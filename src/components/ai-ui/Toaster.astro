@@ -36,7 +36,7 @@ const {
     gap: 8px;
   }
 
-  /* Compact pill toast: small, title-only, centered, coming up from bottom, ZERO drop shadow */
+  /* Compact pill toast: small, title-only, centered, coming up from bottom, subtle primary shadow */
   :global(.ai-toast) {
     pointer-events: auto;
     display: inline-flex;
@@ -44,15 +44,15 @@ const {
     gap: 8px;
     padding: 8px 16px;
     border-radius: var(--radius-pill, 9999px);
-    background: #ffffff;
-    border: 1px solid var(--border, #e4e4e7);
+    background: var(--surface, #ffffff);
+    border: 1px solid color-mix(in srgb, var(--primary, #ED5F45) 20%, var(--border, #e4e4e7));
     color: var(--text, #09090b);
     font-size: 13px;
     font-weight: 500;
     line-height: 1;
-    box-shadow: none;
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--primary, #ED5F45) 12%, transparent);
     animation: ai-toast-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    transition: opacity 0.15s ease, transform 0.15s ease;
+    transition: opacity 0.15s ease, transform 0.15s ease, border-color 0.2s ease;
   }
 
   :global(.ai-toast.removing) {
@@ -64,7 +64,7 @@ const {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--heat, #ED5F45);
+    color: var(--primary, var(--heat, #ED5F45));
     flex-shrink: 0;
   }
 

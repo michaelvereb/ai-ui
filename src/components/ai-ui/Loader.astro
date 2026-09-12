@@ -101,7 +101,7 @@ const isDeterminate = typeof progress === 'number';
   }
 
   .ai-spinner-head {
-    stroke: var(--heat, #ED5F45);
+    stroke: var(--primary, var(--heat, #ED5F45));
   }
 
   /* ── Progress Bar ── */
@@ -143,16 +143,16 @@ const isDeterminate = typeof progress === 'number';
 
   .ai-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #F18774 0%, var(--heat, #ED5F45) 100%);
+    background: var(--primary, var(--heat, #ED5F45));
     border-radius: var(--radius-pill, 9999px);
     transition: width 0.3s ease;
-    box-shadow: 0 0 10px rgba(237, 95, 69, 0.4);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--primary, #ED5F45) 40%, transparent);
   }
 
   .ai-progress-indeterminate {
     height: 100%;
     width: 40%;
-    background: linear-gradient(90deg, transparent 0%, var(--heat, #ED5F45) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, var(--primary, var(--heat, #ED5F45)) 50%, transparent 100%);
     border-radius: var(--radius-pill, 9999px);
     animation: ai-indeterminate-bar 1.5s infinite ease-in-out;
   }
@@ -179,7 +179,7 @@ const isDeterminate = typeof progress === 'number';
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--heat, #ED5F45);
+    background: var(--primary, var(--heat, #ED5F45));
     animation: ai-dot-bounce 1.4s infinite ease-in-out both;
   }
 
@@ -203,7 +203,7 @@ const isDeterminate = typeof progress === 'number';
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: var(--heat, #ED5F45);
+    background: var(--primary, var(--heat, #ED5F45));
     display: inline-block;
   }
 
@@ -214,7 +214,7 @@ const isDeterminate = typeof progress === 'number';
     width: 13px;
     height: 13px;
     border-radius: 50%;
-    border: 2px solid var(--heat, #ED5F45);
+    border: 2px solid var(--primary, var(--heat, #ED5F45));
     animation: ai-ring-pulse 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
   }
 

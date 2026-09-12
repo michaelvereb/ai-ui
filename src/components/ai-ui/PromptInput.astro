@@ -84,8 +84,8 @@ const {
   }
 
   .ai-prompt-input-surface:focus-within {
-    border-color: var(--heat, #ED5F45);
-    box-shadow: 0 0 0 1px var(--heat, #ED5F45), 0 8px 28px rgba(237, 95, 69, 0.18);
+    border-color: var(--primary, var(--heat, #ED5F45));
+    box-shadow: 0 0 0 1px var(--primary, var(--heat, #ED5F45)), 0 8px 28px color-mix(in srgb, var(--primary, #ED5F45) 18%, transparent);
   }
 
   .ai-prompt-textarea {
@@ -162,12 +162,12 @@ const {
     font-weight: var(--font-medium, 500);
   }
 
-  /* Primary orange dot (Strictly no green) */
+  /* Primary dot */
   .ai-model-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--heat, #ED5F45);
+    background: var(--primary, var(--heat, #ED5F45));
   }
 
   .ai-prompt-right-actions {
@@ -189,12 +189,12 @@ const {
     width: 40px;
     height: 40px;
     border-radius: 12px;
-    background: linear-gradient(180deg, #F18774 0%, #ED5F45 100%);
+    background: var(--btn-primary-bg, var(--primary, #ED5F45));
     border: 0.5px solid rgba(255, 255, 255, 0.25);
     color: #ffffff;
     cursor: pointer;
     transition: transform 0.1s ease, filter 0.15s ease;
-    box-shadow: 0 0 0 1px #F18774, 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 1px var(--primary, #ED5F45), 0 2px 8px color-mix(in srgb, var(--primary, #ED5F45) 20%, transparent);
   }
 
   .ai-prompt-submit-btn:hover {

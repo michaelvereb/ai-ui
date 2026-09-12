@@ -91,19 +91,30 @@ const current = models.find((m) => m.id === selectedId) || models[0];
     border-color: var(--border-strong, #36363d);
   }
 
+  .ai-model-trigger:focus-visible {
+    outline: none;
+    border-color: var(--primary, #ED5F45);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary, #ED5F45) 25%, transparent);
+  }
+
+  .ai-model-trigger[aria-expanded="true"] {
+    border-color: var(--primary, #ED5F45);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--primary, #ED5F45) 20%, transparent);
+  }
+
   .ai-model-current-info {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  /* Primary Orange dot (Strictly no green) */
+  /* Primary Dot (Dynamic theme color) */
   .ai-model-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--heat, #ED5F45);
-    box-shadow: 0 0 8px rgba(237, 95, 69, 0.45);
+    background: var(--primary, var(--heat, #ED5F45));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--primary, #ED5F45) 50%, transparent);
   }
 
   .ai-model-chevron {
@@ -124,7 +135,7 @@ const current = models.find((m) => m.id === selectedId) || models[0];
     background: var(--surface-raised, #18181c);
     border: 1px solid var(--border, #232328);
     border-radius: var(--radius-lg, 18px);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 8px 30px color-mix(in srgb, var(--primary, #ED5F45) 15%, rgba(0, 0, 0, 0.45));
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -162,7 +173,7 @@ const current = models.find((m) => m.id === selectedId) || models[0];
   }
 
   .ai-model-opt.is-selected {
-    background: rgba(250, 93, 25, 0.12);
+    background: color-mix(in srgb, var(--primary, #ED5F45) 12%, transparent);
   }
 
   .ai-model-opt-main {
@@ -178,7 +189,7 @@ const current = models.find((m) => m.id === selectedId) || models[0];
   }
 
   .ai-model-opt.is-selected .ai-model-opt-name {
-    color: var(--heat, #ED5F45);
+    color: var(--primary, var(--heat, #ED5F45));
   }
 
   .ai-model-opt-provider {

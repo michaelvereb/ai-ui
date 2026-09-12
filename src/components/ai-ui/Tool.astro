@@ -134,15 +134,15 @@ const outputStr = typeof output === 'string' ? output : JSON.stringify(output, n
   }
 
   .badge-completed {
-    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
-    color: var(--heat, #ED5F45);
-    border: 1px solid rgba(237, 95, 69, 0.25);
+    background: color-mix(in srgb, var(--primary, #ED5F45) 10%, transparent);
+    color: var(--primary, #ED5F45);
+    border: 1px solid color-mix(in srgb, var(--primary, #ED5F45) 25%, transparent);
   }
 
   .badge-executing {
-    background: var(--heat-subtle, rgba(237, 95, 69, 0.12));
-    color: var(--heat, #ED5F45);
-    border: 1px solid var(--heat, #ED5F45);
+    background: color-mix(in srgb, var(--primary, #ED5F45) 14%, transparent);
+    color: var(--primary, #ED5F45);
+    border: 1px solid var(--primary, #ED5F45);
   }
 
   .badge-failed {
@@ -155,7 +155,7 @@ const outputStr = typeof output === 'string' ? output : JSON.stringify(output, n
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--heat, #ED5F45);
+    background: var(--primary, #ED5F45);
   }
 
   .ai-tool-chevron {

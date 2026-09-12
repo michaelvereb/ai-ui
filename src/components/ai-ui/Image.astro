@@ -1,6 +1,6 @@
 ---
 interface Props {
-  src: string;
+  src?: string;
   alt?: string;
   caption?: string;
   aspectRatio?: '16/9' | '4/3' | '1/1' | 'auto';
@@ -18,7 +18,11 @@ const {
 
 <figure class={`ai-image-wrapper ${className}`} data-image-wrapper>
   <div class="ai-image-container" style={`aspect-ratio: ${aspectRatio};`}>
-    <img src={src} alt={alt} class="ai-img" loading="lazy" />
+    {src ? (
+      <img src={src} alt={alt} class="ai-img" loading="lazy" />
+    ) : (
+      <slot />
+    )}
   </div>
   {caption && <figcaption class="ai-image-caption">{caption}</figcaption>}
 </figure>

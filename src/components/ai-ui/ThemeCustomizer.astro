@@ -28,26 +28,23 @@ const {
   </button>
 </div>
 
-<!-- ─── Drawer Backdrop ─── -->
+<!-- Backdrop intentionally transparent/non-blurring so user can see & interact with page -->
 <div class="ai-customizer-backdrop" id="ai-customizer-backdrop" hidden></div>
 
-<!-- ─── Sliding Settings Drawer Panel ─── -->
+<!-- ─── Figma-Style Side Panel ─── -->
 <aside
   class={`ai-customizer-drawer ${className}`}
   id="ai-customizer-drawer"
   role="dialog"
-  aria-modal="true"
+  aria-modal="false"
   aria-labelledby="ai-customizer-title"
   hidden
 >
-  <!-- Drawer Header -->
+  <!-- Panel Header -->
   <div class="ai-drawer-header">
-    <div class="ai-drawer-title-group">
-      <div class="ai-title-row">
-        <h3 class="ai-drawer-title" id="ai-customizer-title">Theme Customizer</h3>
-        <span class="ai-badge-live">Live</span>
-      </div>
-      <p class="ai-drawer-subtitle">Live design & component token controls</p>
+    <div class="ai-header-left">
+      <h3 class="ai-drawer-title" id="ai-customizer-title">Design Tokens</h3>
+      <span class="ai-badge-live">Live</span>
     </div>
     <div class="ai-drawer-header-actions">
       <button
@@ -56,7 +53,7 @@ const {
         id="ai-btn-reset-theme"
         title="Reset all settings to defaults"
       >
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
           <path d="M3 3v5h5"></path>
         </svg>
@@ -68,7 +65,7 @@ const {
         id="ai-btn-close-drawer"
         aria-label="Close Theme Settings"
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -76,47 +73,25 @@ const {
     </div>
   </div>
 
-  <!-- Drawer Scrollable Body -->
+  <!-- Panel Scrollable Body -->
   <div class="ai-drawer-body">
 
     <!-- 1. Mode (Light / Dark) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Theme Mode</label>
-        <span class="ai-setting-value" id="ai-active-mode-label">Light</span>
-      </div>
-      <div class="ai-pill-grid cols-2" id="ai-theme-mode-group">
-        <button type="button" class="ai-mode-pill is-active" data-mode="light">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <span>Light</span>
-        </button>
-        <button type="button" class="ai-mode-pill" data-mode="dark">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-          <span>Dark</span>
-        </button>
+    <div class="ai-setting-row">
+      <span class="ai-setting-label">Theme Mode</span>
+      <div class="ai-pill-grid-mini" id="ai-theme-mode-group">
+        <button type="button" class="ai-mini-pill is-active" data-mode="light">Light</button>
+        <button type="button" class="ai-mini-pill" data-mode="dark">Dark</button>
       </div>
     </div>
 
-    <!-- 2. Base Color (Primary / Accent) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Base Color</label>
-        <span class="ai-setting-value" id="ai-active-color-name">Heat Orange</span>
+    <!-- 2. Base Color (Swatches) -->
+    <div class="ai-setting-stack">
+      <div class="ai-setting-row">
+        <span class="ai-setting-label">Base Color</span>
+        <span class="ai-setting-val-name" id="ai-active-color-name">Heat Orange</span>
       </div>
-      <div class="ai-swatches-grid" id="ai-color-swatches">
-        <!-- Heat Orange (Signature) -->
+      <div class="ai-swatches-row" id="ai-color-swatches">
         <button
           type="button"
           class="ai-color-swatch is-active"
@@ -124,11 +99,10 @@ const {
           data-oklch="oklch(0.66 0.19 32.5)"
           data-name="Heat Orange"
           style="--swatch-color: #ED5F45;"
-          title="Heat Orange (Default)"
+          title="Heat Orange"
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <!-- Zinc -->
         <button
           type="button"
           class="ai-color-swatch"
@@ -140,7 +114,6 @@ const {
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <!-- Blue -->
         <button
           type="button"
           class="ai-color-swatch"
@@ -152,7 +125,6 @@ const {
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <!-- Emerald -->
         <button
           type="button"
           class="ai-color-swatch"
@@ -164,7 +136,6 @@ const {
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <!-- Violet -->
         <button
           type="button"
           class="ai-color-swatch"
@@ -176,7 +147,6 @@ const {
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <!-- Rose -->
         <button
           type="button"
           class="ai-color-swatch"
@@ -188,163 +158,123 @@ const {
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <!-- Custom Color Picker -->
-        <label class="ai-color-picker-label" title="Custom color picker">
+        <label class="ai-color-picker-btn" title="Pick custom color">
           <input type="color" id="ai-custom-color-input" value="#ED5F45" />
-          <span class="ai-color-picker-icon">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2v20M2 12h20"></path>
-            </svg>
-          </span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2v20M2 12h20"></path>
+          </svg>
         </label>
       </div>
     </div>
 
-    <!-- 3. Neutral (Background / Surface Tone) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Neutral (Background)</label>
-        <span class="ai-setting-value" id="ai-active-neutral-name">Pure White</span>
+    <!-- 3. Neutral (Background) -->
+    <div class="ai-setting-stack">
+      <div class="ai-setting-row">
+        <span class="ai-setting-label">Background</span>
+        <span class="ai-setting-val-name" id="ai-active-neutral-name">Pure White</span>
       </div>
-      <div class="ai-pill-grid cols-3" id="ai-neutral-group">
-        <button type="button" class="ai-opt-pill is-active" data-neutral="white" data-bg="#ffffff" data-name="Pure White">White</button>
-        <button type="button" class="ai-opt-pill" data-neutral="zinc" data-bg="#fafafa" data-name="Zinc">Zinc</button>
-        <button type="button" class="ai-opt-pill" data-neutral="slate" data-bg="#f8fafc" data-name="Slate">Slate</button>
-        <button type="button" class="ai-opt-pill" data-neutral="stone" data-bg="#fafaf9" data-name="Stone">Stone</button>
-        <button type="button" class="ai-opt-pill" data-neutral="cream" data-bg="#faf8f5" data-name="Warm Cream">Cream</button>
-        <label class="ai-neutral-custom-label" title="Custom background color">
+      <div class="ai-neutrals-row" id="ai-neutral-group">
+        <button type="button" class="ai-neutral-chip is-active" data-neutral="white" data-bg="#ffffff" data-name="Pure White">White</button>
+        <button type="button" class="ai-neutral-chip" data-neutral="zinc" data-bg="#fafafa" data-name="Zinc">Zinc</button>
+        <button type="button" class="ai-neutral-chip" data-neutral="slate" data-bg="#f8fafc" data-name="Slate">Slate</button>
+        <button type="button" class="ai-neutral-chip" data-neutral="stone" data-bg="#fafaf9" data-name="Stone">Stone</button>
+        <button type="button" class="ai-neutral-chip" data-neutral="cream" data-bg="#faf8f5" data-name="Warm Cream">Cream</button>
+        <label class="ai-neutral-chip ai-picker-chip" title="Custom background color">
           <input type="color" id="ai-custom-bg-input" value="#ffffff" />
-          <span>Custom</span>
+          <span>Hex</span>
         </label>
       </div>
     </div>
 
-    <!-- 4. Heading Font (Dropdown) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label" for="ai-heading-font-select">Heading Font</label>
-        <span class="ai-setting-value" id="ai-active-heading-font-name">SF Pro</span>
-      </div>
-      <div class="ai-select-wrapper">
-        <select id="ai-heading-font-select" class="ai-select-input">
-          <option value="-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Display', 'Segoe UI', sans-serif" selected>SF Pro (Apple System)</option>
-          <option value="'Geist', -apple-system, sans-serif">Geist (Modern Geometric)</option>
-          <option value="'Space Grotesk', sans-serif">Space Grotesk (Technical)</option>
-          <option value="'DM Sans', sans-serif">DM Sans (Clean Sans)</option>
-          <option value="'Outfit', sans-serif">Outfit (Editorial)</option>
-          <option value="'Inter', sans-serif">Inter (UI Sans)</option>
-          <option value="'Geist Mono', monospace">Geist Mono (Monospace)</option>
-        </select>
+    <!-- 4. Heading Font (Single Row: Label Left, Dropdown Right) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label" for="ai-heading-font-select">Heading Font</label>
+      <select id="ai-heading-font-select" class="ai-figma-select">
+        <option value="-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Display', 'Segoe UI', sans-serif" selected>SF Pro</option>
+        <option value="'Geist', -apple-system, sans-serif">Geist</option>
+        <option value="'Space Grotesk', sans-serif">Space Grotesk</option>
+        <option value="'DM Sans', sans-serif">DM Sans</option>
+        <option value="'Outfit', sans-serif">Outfit</option>
+        <option value="'Inter', sans-serif">Inter</option>
+        <option value="'Geist Mono', monospace">Geist Mono</option>
+      </select>
+    </div>
+
+    <!-- 5. Body Font (Single Row: Label Left, Dropdown Right) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label" for="ai-body-font-select">Body Font</label>
+      <select id="ai-body-font-select" class="ai-figma-select">
+        <option value="-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Segoe UI', sans-serif" selected>SF Pro</option>
+        <option value="'Geist', -apple-system, sans-serif">Geist</option>
+        <option value="'DM Sans', sans-serif">DM Sans</option>
+        <option value="'Inter', sans-serif">Inter</option>
+        <option value="'Outfit', sans-serif">Outfit</option>
+        <option value="'Space Grotesk', sans-serif">Space Grotesk</option>
+        <option value="'Geist Mono', monospace">Geist Mono</option>
+      </select>
+    </div>
+
+    <!-- 6. Border Radius (Single Row: Label Left, Custom Input Right) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label" for="ai-custom-radius-input">Border Radius</label>
+      <input
+        type="text"
+        id="ai-custom-radius-input"
+        class="ai-figma-input"
+        value="14px"
+        placeholder="14px, 50%, 0.75rem"
+      />
+    </div>
+
+    <!-- 7. Card Border Weight (Single Row: Label Left, Custom Input Right) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label" for="ai-custom-border-input">Border Weight</label>
+      <input
+        type="text"
+        id="ai-custom-border-input"
+        class="ai-figma-input"
+        value="1px"
+        placeholder="1px, 0px, 1.5px"
+      />
+    </div>
+
+    <!-- 8. Icon Library (Single Row: Label Left, Dropdown Right) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label" for="ai-icon-select">Icon Library</label>
+      <select id="ai-icon-select" class="ai-figma-select">
+        <option value="lucide" selected>Lucide (2.0)</option>
+        <option value="minimal">Minimal Line (1.5)</option>
+        <option value="tabler">Tabler Bold (2.4)</option>
+        <option value="phosphor">Phosphor Round</option>
+      </select>
+    </div>
+
+    <!-- 9. Letter Spacing Tracking (Single Row) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label">Letter Spacing</label>
+      <div class="ai-pill-grid-mini" id="ai-tracking-group">
+        <button type="button" class="ai-mini-pill is-active" data-tracking="-0.02em" data-name="Tight">-0.02</button>
+        <button type="button" class="ai-mini-pill" data-tracking="-0.035em" data-name="Compact">-0.03</button>
+        <button type="button" class="ai-mini-pill" data-tracking="0em" data-name="Normal">0</button>
       </div>
     </div>
 
-    <!-- 5. Body Font (Dropdown) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label" for="ai-body-font-select">Body Font</label>
-        <span class="ai-setting-value" id="ai-active-body-font-name">SF Pro</span>
-      </div>
-      <div class="ai-select-wrapper">
-        <select id="ai-body-font-select" class="ai-select-input">
-          <option value="-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Segoe UI', sans-serif" selected>SF Pro (Apple System)</option>
-          <option value="'Geist', -apple-system, sans-serif">Geist (Modern Geometric)</option>
-          <option value="'DM Sans', sans-serif">DM Sans (Clean Sans)</option>
-          <option value="'Inter', sans-serif">Inter (UI Sans)</option>
-          <option value="'Outfit', sans-serif">Outfit (Editorial)</option>
-          <option value="'Space Grotesk', sans-serif">Space Grotesk (Technical)</option>
-          <option value="'Geist Mono', monospace">Geist Mono (Monospace)</option>
-        </select>
+    <!-- 10. Card Stage Padding (Single Row) -->
+    <div class="ai-setting-row">
+      <label class="ai-setting-label">Stage Padding</label>
+      <div class="ai-pill-grid-mini" id="ai-padding-group">
+        <button type="button" class="ai-mini-pill" data-padding="28px 20px" data-name="Compact">Compact</button>
+        <button type="button" class="ai-mini-pill is-active" data-padding="44px 28px" data-name="Default">Default</button>
+        <button type="button" class="ai-mini-pill" data-padding="64px 36px" data-name="Spacious">Spacious</button>
       </div>
     </div>
 
-    <!-- 6. Border Radii / Roundness (Presets without px + Custom entry for px, %, rem) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Border Radius</label>
-        <span class="ai-setting-value" id="ai-active-radius-name">0.75</span>
-      </div>
-      <!-- Presets (NO "px" text) -->
-      <div class="ai-pill-grid cols-6" id="ai-radius-group">
-        <button type="button" class="ai-opt-pill" data-radius="0px" data-rem="0" data-label="0">0</button>
-        <button type="button" class="ai-opt-pill" data-radius="5px" data-rem="0.3rem" data-label="0.3">0.3</button>
-        <button type="button" class="ai-opt-pill" data-radius="8px" data-rem="0.5rem" data-label="0.5">0.5</button>
-        <button type="button" class="ai-opt-pill" data-radius="10px" data-rem="0.625rem" data-label="0.62">0.62</button>
-        <button type="button" class="ai-opt-pill is-active" data-radius="14px" data-rem="0.75rem" data-label="0.75">0.75</button>
-        <button type="button" class="ai-opt-pill" data-radius="20px" data-rem="1.0rem" data-label="1.0">1.0</button>
-      </div>
-      <!-- Custom Radius Entry (supports px, %, rem, or raw number) -->
-      <div class="ai-custom-input-row">
-        <input
-          type="text"
-          id="ai-custom-radius-input"
-          class="ai-text-input"
-          placeholder="Custom radius (e.g. 14px, 50%, 0.8rem)"
-          value="14px"
-        />
-        <span class="ai-input-tip">Custom (px / % / rem)</span>
-      </div>
-    </div>
-
-    <!-- 7. Icon Library (Dropdown) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label" for="ai-icon-select">Icon Library</label>
-        <span class="ai-setting-value" id="ai-active-icon-name">Lucide</span>
-      </div>
-      <div class="ai-select-wrapper">
-        <select id="ai-icon-select" class="ai-select-input">
-          <option value="lucide" selected>Lucide (2.0 stroke)</option>
-          <option value="minimal">Minimal Line (1.5 stroke)</option>
-          <option value="tabler">Tabler Bold (2.4 stroke)</option>
-          <option value="phosphor">Phosphor (Round)</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- 8. Component Design Tweaks (Direct Levers) -->
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Card Border Weight</label>
-        <span class="ai-setting-value" id="ai-active-border-name">Hairline</span>
-      </div>
-      <div class="ai-pill-grid cols-4" id="ai-border-group">
-        <button type="button" class="ai-opt-pill is-active" data-border="1px" data-name="Hairline">1px</button>
-        <button type="button" class="ai-opt-pill" data-border="0px" data-name="Flush">0px</button>
-        <button type="button" class="ai-opt-pill" data-border="1.5px" data-name="Defined">1.5px</button>
-        <button type="button" class="ai-opt-pill" data-border="2px" data-name="Bold">2px</button>
-      </div>
-    </div>
-
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Letter Spacing (Tracking)</label>
-        <span class="ai-setting-value" id="ai-active-tracking-name">Tight</span>
-      </div>
-      <div class="ai-pill-grid cols-3" id="ai-tracking-group">
-        <button type="button" class="ai-opt-pill is-active" data-tracking="-0.02em" data-name="Tight">-0.02em</button>
-        <button type="button" class="ai-opt-pill" data-tracking="-0.035em" data-name="Compact">-0.035em</button>
-        <button type="button" class="ai-opt-pill" data-tracking="0em" data-name="Normal">0em</button>
-      </div>
-    </div>
-
-    <div class="ai-setting-section">
-      <div class="ai-setting-label-row">
-        <label class="ai-setting-label">Card Stage Padding</label>
-        <span class="ai-setting-value" id="ai-active-padding-name">Default</span>
-      </div>
-      <div class="ai-pill-grid cols-3" id="ai-padding-group">
-        <button type="button" class="ai-opt-pill" data-padding="28px 20px" data-name="Compact">Compact</button>
-        <button type="button" class="ai-opt-pill is-active" data-padding="44px 28px" data-name="Default">Default</button>
-        <button type="button" class="ai-opt-pill" data-padding="64px 36px" data-name="Spacious">Spacious</button>
-      </div>
-    </div>
-
-    <!-- 9. Code Export Panel (OKLCH & Standard CSS) -->
-    <div class="ai-setting-section ai-export-section">
-      <div class="ai-export-top">
-        <div class="ai-format-tabs" id="ai-code-format-tabs">
-          <button type="button" class="ai-format-tab is-active" data-fmt="oklch">OKLCH</button>
-          <button type="button" class="ai-format-tab" data-fmt="hex">CSS Hex</button>
+    <!-- 11. Code Export Panel (OKLCH & Standard CSS) -->
+    <div class="ai-export-card">
+      <div class="ai-export-header">
+        <div class="ai-export-tabs" id="ai-code-format-tabs">
+          <button type="button" class="ai-tab-btn is-active" data-fmt="oklch">OKLCH</button>
+          <button type="button" class="ai-tab-btn" data-fmt="hex">Hex CSS</button>
         </div>
         <button
           type="button"
@@ -381,7 +311,7 @@ const {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 18px;
+    padding: 9px 16px;
     background: #09090b;
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -390,134 +320,88 @@ const {
     font-weight: 500;
     cursor: pointer;
     font-family: inherit;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    transition: all 0.18s ease;
   }
 
   .ai-customizer-trigger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
     background: #18181b;
-  }
-
-  .ai-trigger-icon {
-    transition: transform 0.3s ease;
-  }
-
-  .ai-customizer-trigger:hover .ai-trigger-icon {
-    transform: rotate(45deg);
   }
 
   .ai-trigger-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--heat, #ED5F45);
+    background: var(--primary, var(--heat, #ED5F45));
     display: inline-block;
-    box-shadow: 0 0 8px var(--heat, #ED5F45);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.15s ease;
   }
 
-  /* ─── Drawer Backdrop ─── */
+  /* ─── Non-Blocking Transparent Backdrop (Zero Darken / Zero Blur) ─── */
   .ai-customizer-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(2px);
-    z-index: 998;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+    display: none !important;
   }
 
-  .ai-customizer-backdrop.is-visible {
-    opacity: 1;
-  }
-
-  /* ─── Sliding Drawer Panel ─── */
+  /* ─── Figma-Style Side Panel ─── */
   .ai-customizer-drawer {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 100%;
-    max-width: 400px;
-    background: #ffffff;
-    color: #09090b;
+    width: 330px;
+    max-width: 90vw;
+    background: var(--surface, #ffffff);
+    color: var(--text, #09090b);
     border-left: 1px solid var(--border, #e4e4e7);
     z-index: 999;
     display: flex;
     flex-direction: column;
-    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.05);
+    font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, sans-serif);
+    letter-spacing: -0.015em;
     transform: translateX(100%);
-    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-    font-family: var(--font-sans);
-    letter-spacing: var(--tracking-ui, -0.02em);
-    box-sizing: border-box;
+    transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .ai-customizer-drawer.is-open {
     transform: translateX(0);
   }
 
-  :global(.dark) .ai-customizer-drawer,
-  :global([data-theme="dark"]) .ai-customizer-drawer {
-    background: #131316;
-    color: #fafafa;
-    border-left-color: #27272a;
-    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.55);
-  }
-
-  /* ─── Drawer Header ─── */
+  /* Header */
   .ai-drawer-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 20px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border, #e4e4e7);
+    background: var(--surface, #ffffff);
     flex-shrink: 0;
   }
 
-  :global(.dark) .ai-drawer-header,
-  :global([data-theme="dark"]) .ai-drawer-header {
-    border-bottom-color: #27272a;
-  }
-
-  .ai-drawer-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .ai-title-row {
+  .ai-header-left {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
   .ai-drawer-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
+    color: var(--text, #09090b);
     margin: 0;
     letter-spacing: -0.02em;
   }
 
   .ai-badge-live {
-    font-size: 10.5px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     padding: 2px 6px;
-    background: var(--heat-subtle, rgba(237, 95, 69, 0.1));
-    color: var(--heat, #ED5F45);
-    border: 1px solid rgba(237, 95, 69, 0.25);
     border-radius: 4px;
-    line-height: 1;
-  }
-
-  .ai-drawer-subtitle {
-    font-size: 12px;
-    color: var(--text-muted, #71717a);
-    margin: 0;
+    background: color-mix(in srgb, var(--primary, #ED5F45) 12%, transparent);
+    color: var(--primary, #ED5F45);
   }
 
   .ai-drawer-header-actions {
@@ -529,21 +413,22 @@ const {
   .ai-btn-reset {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 9px;
-    background: transparent;
+    gap: 5px;
+    padding: 5px 10px;
     border: 1px solid var(--border, #e4e4e7);
     border-radius: 6px;
+    background: var(--surface, #ffffff);
+    color: var(--text-muted, #52525b);
     font-size: 11.5px;
-    color: var(--text-muted, #71717a);
+    font-weight: 500;
     cursor: pointer;
-    font-family: inherit;
     transition: all 0.15s ease;
   }
 
   .ai-btn-reset:hover {
-    background: var(--bg-subtle, #f4f4f5);
     color: var(--text, #09090b);
+    border-color: var(--border-strong, #d4d4d8);
+    background: var(--bg-subtle, #f4f4f5);
   }
 
   .ai-btn-close {
@@ -552,337 +437,101 @@ const {
     justify-content: center;
     width: 28px;
     height: 28px;
-    background: transparent;
-    border: 1px solid transparent;
+    border: 1px solid var(--border, #e4e4e7);
     border-radius: 6px;
+    background: var(--surface, #ffffff);
     color: var(--text-muted, #71717a);
     cursor: pointer;
     transition: all 0.15s ease;
   }
 
   .ai-btn-close:hover {
-    background: var(--bg-subtle, #f4f4f5);
     color: var(--text, #09090b);
+    background: var(--bg-subtle, #f4f4f5);
   }
 
-  /* ─── Drawer Scrollable Body ─── */
+  /* Scrollable Body */
   .ai-drawer-body {
-    flex-grow: 1;
+    flex: 1;
     overflow-y: auto;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
   }
 
-  .ai-setting-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .ai-setting-label-row {
+  /* Single-line Row Layout (Figma Inspector Style: Label on left, control on right) */
+  .ai-setting-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 12.5px;
+    gap: 12px;
+    min-height: 32px;
+  }
+
+  .ai-setting-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
   }
 
   .ai-setting-label {
-    font-weight: 600;
-    color: var(--text, #09090b);
-  }
-
-  .ai-setting-value {
-    font-size: 12px;
-    color: var(--text-muted, #71717a);
-    font-family: var(--font-mono, monospace);
-  }
-
-  /* ─── Dropdown Inputs ─── */
-  .ai-select-wrapper {
-    position: relative;
-    width: 100%;
-  }
-
-  .ai-select-input {
-    width: 100%;
-    padding: 9px 14px;
-    background: var(--bg-subtle, #f4f4f5);
-    color: var(--text, #09090b);
-    border: 1px solid var(--border, #e4e4e7);
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 34px;
-  }
-
-  :global(.dark) .ai-select-input,
-  :global([data-theme="dark"]) .ai-select-input {
-    background-color: #1c1c20;
-    border-color: #2e2e34;
-    color: #fafafa;
-  }
-
-  .ai-select-input:focus {
-    border-color: var(--heat, #ED5F45);
-    box-shadow: 0 0 0 2px var(--heat-subtle, rgba(237, 95, 69, 0.15));
-  }
-
-  /* ─── Text / Custom Inputs ─── */
-  .ai-custom-input-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2px;
-  }
-
-  .ai-text-input {
-    flex-grow: 1;
-    padding: 8px 12px;
-    background: var(--bg-subtle, #f4f4f5);
-    color: var(--text, #09090b);
-    border: 1px solid var(--border, #e4e4e7);
-    border-radius: 8px;
     font-size: 12.5px;
-    font-family: var(--font-mono, monospace);
-    outline: none;
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-  }
-
-  :global(.dark) .ai-text-input,
-  :global([data-theme="dark"]) .ai-text-input {
-    background: #1c1c20;
-    border-color: #2e2e34;
-    color: #fafafa;
-  }
-
-  .ai-text-input:focus {
-    border-color: var(--heat, #ED5F45);
-    box-shadow: 0 0 0 2px var(--heat-subtle, rgba(237, 95, 69, 0.15));
-  }
-
-  .ai-input-tip {
-    font-size: 11px;
-    color: var(--text-muted, #71717a);
+    font-weight: 500;
+    color: var(--text, #09090b);
+    margin: 0;
     white-space: nowrap;
   }
 
-  /* ─── Pill Grids ─── */
-  .ai-pill-grid {
-    display: grid;
-    gap: 6px;
-    width: 100%;
+  .ai-setting-val-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-subtle, #71717a);
   }
 
-  .ai-pill-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
-  .ai-pill-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .ai-pill-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
-  .ai-pill-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
-
-  .ai-mode-pill,
-  .ai-opt-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 7px 8px;
+  /* Compact Figma-style Dropdown */
+  .ai-figma-select {
+    width: 145px;
+    height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--text, #09090b);
     background: var(--bg-subtle, #f4f4f5);
     border: 1px solid var(--border, #e4e4e7);
-    border-radius: 8px;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--text-muted, #52525b);
+    border-radius: 6px;
+    outline: none;
     cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
-    white-space: nowrap;
+    transition: border-color 0.15s ease;
   }
 
-  :global(.dark) .ai-mode-pill,
-  :global(.dark) .ai-opt-pill,
-  :global([data-theme="dark"]) .ai-mode-pill,
-  :global([data-theme="dark"]) .ai-opt-pill {
-    background: #1c1c20;
-    border-color: #2e2e34;
-    color: #a1a1aa;
+  .ai-figma-select:focus {
+    border-color: var(--primary, #ED5F45);
   }
 
-  .ai-mode-pill:hover,
-  .ai-opt-pill:hover {
-    color: var(--text, #09090b);
-    border-color: var(--border-strong, #d4d4d8);
-  }
-
-  .ai-mode-pill.is-active,
-  .ai-opt-pill.is-active {
-    background: #ffffff;
-    color: #09090b;
-    border-color: var(--text, #09090b);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    font-weight: 600;
-  }
-
-  :global(.dark) .ai-mode-pill.is-active,
-  :global(.dark) .ai-opt-pill.is-active,
-  :global([data-theme="dark"]) .ai-mode-pill.is-active,
-  :global([data-theme="dark"]) .ai-opt-pill.is-active {
-    background: #27272a;
-    color: #ffffff;
-    border-color: #ffffff;
-  }
-
-  /* ─── Swatches Grid ─── */
-  .ai-swatches-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    width: 100%;
-  }
-
-  .ai-color-swatch {
-    aspect-ratio: 1;
-    border-radius: 8px;
-    background: var(--swatch-color);
-    border: 2px solid transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s ease;
-    padding: 0;
-    position: relative;
-  }
-
-  .ai-color-swatch:hover {
-    transform: scale(1.08);
-  }
-
-  .ai-color-swatch.is-active {
-    border-color: #09090b;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  :global(.dark) .ai-color-swatch.is-active,
-  :global([data-theme="dark"]) .ai-color-swatch.is-active {
-    border-color: #ffffff;
-    box-shadow: 0 0 0 2px #131316, 0 2px 6px rgba(0, 0, 0, 0.4);
-  }
-
-  .ai-swatch-check {
-    color: #ffffff;
-    font-size: 11px;
-    font-weight: 700;
-    display: none;
-    line-height: 1;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  }
-
-  .ai-color-swatch.is-active .ai-swatch-check {
-    display: block;
-  }
-
-  .ai-color-picker-label {
-    aspect-ratio: 1;
-    border-radius: 8px;
-    background: var(--bg-subtle, #f4f4f5);
-    border: 1px dashed var(--border-strong, #d4d4d8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.15s ease;
-  }
-
-  :global(.dark) .ai-color-picker-label,
-  :global([data-theme="dark"]) .ai-color-picker-label {
-    background: #1c1c20;
-    border-color: #3f3f46;
-  }
-
-  .ai-color-picker-label:hover {
-    border-color: var(--text, #09090b);
-  }
-
-  .ai-color-picker-label input[type="color"] {
-    position: absolute;
-    opacity: 0;
-    width: 200%;
-    height: 200%;
-    cursor: pointer;
-  }
-
-  .ai-color-picker-icon {
-    color: var(--text-muted, #71717a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .ai-neutral-custom-label {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 7px 8px;
-    background: var(--bg-subtle, #f4f4f5);
-    border: 1px dashed var(--border-strong, #d4d4d8);
-    border-radius: 8px;
+  /* Compact Figma-style Custom Input (Right-aligned, clean) */
+  .ai-figma-input {
+    width: 95px;
+    height: 30px;
+    padding: 0 10px;
     font-size: 12px;
-    font-weight: 500;
-    color: var(--text-muted, #52525b);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.15s ease;
+    font-family: var(--font-mono, monospace);
+    color: var(--text, #09090b);
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 6px;
+    outline: none;
+    text-align: right;
+    transition: border-color 0.15s ease;
   }
 
-  :global(.dark) .ai-neutral-custom-label,
-  :global([data-theme="dark"]) .ai-neutral-custom-label {
-    background: #1c1c20;
-    border-color: #3f3f46;
-    color: #a1a1aa;
+  .ai-figma-input:focus {
+    border-color: var(--primary, #ED5F45);
+    box-shadow: 0 0 0 1px var(--primary, #ED5F45);
   }
 
-  .ai-neutral-custom-label input[type="color"] {
-    position: absolute;
-    opacity: 0;
-    width: 200%;
-    height: 200%;
-    cursor: pointer;
-  }
-
-  /* ─── Export CSS Section ─── */
-  .ai-export-section {
-    padding-top: 14px;
-    border-top: 1px solid var(--border, #e4e4e7);
-  }
-
-  :global(.dark) .ai-export-section,
-  :global([data-theme="dark"]) .ai-export-section {
-    border-top-color: #27272a;
-  }
-
-  .ai-export-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-
-  .ai-format-tabs {
+  /* Mini Pills Toggle */
+  .ai-pill-grid-mini {
     display: inline-flex;
     background: var(--bg-subtle, #f4f4f5);
     border: 1px solid var(--border, #e4e4e7);
@@ -891,84 +540,221 @@ const {
     gap: 2px;
   }
 
-  :global(.dark) .ai-format-tabs,
-  :global([data-theme="dark"]) .ai-format-tabs {
-    background: #1c1c20;
-    border-color: #27272a;
+  .ai-mini-pill {
+    padding: 4px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-muted, #71717a);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
   }
 
-  .ai-format-tab {
+  .ai-mini-pill.is-active {
+    background: var(--surface, #ffffff);
+    color: var(--text, #09090b);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+  }
+
+  /* Base Color Swatches Row */
+  .ai-swatches-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--swatch-color);
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+  }
+
+  .ai-color-swatch:hover {
+    transform: scale(1.12);
+  }
+
+  .ai-color-swatch.is-active {
+    box-shadow: 0 0 0 2px var(--surface, #ffffff), 0 0 0 3.5px var(--swatch-color);
+  }
+
+  .ai-swatch-check {
+    display: none;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .ai-color-swatch.is-active .ai-swatch-check {
+    display: block;
+  }
+
+  .ai-color-picker-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px dashed var(--border-strong, #a1a1aa);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    color: var(--text-muted, #71717a);
+    transition: all 0.15s ease;
+  }
+
+  .ai-color-picker-btn:hover {
+    border-color: var(--text, #09090b);
+    color: var(--text, #09090b);
+  }
+
+  .ai-color-picker-btn input[type="color"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  /* Neutrals Row */
+  .ai-neutrals-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .ai-neutral-chip {
+    padding: 4px 9px;
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 6px;
+    color: var(--text-muted, #52525b);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+  }
+
+  .ai-neutral-chip:hover {
+    background: var(--surface, #ffffff);
+    color: var(--text, #09090b);
+  }
+
+  .ai-neutral-chip.is-active {
+    background: var(--surface, #ffffff);
+    color: var(--text, #09090b);
+    border-color: var(--primary, #ED5F45);
+    font-weight: 600;
+  }
+
+  .ai-picker-chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .ai-picker-chip input[type="color"] {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  /* Code Export Card */
+  .ai-export-card {
+    margin-top: 6px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border, #e4e4e7);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-export-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ai-export-tabs {
+    display: inline-flex;
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .ai-tab-btn {
+    padding: 3px 8px;
     background: transparent;
     border: none;
     border-radius: 4px;
     font-size: 11px;
     font-weight: 500;
     color: var(--text-muted, #71717a);
-    padding: 3px 8px;
     cursor: pointer;
     font-family: inherit;
     transition: all 0.15s ease;
   }
 
-  .ai-format-tab.is-active {
-    background: #ffffff;
-    color: #09090b;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  .ai-tab-btn.is-active {
+    background: var(--surface, #ffffff);
+    color: var(--text, #09090b);
     font-weight: 600;
-  }
-
-  :global(.dark) .ai-format-tab.is-active,
-  :global([data-theme="dark"]) .ai-format-tab.is-active {
-    background: #27272a;
-    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
   }
 
   .ai-btn-copy-css {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 5px 11px;
-    background: var(--text, #09090b);
-    color: var(--bg, #ffffff);
-    border: 1px solid transparent;
+    padding: 4px 9px;
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, #e4e4e7);
     border-radius: 6px;
     font-size: 11.5px;
     font-weight: 500;
+    color: var(--text, #09090b);
     cursor: pointer;
     font-family: inherit;
     transition: all 0.15s ease;
   }
 
-  :global(.dark) .ai-btn-copy-css,
-  :global([data-theme="dark"]) .ai-btn-copy-css {
-    background: #fafafa;
-    color: #09090b;
-  }
-
   .ai-btn-copy-css:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    background: var(--bg-subtle, #f4f4f5);
+    border-color: var(--border-strong, #d4d4d8);
   }
 
   .ai-code-preview-wrap {
     background: #0d0d10;
     border: 1px solid #27272a;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
-    max-height: 180px;
-    position: relative;
+    max-height: 140px;
   }
 
   .ai-code-pre {
     margin: 0;
-    padding: 12px;
+    padding: 10px 12px;
     font-family: var(--font-mono, monospace);
-    font-size: 11px;
+    font-size: 10.5px;
     line-height: 1.45;
     color: #e4e4e7;
     overflow-x: auto;
     overflow-y: auto;
-    max-height: 180px;
+    max-height: 140px;
     white-space: pre;
   }
 </style>
@@ -977,7 +763,6 @@ const {
   function initThemeCustomizer() {
     const trigger = document.getElementById('ai-theme-trigger');
     const drawer = document.getElementById('ai-customizer-drawer');
-    const backdrop = document.getElementById('ai-customizer-backdrop');
     const closeBtn = document.getElementById('ai-btn-close-drawer');
     const resetBtn = document.getElementById('ai-btn-reset-theme');
     const copyCssBtn = document.getElementById('ai-btn-copy-css');
@@ -985,14 +770,6 @@ const {
     const activeColorDot = document.getElementById('ai-active-color-dot');
     const activeColorName = document.getElementById('ai-active-color-name');
     const activeNeutralName = document.getElementById('ai-active-neutral-name');
-    const activeModeLabel = document.getElementById('ai-active-mode-label');
-    const activeHeadingFontName = document.getElementById('ai-active-heading-font-name');
-    const activeBodyFontName = document.getElementById('ai-active-body-font-name');
-    const activeRadiusName = document.getElementById('ai-active-radius-name');
-    const activeIconName = document.getElementById('ai-active-icon-name');
-    const activeBorderName = document.getElementById('ai-active-border-name');
-    const activeTrackingName = document.getElementById('ai-active-tracking-name');
-    const activePaddingName = document.getElementById('ai-active-padding-name');
 
     const headingFontSelect = document.getElementById('ai-heading-font-select') as HTMLSelectElement;
     const bodyFontSelect = document.getElementById('ai-body-font-select') as HTMLSelectElement;
@@ -1000,6 +777,7 @@ const {
     const customColorInput = document.getElementById('ai-custom-color-input') as HTMLInputElement;
     const customBgInput = document.getElementById('ai-custom-bg-input') as HTMLInputElement;
     const customRadiusInput = document.getElementById('ai-custom-radius-input') as HTMLInputElement;
+    const customBorderInput = document.getElementById('ai-custom-border-input') as HTMLInputElement;
 
     // State
     const defaultState = {
@@ -1015,11 +793,9 @@ const {
       bodyFont: "-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Segoe UI', sans-serif",
       bodyFontName: 'SF Pro',
       radius: '14px',
-      radiusLabel: '0.75',
+      borderWidth: '1px',
       icon: 'lucide',
       iconName: 'Lucide',
-      borderWidth: '1px',
-      borderName: 'Hairline',
       tracking: '-0.02em',
       trackingName: 'Tight',
       padding: '44px 28px',
@@ -1029,30 +805,25 @@ const {
 
     let state = { ...defaultState };
 
-    // Open / Close Drawer
+    // Open / Close Drawer (No backdrop darkening/blur)
     function openDrawer() {
-      if (!drawer || !backdrop) return;
+      if (!drawer) return;
       drawer.removeAttribute('hidden');
-      backdrop.removeAttribute('hidden');
       requestAnimationFrame(() => {
         drawer.classList.add('is-open');
-        backdrop.classList.add('is-visible');
       });
     }
 
     function closeDrawer() {
-      if (!drawer || !backdrop) return;
+      if (!drawer) return;
       drawer.classList.remove('is-open');
-      backdrop.classList.remove('is-visible');
       setTimeout(() => {
         drawer.setAttribute('hidden', '');
-        backdrop.setAttribute('hidden', '');
-      }, 320);
+      }, 250);
     }
 
     trigger?.addEventListener('click', openDrawer);
     closeBtn?.addEventListener('click', closeDrawer);
-    backdrop?.addEventListener('click', closeDrawer);
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && drawer?.classList.contains('is-open')) {
@@ -1069,42 +840,19 @@ const {
   --background: ${isDark ? 'oklch(0.145 0 0)' : 'oklch(1 0 0)'};
   --foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)'};
   --card: ${isDark ? 'oklch(0.205 0 0)' : 'oklch(1 0 0)'};
-  --card-foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)'};
-  --popover: ${isDark ? 'oklch(0.205 0 0)' : 'oklch(1 0 0)'};
-  --popover-foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)'};
   --primary: ${state.baseColorOklch};
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: ${isDark ? 'oklch(0.269 0 0)' : 'oklch(0.97 0 0)'};
-  --secondary-foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.205 0 0)'};
-  --muted: ${isDark ? 'oklch(0.269 0 0)' : 'oklch(0.97 0 0)'};
-  --muted-foreground: ${isDark ? 'oklch(0.708 0 0)' : 'oklch(0.556 0 0)'};
   --accent: ${state.baseColorOklch};
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
   --border: ${isDark ? 'oklch(1 0 0 / 10%)' : 'oklch(0.922 0 0)'};
-  --input: ${isDark ? 'oklch(1 0 0 / 15%)' : 'oklch(0.922 0 0)'};
-  --ring: ${state.baseColorOklch};
+  --border-width: ${state.borderWidth};
   --radius: ${state.radius};
   --font-heading: ${state.headingFont};
   --font-body: ${state.bodyFont};
   --tracking-ui: ${state.tracking};
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --primary: ${state.baseColorOklch};
-  --primary-foreground: oklch(0.205 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --ring: ${state.baseColorOklch};
 }`;
       }
 
       // CSS Hex format
       return `:root {
-  --theme-mode: ${state.mode};
   --primary: ${state.baseColor};
   --heat: ${state.baseColor};
   --accent: ${state.baseColor};
@@ -1112,18 +860,10 @@ const {
   --surface: ${isDark ? '#131316' : '#ffffff'};
   --border: ${isDark ? '#27272a' : '#e4e4e7'};
   --border-width: ${state.borderWidth};
+  --radius: ${state.radius};
   --font-heading: ${state.headingFont};
   --font-sans: ${state.bodyFont};
-  --radius: ${state.radius};
-  --radius-card: ${state.radius};
   --tracking-ui: ${state.tracking};
-}
-
-.dark {
-  --background: #09090b;
-  --surface: #131316;
-  --border: #27272a;
-  --primary: ${state.baseColor};
 }`;
     }
 
@@ -1146,10 +886,9 @@ const {
         root.style.setProperty('--bg', state.neutralBg);
         root.style.setProperty('--surface', '#ffffff');
       }
-      if (activeModeLabel) activeModeLabel.textContent = isDark ? 'Dark' : 'Light';
       if (activeNeutralName) activeNeutralName.textContent = state.neutralName;
 
-      // 2. Base Color & Heat variables
+      // 2. Base Color & Heat variables (Propagates to ALL components)
       root.style.setProperty('--heat', state.baseColor);
       root.style.setProperty('--primary', state.baseColor);
       root.style.setProperty('--accent', state.baseColor);
@@ -1161,46 +900,69 @@ const {
       if (activeColorDot) activeColorDot.style.backgroundColor = state.baseColor;
       if (activeColorName) activeColorName.textContent = state.baseColorName;
 
-      // 3. Fonts (SF Pro & Select options)
+      // Update specific components directly for instant reactivity
+      document.querySelectorAll<HTMLElement>('.logo-badge').forEach((el) => {
+        el.style.background = state.baseColor;
+      });
+      document.querySelectorAll<HTMLElement>('.demo-btn-primary').forEach((el) => {
+        el.style.background = state.baseColor;
+      });
+      document.querySelectorAll<HTMLElement>('.ai-prompt-submit-btn').forEach((el) => {
+        el.style.background = state.baseColor;
+      });
+      document.querySelectorAll<HTMLElement>('.ai-model-dot, .loader-progress-dot').forEach((el) => {
+        el.style.background = state.baseColor;
+      });
+      document.querySelectorAll<HTMLElement>('.anim-card-tag, .table-badge-pass, .badge-completed').forEach((el) => {
+        el.style.color = state.baseColor;
+        el.style.borderColor = `${state.baseColor}40`;
+        el.style.backgroundColor = `${state.baseColor}15`;
+      });
+      document.querySelectorAll<SVGElement>('.ai-spinner-head').forEach((el) => {
+        el.style.stroke = state.baseColor;
+        el.style.color = state.baseColor;
+      });
+      document.querySelectorAll<SVGElement>('[data-primary-fill]').forEach((el) => {
+        el.setAttribute('fill', state.baseColor);
+      });
+
+      // 3. Fonts (SF Pro & Dropdown options)
       root.style.setProperty('--font-heading', state.headingFont);
       document.querySelectorAll<HTMLElement>('h1, h2, h3, .section-title, .brand-name').forEach((el) => {
         el.style.fontFamily = state.headingFont;
       });
-      if (activeHeadingFontName) activeHeadingFontName.textContent = state.headingFontName;
 
       root.style.setProperty('--font-sans', state.bodyFont);
       document.body.style.fontFamily = state.bodyFont;
-      if (activeBodyFontName) activeBodyFontName.textContent = state.bodyFontName;
 
-      // 4. Border Radius (Custom & Presets)
+      // 4. Border Radius (Custom Value)
       root.style.setProperty('--radius', state.radius);
       root.style.setProperty('--radius-card', state.radius);
       root.style.setProperty('--radius-md', state.radius);
       document.querySelectorAll<HTMLElement>('.component-stage, .anim-list-item, .demo-card').forEach((el) => {
         el.style.borderRadius = state.radius;
       });
-      if (activeRadiusName) activeRadiusName.textContent = state.radiusLabel;
       if (customRadiusInput && customRadiusInput.value !== state.radius) {
         customRadiusInput.value = state.radius;
       }
 
-      // 5. Border Weight / Width
+      // 5. Border Weight / Width (Custom Value)
       root.style.setProperty('--border-width', state.borderWidth);
       document.querySelectorAll<HTMLElement>('.component-stage, .anim-list-item, .loader-thinking-pill').forEach((el) => {
         el.style.borderWidth = state.borderWidth;
       });
-      if (activeBorderName) activeBorderName.textContent = state.borderName;
+      if (customBorderInput && customBorderInput.value !== state.borderWidth) {
+        customBorderInput.value = state.borderWidth;
+      }
 
       // 6. Letter Spacing Tracking
       root.style.setProperty('--tracking-ui', state.tracking);
       document.body.style.letterSpacing = state.tracking;
-      if (activeTrackingName) activeTrackingName.textContent = state.trackingName;
 
       // 7. Card Stage Padding Density
       document.querySelectorAll<HTMLElement>('.component-stage').forEach((el) => {
         el.style.padding = state.padding;
       });
-      if (activePaddingName) activePaddingName.textContent = state.paddingName;
 
       // 8. Icon Library Stroke Width
       if (state.icon === 'minimal') {
@@ -1216,7 +978,6 @@ const {
           svg.setAttribute('stroke-width', '2.0');
         });
       }
-      if (activeIconName) activeIconName.textContent = state.iconName;
 
       // 9. Update Code Preview
       if (codeOutput) {
@@ -1280,66 +1041,41 @@ const {
 
     // Heading Font Select (Dropdown)
     headingFontSelect?.addEventListener('change', () => {
-      const val = headingFontSelect.value;
-      const text = headingFontSelect.options[headingFontSelect.selectedIndex].text.split(' (')[0];
-      state.headingFont = val;
-      state.headingFontName = text;
+      state.headingFont = headingFontSelect.value;
+      state.headingFontName = headingFontSelect.options[headingFontSelect.selectedIndex].text;
       applyState();
     });
 
     // Body Font Select (Dropdown)
     bodyFontSelect?.addEventListener('change', () => {
-      const val = bodyFontSelect.value;
-      const text = bodyFontSelect.options[bodyFontSelect.selectedIndex].text.split(' (')[0];
-      state.bodyFont = val;
-      state.bodyFontName = text;
+      state.bodyFont = bodyFontSelect.value;
+      state.bodyFontName = bodyFontSelect.options[bodyFontSelect.selectedIndex].text;
       applyState();
     });
 
     // Icon Select (Dropdown)
     iconSelect?.addEventListener('change', () => {
-      const val = iconSelect.value;
-      const text = iconSelect.options[iconSelect.selectedIndex].text.split(' (')[0];
-      state.icon = val;
-      state.iconName = text;
+      state.icon = iconSelect.value;
+      state.iconName = iconSelect.options[iconSelect.selectedIndex].text;
       applyState();
     });
 
-    // Radius Preset Buttons (NO "px" shown)
-    document.querySelectorAll<HTMLButtonElement>('#ai-radius-group [data-radius]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#ai-radius-group [data-radius]').forEach((b) => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        const r = btn.getAttribute('data-radius') || '14px';
-        state.radius = r;
-        state.radiusLabel = btn.getAttribute('data-label') || r;
-        applyState();
-      });
-    });
-
-    // Custom Radius Text Input (allows px, %, rem, raw numbers)
+    // Custom Radius Text Input (Only custom value kept)
     customRadiusInput?.addEventListener('input', () => {
       let val = customRadiusInput.value.trim();
       if (!val) return;
-      // If user types just a number (e.g. 16), interpret as px
-      if (/^\d+$/.test(val)) {
-        val = `${val}px`;
-      }
-      document.querySelectorAll('#ai-radius-group [data-radius]').forEach((b) => b.classList.remove('is-active'));
+      if (/^\d+$/.test(val)) val = `${val}px`;
       state.radius = val;
-      state.radiusLabel = val;
       applyState();
     });
 
-    // Card Border Width Buttons
-    document.querySelectorAll<HTMLButtonElement>('#ai-border-group [data-border]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#ai-border-group [data-border]').forEach((b) => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        state.borderWidth = btn.getAttribute('data-border') || '1px';
-        state.borderName = btn.getAttribute('data-name') || state.borderWidth;
-        applyState();
-      });
+    // Custom Border Width Text Input (Only custom value kept)
+    customBorderInput?.addEventListener('input', () => {
+      let val = customBorderInput.value.trim();
+      if (!val) return;
+      if (/^\d+$/.test(val)) val = `${val}px`;
+      state.borderWidth = val;
+      applyState();
     });
 
     // Tracking Buttons
@@ -1378,7 +1114,6 @@ const {
     resetBtn?.addEventListener('click', () => {
       state = { ...defaultState };
 
-      // Reset controls
       document.querySelectorAll('#ai-theme-mode-group [data-mode]').forEach((b) => {
         b.classList.toggle('is-active', b.getAttribute('data-mode') === 'light');
       });
@@ -1387,12 +1122,6 @@ const {
       });
       document.querySelectorAll('#ai-neutral-group [data-neutral]').forEach((b) => {
         b.classList.toggle('is-active', b.getAttribute('data-neutral') === 'white');
-      });
-      document.querySelectorAll('#ai-radius-group [data-radius]').forEach((b) => {
-        b.classList.toggle('is-active', b.getAttribute('data-label') === '0.75');
-      });
-      document.querySelectorAll('#ai-border-group [data-border]').forEach((b) => {
-        b.classList.toggle('is-active', b.getAttribute('data-border') === '1px');
       });
       document.querySelectorAll('#ai-tracking-group [data-tracking]').forEach((b) => {
         b.classList.toggle('is-active', b.getAttribute('data-tracking') === '-0.02em');
@@ -1405,14 +1134,15 @@ const {
       if (bodyFontSelect) bodyFontSelect.selectedIndex = 0;
       if (iconSelect) iconSelect.selectedIndex = 0;
       if (customRadiusInput) customRadiusInput.value = '14px';
+      if (customBorderInput) customBorderInput.value = '1px';
 
       applyState();
       if (typeof (window as any).aiToast === 'function') {
-        (window as any).aiToast('Theme reset to SF Pro & Michael Vereb defaults');
+        (window as any).aiToast('Theme reset to defaults');
       }
     });
 
-    // Copy Code Button — triggers window.aiToast per guidelines
+    // Copy Code Button
     copyCssBtn?.addEventListener('click', () => {
       const code = generateCssCode();
       navigator.clipboard.writeText(code).then(() => {

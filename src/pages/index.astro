@@ -188,7 +188,8 @@ const scorecardItems = [
       margin-top: 4px;
     }
 
-    .header-customize-btn {
+    .header-customize-btn,
+    .header-github-btn {
       display: inline-flex;
       align-items: center;
       gap: 7px;
@@ -201,12 +202,15 @@ const scorecardItems = [
       font-weight: 500;
       cursor: pointer;
       font-family: inherit;
+      text-decoration: none;
       transition: all 0.15s ease;
     }
 
-    .header-customize-btn:hover {
+    .header-customize-btn:hover,
+    .header-github-btn:hover {
       background: var(--bg-subtle, #f4f4f5);
       border-color: var(--border-strong, #d4d4d8);
+      color: var(--text, #09090b);
     }
 
     .brand-row {
@@ -220,13 +224,14 @@ const scorecardItems = [
     .logo-badge {
       width: 32px;
       height: 32px;
-      background: linear-gradient(180deg, #F18774 0%, #ED5F45 100%);
+      background: var(--btn-primary-bg, var(--primary, #ED5F45));
       border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #ffffff;
       box-shadow: none;
+      transition: background 0.2s ease;
     }
 
     .brand-name {
@@ -242,6 +247,135 @@ const scorecardItems = [
       max-width: 580px;
       line-height: 1.5;
       margin: 0;
+    }
+
+    /* ─── 1-Line Agent Install Banner (Cloudflare Style) ─── */
+    .agent-install-banner {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      max-width: 720px;
+      background: var(--bg-subtle, #fafafa);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      margin-top: 6px;
+    }
+
+    .agent-install-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .agent-install-tag {
+      font-family: var(--font-mono, monospace);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: color-mix(in srgb, var(--primary, #ED5F45) 12%, transparent);
+      color: var(--primary, #ED5F45);
+    }
+
+    .agent-install-desc {
+      font-size: 12.5px;
+      color: var(--text-muted, #52525b);
+      font-weight: 450;
+    }
+
+    .agent-install-cmd-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .agent-install-code {
+      font-family: var(--font-mono, monospace);
+      font-size: 12px;
+      color: var(--text, #09090b);
+      white-space: nowrap;
+      overflow-x: auto;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .agent-install-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: 6px;
+      background: var(--surface, #ffffff);
+      color: var(--text, #09090b);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .agent-install-copy-btn:hover {
+      background: var(--bg-subtle, #f4f4f5);
+      border-color: var(--border-strong, #d4d4d8);
+    }
+
+    /* ─── Components Quick Jump Index Bar ─── */
+    .components-quick-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 820px;
+      margin-top: 4px;
+    }
+
+    .quick-nav-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-subtle, #71717a);
+    }
+
+    .quick-nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .quick-nav-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted, #52525b);
+      text-decoration: none;
+      background: var(--bg-subtle, #fafafa);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: var(--radius-pill, 9999px);
+      transition: all 0.15s ease;
+    }
+
+    .quick-nav-link:hover {
+      color: var(--primary, #ED5F45);
+      border-color: var(--primary, #ED5F45);
+      background: var(--surface, #ffffff);
     }
 
     /* ─── Equal Component Showcase Section (Zero Eyebrow Tags) ─── */
@@ -388,7 +522,7 @@ const scorecardItems = [
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: var(--heat, #ED5F45);
+      background: var(--primary, #ED5F45);
       flex-shrink: 0;
       animation: ai-pulse 1.8s ease-in-out infinite;
     }
@@ -427,14 +561,14 @@ const scorecardItems = [
     }
 
     .demo-btn-primary {
-      background: linear-gradient(180deg, #F18774 0%, #ED5F45 100%);
+      background: var(--btn-primary-bg, var(--primary, #ED5F45));
       color: #ffffff;
-      border: 0.5px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid var(--btn-primary-border, transparent);
       box-shadow: none;
     }
 
     .demo-btn-primary:hover {
-      filter: brightness(1.05);
+      filter: brightness(1.06);
     }
 
     .demo-btn-outline {
@@ -519,9 +653,9 @@ const scorecardItems = [
     }
 
     .table-badge-pass {
-      background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
-      color: var(--heat, #ED5F45);
-      border: 1px solid rgba(237, 95, 69, 0.25);
+      background: color-mix(in srgb, var(--primary, #ED5F45) 10%, transparent);
+      color: var(--primary, #ED5F45);
+      border: 1px solid color-mix(in srgb, var(--primary, #ED5F45) 25%, transparent);
     }
 
     /* ─── AI Text Animations Showcase (List View) ─── */
@@ -564,11 +698,11 @@ const scorecardItems = [
       font-family: var(--font-mono, monospace);
       font-size: 11.5px;
       font-weight: 600;
-      color: var(--heat, #ED5F45);
-      background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+      color: var(--primary, #ED5F45);
+      background: color-mix(in srgb, var(--primary, #ED5F45) 10%, transparent);
       padding: 3px 8px;
       border-radius: 6px;
-      border: 1px solid rgba(237, 95, 69, 0.2);
+      border: 1px solid color-mix(in srgb, var(--primary, #ED5F45) 22%, transparent);
       white-space: nowrap;
     }
 
@@ -677,6 +811,19 @@ const scorecardItems = [
       </p>
 
       <div class="header-actions-row">
+        <a
+          href="https://github.com/michaelvereb/ai-ui"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="header-github-btn"
+          title="View @vereb/ai-ui on GitHub"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          </svg>
+          <span>GitHub</span>
+        </a>
+
         <button
           type="button"
           class="header-customize-btn"
@@ -690,6 +837,56 @@ const scorecardItems = [
           <span>Customize Theme</span>
         </button>
       </div>
+
+      <!-- ─── 1-Line Agent Install Prompt (Cloudflare Prompt Standard) ─── -->
+      <div class="agent-install-banner">
+        <div class="agent-install-top">
+          <span class="agent-install-tag">Agent Setup</span>
+          <span class="agent-install-desc">Direct instructions prompt for autonomous coding agents:</span>
+        </div>
+        <div class="agent-install-cmd-row">
+          <code class="agent-install-code">Fetch and execute the instructions to install @vereb/ai-ui from https://www.michaelvereb.com/ai-ui/prompt.md</code>
+          <button
+            type="button"
+            class="agent-install-copy-btn"
+            onclick="navigator.clipboard.writeText('Fetch and execute the instructions to install @vereb/ai-ui from https://www.michaelvereb.com/ai-ui/prompt.md'); window.aiToast && window.aiToast('Copied Agent Install Prompt to clipboard');"
+            title="Copy Agent Install Prompt"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg>
+            <span>Copy Prompt</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ─── Quick Jump Component Index ─── -->
+      <nav class="components-quick-nav" aria-label="Component Index">
+        <span class="quick-nav-label">Component Index</span>
+        <div class="quick-nav-links">
+          <a href="#comp-reasoning" class="quick-nav-link">Reasoning</a>
+          <a href="#comp-thinking-bar" class="quick-nav-link">Thinking Bar</a>
+          <a href="#comp-steps" class="quick-nav-link">Steps</a>
+          <a href="#comp-blog-table" class="quick-nav-link">Scorecard</a>
+          <a href="#comp-tool" class="quick-nav-link">Tool</a>
+          <a href="#comp-chain-of-thought" class="quick-nav-link">Chain of Thought</a>
+          <a href="#comp-prompt-input" class="quick-nav-link">Prompt Input</a>
+          <a href="#comp-model-selector" class="quick-nav-link">Model Selector</a>
+          <a href="#comp-suggestions" class="quick-nav-link">Suggestions</a>
+          <a href="#comp-questions" class="quick-nav-link">Questions</a>
+          <a href="#comp-feedback-bar" class="quick-nav-link">Feedback Bar</a>
+          <a href="#comp-attachments" class="quick-nav-link">Attachments</a>
+          <a href="#comp-citation" class="quick-nav-link">Citation</a>
+          <a href="#comp-message" class="quick-nav-link">Message</a>
+          <a href="#comp-thread" class="quick-nav-link">Thread</a>
+          <a href="#comp-loader" class="quick-nav-link">Loader</a>
+          <a href="#comp-text-shimmer" class="quick-nav-link">Text Shimmer</a>
+          <a href="#comp-image" class="quick-nav-link">Image</a>
+          <a href="#comp-toaster" class="quick-nav-link">Toaster</a>
+          <a href="#comp-text-animations" class="quick-nav-link">20 Text Animations</a>
+        </div>
+      </nav>
     </header>
 
     <!-- ─── 1. Reasoning ─── -->
@@ -1043,11 +1240,21 @@ const scorecardItems = [
       <div class="component-stage">
         <div class="component-float w-default">
           <Image
-            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23fafafa'/%3E%3Crect x='100' y='60' width='600' height='330' rx='16' fill='%23ffffff' stroke='%23e4e4e7' stroke-width='1.5'/%3E%3Ccircle cx='140' cy='100' r='8' fill='%23ED5F45'/%3E%3Crect x='165' y='94' width='160' height='12' rx='6' fill='%2309090b'/%3E%3Crect x='100' y='140' width='600' height='1' fill='%23e4e4e7'/%3E%3Crect x='140' y='180' width='380' height='14' rx='7' fill='%23a1a1aa'/%3E%3Crect x='140' y='210' width='260' height='14' rx='7' fill='%23e4e4e7'/%3E%3Crect x='140' y='250' width='440' height='14' rx='7' fill='%23e4e4e7'/%3E%3Crect x='140' y='300' width='140' height='36' rx='10' fill='%23ED5F45'/%3E%3C/svg%3E"
-            alt="Agent Diagnostic Architecture"
             caption="Figure 1.1 — Autonomous Edge & Knowledge Graph Inspection Pipeline"
             aspectRatio="16/9"
-          />
+          >
+            <svg width="100%" height="100%" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+              <rect width="800" height="450" fill="var(--bg-subtle, #fafafa)"/>
+              <rect x="100" y="60" width="600" height="330" rx="16" fill="var(--surface, #ffffff)" stroke="var(--border, #e4e4e7)" stroke-width="1.5"/>
+              <circle cx="140" cy="100" r="8" fill="var(--primary, #ED5F45)" data-primary-fill/>
+              <rect x="165" y="94" width="160" height="12" rx="6" fill="var(--text, #09090b)"/>
+              <rect x="100" y="140" width="600" height="1" fill="var(--border, #e4e4e7)"/>
+              <rect x="140" y="180" width="380" height="14" rx="7" fill="var(--text-subtle, #a1a1aa)"/>
+              <rect x="140" y="210" width="260" height="14" rx="7" fill="var(--border, #e4e4e7)"/>
+              <rect x="140" y="250" width="440" height="14" rx="7" fill="var(--border, #e4e4e7)"/>
+              <rect x="140" y="300" width="140" height="36" rx="10" fill="var(--primary, #ED5F45)" data-primary-fill/>
+            </svg>
+          </Image>
         </div>
       </div>
     </section>
