@@ -24,7 +24,6 @@ const {
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
     </svg>
     <span class="ai-trigger-label">Customize</span>
-    <span class="ai-trigger-dot" id="ai-active-color-dot" aria-hidden="true"></span>
   </button>
 </div>
 
@@ -311,31 +310,23 @@ const {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 9px 16px;
+    padding: 10px 18px;
     background: #09090b;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: var(--radius-pill, 9999px);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     font-family: inherit;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     transition: all 0.18s ease;
   }
 
   .ai-customizer-trigger:hover {
     transform: translateY(-1px);
     background: #18181b;
-  }
-
-  .ai-trigger-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--primary, var(--heat, #ED5F45));
-    display: inline-block;
-    transition: background-color 0.15s ease;
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   /* ─── Non-Blocking Transparent Backdrop (Zero Darken / Zero Blur) ─── */
