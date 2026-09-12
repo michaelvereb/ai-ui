@@ -1,0 +1,250 @@
+---
+interface ModelOption {
+  id: string;
+  name: string;
+  provider: string;
+  description?: string;
+  isDefault?: boolean;
+}
+
+interface Props {
+  models?: ModelOption[];
+  selectedId?: string;
+  class?: string;
+}
+
+const defaultModels: ModelOption[] = [
+  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', description: 'Deep reasoning, agent audit diagnostics, and code synthesis', isDefault: true },
+  { id: 'deepseek-r1', name: 'DeepSeek R1', provider: 'DeepSeek', description: 'Specialized mathematical and architectural verification' },
+  { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', description: 'Multimodal vision and structured JSON extraction' },
+  { id: 'gemini-2-flash', name: 'Gemini 2.0 Flash', provider: 'Google', description: 'High-throughput sub-second edge evaluation' },
+];
+
+const {
+  models = defaultModels,
+  selectedId = 'claude-3-5-sonnet',
+  class: className = '',
+} = Astro.props;
+
+const current = models.find((m) => m.id === selectedId) || models[0];
+---
+
+<div class={`ai-model-selector ${className}`} data-model-selector>
+  <button type="button" class="ai-model-trigger" data-model-trigger aria-expanded="false" aria-haspopup="listbox">
+    <div class="ai-model-current-info">
+      <!-- Primary Orange Dot (Strictly no green) -->
+      <span class="ai-model-dot"></span>
+      <span class="ai-model-selected-name" data-selected-name>{current.name}</span>
+    </div>
+    <svg class="ai-model-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  </button>
+
+  <div class="ai-model-menu" data-model-menu hidden role="listbox">
+    <div class="ai-model-menu-header">Select Model Engine</div>
+    {models.map((model) => (
+      <button
+        type="button"
+        class={`ai-model-opt ${model.id === current.id ? 'is-selected' : ''}`}
+        data-model-id={model.id}
+        data-model-name={model.name}
+        role="option"
+        aria-selected={model.id === current.id ? 'true' : 'false'}
+      >
+        <div class="ai-model-opt-main">
+          <span class="ai-model-opt-name">{model.name}</span>
+          <span class="ai-model-opt-provider">{model.provider}</span>
+        </div>
+        {model.description && <span class="ai-model-opt-desc">{model.description}</span>}
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ai-model-selector {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+
+  .ai-model-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--surface, #131316);
+    border: 1px solid var(--border, #232328);
+    border-radius: var(--radius-pill, 9999px);
+    color: var(--text, #fcfcfc);
+    font-size: var(--text-sm, 14px);
+    font-weight: var(--font-medium, 500);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 40px;
+  }
+
+  .ai-model-trigger:hover {
+    background: var(--surface-raised, #18181c);
+    border-color: var(--border-strong, #36363d);
+  }
+
+  .ai-model-current-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Primary Orange dot (Strictly no green) */
+  .ai-model-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--heat, #ED5F45);
+    box-shadow: 0 0 8px rgba(237, 95, 69, 0.45);
+  }
+
+  .ai-model-chevron {
+    color: var(--text-subtle, #71717a);
+    transition: transform 0.2s ease;
+  }
+
+  .ai-model-trigger[aria-expanded="true"] .ai-model-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ai-model-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 50;
+    width: 300px;
+    background: var(--surface-raised, #18181c);
+    border: 1px solid var(--border, #232328);
+    border-radius: var(--radius-lg, 18px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ai-model-menu[hidden] {
+    display: none;
+  }
+
+  .ai-model-menu-header {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-subtle, #71717a);
+    font-weight: var(--font-semibold, 600);
+    padding: 6px 12px 4px;
+  }
+
+  .ai-model-opt {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 12px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm, 10px);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+  }
+
+  .ai-model-opt:hover {
+    background: var(--surface-hover, #1e1e24);
+  }
+
+  .ai-model-opt.is-selected {
+    background: rgba(250, 93, 25, 0.12);
+  }
+
+  .ai-model-opt-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ai-model-opt-name {
+    font-size: var(--text-sm, 14px);
+    font-weight: var(--font-medium, 500);
+    color: var(--text, #fcfcfc);
+  }
+
+  .ai-model-opt.is-selected .ai-model-opt-name {
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-model-opt-provider {
+    font-size: 12px;
+    color: var(--text-subtle, #71717a);
+  }
+
+  .ai-model-opt-desc {
+    font-size: var(--text-xs, 13px);
+    color: var(--text-muted, #a1a1aa);
+    line-height: 1.35;
+  }
+</style>
+
+<script>
+  function initModelSelectors() {
+    document.querySelectorAll<HTMLElement>('[data-model-selector]').forEach((container) => {
+      const trigger = container.querySelector<HTMLButtonElement>('[data-model-trigger]');
+      const menu = container.querySelector<HTMLElement>('[data-model-menu]');
+      const selectedName = container.querySelector<HTMLElement>('[data-selected-name]');
+
+      if (!trigger || !menu) return;
+
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          trigger.setAttribute('aria-expanded', 'false');
+          menu.setAttribute('hidden', '');
+        } else {
+          trigger.setAttribute('aria-expanded', 'true');
+          menu.removeAttribute('hidden');
+        }
+      });
+
+      menu.querySelectorAll<HTMLButtonElement>('[data-model-id]').forEach((opt) => {
+        opt.addEventListener('click', () => {
+          menu.querySelectorAll('.ai-model-opt').forEach((o) => o.classList.remove('is-selected'));
+          opt.classList.add('is-selected');
+          const name = opt.getAttribute('data-model-name') || '';
+          if (selectedName) selectedName.textContent = name;
+          trigger.setAttribute('aria-expanded', 'false');
+          menu.setAttribute('hidden', '');
+
+          if (typeof (window as any).aiToast === 'function') {
+            (window as any).aiToast({
+              title: 'Model switched',
+              description: `Orchestrator set to ${name}`,
+              variant: 'default',
+            });
+          }
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!container.contains(e.target as Node)) {
+          trigger.setAttribute('aria-expanded', 'false');
+          menu.setAttribute('hidden', '');
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initModelSelectors);
+  } else {
+    initModelSelectors();
+  }
+</script>

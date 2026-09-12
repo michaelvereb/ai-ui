@@ -1,0 +1,271 @@
+---
+interface Props {
+  name: string;
+  status?: 'executing' | 'completed' | 'failed';
+  input?: Record<string, unknown> | string;
+  output?: Record<string, unknown> | string;
+  defaultOpen?: boolean;
+  class?: string;
+}
+
+const {
+  name,
+  status = 'completed',
+  input = {},
+  output = {},
+  defaultOpen = false,
+  class: className = '',
+} = Astro.props;
+
+const inputStr = typeof input === 'string' ? input : JSON.stringify(input, null, 2);
+const outputStr = typeof output === 'string' ? output : JSON.stringify(output, null, 2);
+---
+
+<div class={`ai-tool-call status-${status} ${className}`} data-tool>
+  <button type="button" class="ai-tool-header" data-toggle aria-expanded={defaultOpen ? 'true' : 'false'}>
+    <div class="ai-tool-title-group">
+      <div class="ai-tool-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+        </svg>
+      </div>
+      <span class="ai-tool-name">{name}</span>
+      <!-- Primary Orange Tag for execution (Strictly no green) -->
+      <span class={`ai-tool-badge badge-${status}`}>
+        {status === 'executing' && <span class="ai-badge-dot animate-pulse"></span>}
+        {status}
+      </span>
+    </div>
+
+    <svg class="ai-tool-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  </button>
+
+  <div class="ai-tool-content" data-content hidden={!defaultOpen}>
+    {inputStr && (
+      <div class="ai-tool-block">
+        <div class="ai-tool-block-header">
+          <span>Input Arguments</span>
+          <button type="button" class="ai-tool-copy" data-copy-code={inputStr}>Copy</button>
+        </div>
+        <pre class="ai-tool-code"><code>{inputStr}</code></pre>
+      </div>
+    )}
+
+    {outputStr && (
+      <div class="ai-tool-block">
+        <div class="ai-tool-block-header">
+          <span>Execution Output</span>
+          <button type="button" class="ai-tool-copy" data-copy-code={outputStr}>Copy</button>
+        </div>
+        <pre class="ai-tool-code"><code>{outputStr}</code></pre>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .ai-tool-call {
+    border-radius: 18px;
+    border: 1px solid var(--border, #e4e4e7);
+    background: #ffffff;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    transition: border-color 0.15s ease;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .ai-tool-call:hover {
+    border-color: var(--border-strong, #d4d4d8);
+  }
+
+  .ai-tool-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    gap: 14px;
+    min-height: 58px;
+  }
+
+  .ai-tool-header:hover {
+    background: var(--bg-subtle, #fafafa);
+  }
+
+  .ai-tool-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ai-tool-icon {
+    color: var(--heat, #ED5F45);
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-tool-name {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--font-mono, monospace);
+    color: var(--text, #09090b);
+    letter-spacing: -0.02em;
+  }
+
+  /* Tags: Primary orange for completed (Strictly no green) */
+  .ai-tool-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill, 9999px);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-completed {
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+    color: var(--heat, #ED5F45);
+    border: 1px solid rgba(237, 95, 69, 0.25);
+  }
+
+  .badge-executing {
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.12));
+    color: var(--heat, #ED5F45);
+    border: 1px solid var(--heat, #ED5F45);
+  }
+
+  .badge-failed {
+    background: var(--status-error-bg, rgba(239, 68, 68, 0.1));
+    color: var(--status-error, #ef4444);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+  }
+
+  .ai-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--heat, #ED5F45);
+  }
+
+  .ai-tool-chevron {
+    color: var(--text-subtle, #71717a);
+    transition: transform 0.2s ease;
+  }
+
+  .ai-tool-header[aria-expanded="true"] .ai-tool-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ai-tool-content {
+    border-top: 1px solid var(--border, #e4e4e7);
+    background: var(--bg-subtle, #fafafa);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .ai-tool-content[hidden] {
+    display: none;
+  }
+
+  .ai-tool-block {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border, #e4e4e7);
+  }
+
+  .ai-tool-block:last-child {
+    border-bottom: none;
+  }
+
+  .ai-tool-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12.5px;
+    color: var(--text-subtle, #71717a);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .ai-tool-copy {
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    color: var(--text-muted, #71717a);
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .ai-tool-copy:hover {
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+    border-color: var(--border-strong, #d4d4d8);
+  }
+
+  .ai-tool-code {
+    margin: 0;
+    font-family: var(--font-mono, monospace);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #27272a;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+</style>
+
+<script>
+  function initToolCalls() {
+    document.querySelectorAll<HTMLElement>('[data-tool]').forEach((el) => {
+      const toggle = el.querySelector<HTMLButtonElement>('[data-toggle]');
+      const content = el.querySelector<HTMLElement>('[data-content]');
+
+      if (!toggle || !content) return;
+
+      toggle.addEventListener('click', () => {
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+          toggle.setAttribute('aria-expanded', 'false');
+          content.setAttribute('hidden', '');
+        } else {
+          toggle.setAttribute('aria-expanded', 'true');
+          content.removeAttribute('hidden');
+        }
+      });
+
+      // Copy buttons: trigger toast without changing button text
+      el.querySelectorAll<HTMLButtonElement>('[data-copy-code]').forEach((copyBtn) => {
+        copyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const code = copyBtn.getAttribute('data-copy-code') || '';
+          navigator.clipboard.writeText(code).then(() => {
+            if (typeof (window as any).aiToast === 'function') {
+              (window as any).aiToast('Tool payload copied to clipboard');
+            }
+          });
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initToolCalls);
+  } else {
+    initToolCalls();
+  }
+</script>

@@ -1,0 +1,255 @@
+---
+interface Props {
+  placeholder?: string;
+  submitLabel?: string;
+  allowAttachments?: boolean;
+  selectedModel?: string;
+  class?: string;
+  id?: string;
+}
+
+const {
+  placeholder = 'Audit domain (e.g. www.boss-textile.com) or enter agent prompt...',
+  submitLabel = 'Run Audit',
+  allowAttachments = true,
+  selectedModel = 'Claude 3.5 Sonnet',
+  class: className = '',
+  id = 'ai-prompt-input',
+} = Astro.props;
+---
+
+<div class={`ai-prompt-input-container ${className}`} data-prompt-input id={id}>
+  <div class="ai-prompt-input-surface">
+    <textarea
+      class="ai-prompt-textarea"
+      placeholder={placeholder}
+      rows="2"
+      data-textarea
+      aria-label="Agent prompt input"
+    ></textarea>
+
+    <div class="ai-prompt-toolbar">
+      <div class="ai-prompt-left-actions">
+        {allowAttachments && (
+          <label class="ai-prompt-action-btn" title="Attach audit logs or schema file" aria-label="Attach file">
+            <input type="file" class="ai-hidden-file-input" data-file-input />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+            </svg>
+            <span class="ai-action-text">Attach</span>
+          </label>
+        )}
+
+        <div class="ai-prompt-model-badge" title="Active LLM orchestrator">
+          <span class="ai-model-dot"></span>
+          <span class="ai-model-name">{selectedModel}</span>
+        </div>
+      </div>
+
+      <div class="ai-prompt-right-actions">
+        <span class="ai-shortcut-hint">Enter ↵</span>
+        <button
+          type="button"
+          class="ai-prompt-submit-btn"
+          data-submit-btn
+          title={submitLabel}
+          aria-label={submitLabel}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ai-prompt-input-container {
+    width: 100%;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+
+  .ai-prompt-input-surface {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface, #131316);
+    border: 1px solid var(--border, #232328);
+    border-radius: var(--radius-xl, 22px);
+    padding: 16px 18px 12px;
+    box-shadow: var(--shadow-card, 0 2px 12px rgba(0, 0, 0, 0.35));
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ai-prompt-input-surface:focus-within {
+    border-color: var(--heat, #ED5F45);
+    box-shadow: 0 0 0 1px var(--heat, #ED5F45), 0 8px 28px rgba(237, 95, 69, 0.18);
+  }
+
+  .ai-prompt-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text, #fcfcfc);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    letter-spacing: var(--tracking-ui, -0.02em);
+    line-height: 1.5;
+    resize: none;
+    min-height: 54px;
+    max-height: 220px;
+    margin-bottom: 10px;
+  }
+
+  .ai-prompt-textarea::placeholder {
+    color: var(--text-subtle, #71717a);
+  }
+
+  .ai-prompt-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-muted, #1c1c20);
+  }
+
+  .ai-prompt-left-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ai-prompt-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--border, #232328);
+    border-radius: var(--radius-md, 14px);
+    color: var(--text-muted, #a1a1aa);
+    font-size: 13px;
+    font-weight: var(--font-medium, 500);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .ai-prompt-action-btn:hover {
+    background: var(--surface-raised, #18181c);
+    color: var(--text, #fcfcfc);
+    border-color: var(--border-strong, #36363d);
+  }
+
+  .ai-hidden-file-input {
+    display: none;
+  }
+
+  .ai-prompt-model-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    background: var(--surface-raised, #18181c);
+    border: 1px solid var(--border-muted, #1c1c20);
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 13px;
+    color: var(--text-muted, #a1a1aa);
+    font-weight: var(--font-medium, 500);
+  }
+
+  /* Primary orange dot (Strictly no green) */
+  .ai-model-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--heat, #ED5F45);
+  }
+
+  .ai-prompt-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ai-shortcut-hint {
+    font-family: var(--font-mono, monospace);
+    font-size: 12px;
+    color: var(--text-dim, #52525b);
+  }
+
+  .ai-prompt-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #F18774 0%, #ED5F45 100%);
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    cursor: pointer;
+    transition: transform 0.1s ease, filter 0.15s ease;
+    box-shadow: 0 0 0 1px #F18774, 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .ai-prompt-submit-btn:hover {
+    filter: brightness(1.08);
+  }
+
+  .ai-prompt-submit-btn:active {
+    transform: scale(0.96);
+  }
+</style>
+
+<script>
+  function initPromptInputs() {
+    document.querySelectorAll<HTMLElement>('[data-prompt-input]').forEach((container) => {
+      const textarea = container.querySelector<HTMLTextAreaElement>('[data-textarea]');
+      const submitBtn = container.querySelector<HTMLButtonElement>('[data-submit-btn]');
+
+      if (!textarea) return;
+
+      const resize = () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${Math.min(220, textarea.scrollHeight)}px`;
+      };
+      textarea.addEventListener('input', resize);
+
+      textarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleSubmit();
+        }
+      });
+
+      submitBtn?.addEventListener('click', handleSubmit);
+
+      function handleSubmit() {
+        const val = textarea?.value.trim();
+        if (!val) return;
+        if (typeof (window as any).aiToast === 'function') {
+          (window as any).aiToast({
+            title: 'Diagnostic initiated',
+            description: `Analyzing: ${val.substring(0, 48)}${val.length > 48 ? '...' : ''}`,
+            variant: 'info',
+          });
+        }
+        if (textarea) {
+          textarea.value = '';
+          resize();
+        }
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPromptInputs);
+  } else {
+    initPromptInputs();
+  }
+</script>

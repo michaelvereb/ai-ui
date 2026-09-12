@@ -1,0 +1,1134 @@
+---
+import '../styles/theme.css';
+import Reasoning from '../components/ai-ui/Reasoning.astro';
+import ThinkingBar from '../components/ai-ui/ThinkingBar.astro';
+import Steps, { type StepItem } from '../components/ai-ui/Steps.astro';
+import Tool from '../components/ai-ui/Tool.astro';
+import ChainOfThought from '../components/ai-ui/ChainOfThought.astro';
+import PromptInput from '../components/ai-ui/PromptInput.astro';
+import ModelSelector from '../components/ai-ui/ModelSelector.astro';
+import Suggestions from '../components/ai-ui/Suggestions.astro';
+import Questions from '../components/ai-ui/Questions.astro';
+import FeedbackBar from '../components/ai-ui/FeedbackBar.astro';
+import Attachments from '../components/ai-ui/Attachments.astro';
+import Citation from '../components/ai-ui/Citation.astro';
+import Message from '../components/ai-ui/Message.astro';
+import Thread from '../components/ai-ui/Thread.astro';
+import Loader from '../components/ai-ui/Loader.astro';
+import TextShimmer from '../components/ai-ui/TextShimmer.astro';
+import Image from '../components/ai-ui/Image.astro';
+import Toaster from '../components/ai-ui/Toaster.astro';
+import ThemeCustomizer from '../components/ai-ui/ThemeCustomizer.astro';
+import AnimateText from '../components/animations/AnimateText.astro';
+
+// 1. Audit Steps Data (Clean text without ugly separators)
+const auditSteps: StepItem[] = [
+  {
+    id: 'step-1',
+    title: 'HTTP/2 & Zero-Trust Edge Security',
+    status: 'completed',
+    duration: '124ms',
+    summary: 'Status 200 OK · TLS 1.3 Strict · HSTS Verified',
+    details: 'HTTP/2 200 OK\nstrict-transport-security: max-age=31536000; includeSubDomains\nx-content-type-options: nosniff\ncf-cache-status: HIT (edge TTFB: 124ms)',
+  },
+  {
+    id: 'step-2',
+    title: 'RFC 8259 Structured Data Escaping',
+    status: 'completed',
+    duration: '310ms',
+    summary: '10 schemas parsed · Zero double-escaped entities',
+    details: 'Schemas parsed: WebSite, Organization, Product, FAQPage\nRFC 8259 Check: PASSED (clean Unicode hex \\u0026, \\u2714)',
+  },
+  {
+    id: 'step-3',
+    title: 'WebMCP Autonomous Agent Readiness',
+    status: 'running',
+    duration: '280ms',
+    summary: 'navigator.modelContext.registerTool() verified',
+    details: 'Tool registered: "search_catalog" (readOnlyHint: true)\nEdge bridge: Active at /.webmcp/bridge.js',
+  },
+  {
+    id: 'step-4',
+    title: '30-Point Remediation Report',
+    status: 'pending',
+    summary: 'Awaiting synthesis of diagnostic scores',
+  },
+];
+
+// 2. Tool Execution Data
+const toolInput = {
+  domain: 'www.boss-textile.com',
+  pillars: ['Edge Security', 'RFC 8259 Schema', 'WebMCP'],
+};
+
+const toolOutput = {
+  status: 'COMPLETE',
+  score: 88,
+  passingChecks: 26,
+  issues: 2,
+};
+
+// 3. Chain of Thought Nodes
+const thoughtNodes = [
+  { title: 'Evaluate Edge DNS & TLS Handshake', detail: 'HSTS max-age=31536000 verified', status: 'completed' as const },
+  { title: 'Parse JSON-LD for HTML Entities', detail: 'Strict single-pass RFC 8259 validation passed', status: 'completed' as const },
+  { title: 'Probe WebMCP Bridge', detail: 'Inspecting in-browser registered tool schemas', status: 'active' as const },
+  { title: 'Synthesize Site-Ready Checklist', detail: 'Generate markdown remediation report', status: 'pending' as const },
+];
+
+// 4. Suggestions Data
+const suggestionsList = [
+  { label: 'Audit www.boss-textile.com', description: 'Run full 30-point diagnostic crawl' },
+  { label: 'Verify RFC 8259 JSON-LD', description: 'Scan for illegal double-escaped entities' },
+  { label: 'Probe WebMCP Bridge', description: 'Inspect in-browser tool registration' },
+];
+
+// 5. Questions Options
+const questionOptions = [
+  { id: 'opt-1', label: 'Full 30-Point Diagnostic', description: 'Comprehensive crawl across Security, SEO, Schema & Agents' },
+  { id: 'opt-2', label: 'Fast Edge Probe (<1s)', description: 'Headers, SSL/TLS, TTFB latency, and DNS validation only' },
+  { id: 'opt-3', label: 'Autonomous Agent Readiness', description: 'WebMCP, llms.txt, and AI crawler accessibility checks' },
+];
+
+// 6. Attachments Data
+const sampleFiles = [
+  { id: 'file-1', name: 'audit-telemetry.json', size: '24 KB', type: 'JSON' },
+  { id: 'file-2', name: 'remediation-report.pdf', size: '1.2 MB', type: 'PDF' },
+  { id: 'file-3', name: 'schema-graph.jsonld', size: '8.4 KB', type: 'JSON-LD' },
+];
+
+// 7. AI Text Animations Catalog (All 20 Effects from animate-text)
+const sampleText = 'Autonomous agent auditing edge security and schemas';
+
+const textAnimationDemos = [
+  { id: 'anim-soft-blur-in', effect: 'soft-blur-in' as const, label: 'Soft Blur In', sample: sampleText },
+  { id: 'anim-typewriter', effect: 'typewriter' as const, label: 'Typewriter', sample: sampleText },
+  { id: 'anim-per-word-crossfade', effect: 'per-word-crossfade' as const, label: 'Per-Word Crossfade', sample: sampleText },
+  { id: 'anim-mask-reveal-up', effect: 'mask-reveal-up' as const, label: 'Mask Reveal Up', sample: sampleText },
+  { id: 'anim-spring-scale-in', effect: 'spring-scale-in' as const, label: 'Spring Scale In', sample: sampleText },
+  { id: 'anim-line-by-line-slide', effect: 'line-by-line-slide' as const, label: 'Line Slide Reveal', sample: sampleText },
+  { id: 'anim-shimmer-sweep', effect: 'shimmer-sweep' as const, label: 'Shimmer Sweep', sample: sampleText },
+  { id: 'anim-shared-axis-y', effect: 'shared-axis-y' as const, label: 'Shared Axis Y', sample: sampleText },
+  { id: 'anim-focus-blur-resolve', effect: 'focus-blur-resolve' as const, label: 'Focus Blur Resolve', sample: sampleText },
+  { id: 'anim-kinetic-center-build', effect: 'kinetic-center-build' as const, label: 'Kinetic Center Build', sample: sampleText },
+  { id: 'anim-bottom-up-letters', effect: 'bottom-up-letters' as const, label: 'Bottom-Up Letters', sample: sampleText },
+  { id: 'anim-top-down-letters', effect: 'top-down-letters' as const, label: 'Top-Down Letters', sample: sampleText },
+  { id: 'anim-micro-scale-fade', effect: 'micro-scale-fade' as const, label: 'Micro Scale Fade', sample: sampleText },
+  { id: 'anim-shared-axis-z', effect: 'shared-axis-z' as const, label: 'Shared Axis Z', sample: sampleText },
+  { id: 'anim-short-slide-right', effect: 'short-slide-right' as const, label: 'Short Slide Right', sample: sampleText },
+  { id: 'anim-short-slide-down', effect: 'short-slide-down' as const, label: 'Short Slide Down', sample: sampleText },
+  { id: 'anim-blur-out-up', effect: 'blur-out-up' as const, label: 'Blur Out Up', sample: sampleText },
+  { id: 'anim-scale-down-fade', effect: 'scale-down-fade' as const, label: 'Scale Down Settle', sample: sampleText },
+  { id: 'anim-per-character-rise', effect: 'per-character-rise' as const, label: 'Character Rise', sample: sampleText },
+];
+
+// 8. Michael Vereb /blog Rich Text Table Data (30-Point Site-Ready Specification Scorecard)
+const scorecardItems = [
+  { category: 'Edge Security', check: 'TLS 1.3 & Strict HSTS', spec: 'max-age=31536000; includeSubDomains', result: 'Verified (124ms TTFB)' },
+  { category: 'Structured Data', check: 'RFC 8259 Single-Pass Escaping', spec: 'Zero double-escaped &amp; entities; clean Unicode hex', result: 'Passed (10 Schemas)' },
+  { category: 'Agent Readiness', check: 'WebMCP Bridge & Tool Manifest', spec: 'navigator.modelContext + /.webmcp/bridge.js', result: 'Active (readOnlyHint)' },
+  { category: 'AI Discovery', check: 'Dual llms.txt Discovery', spec: '<head> alternate link + visible footer anchor', result: '200 OK (Clean Index)' },
+  { category: 'DNS Hygiene', check: 'Canonical WWW Redirection', spec: 'Strict 301 from apex to www subdomain', result: 'Enforced (Zero Loops)' },
+  { category: 'Analytics', check: 'Cloudflare Zaraz Edge Execution', spec: 'Zero client-side GTM or gtag.js script overhead', result: 'Active (0ms CPU)' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ai-ui — Agent Audit Component Library</title>
+  <meta name="description" content="Minimal, spacious, flat Astro components for autonomous AI agents, streaming traces, and diagnostics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── Page Canvas (Dynamic Light/Dark Theme) ─── */
+    body {
+      background-color: var(--bg, #ffffff);
+      color: var(--text, #09090b);
+      font-family: var(--font-sans);
+      letter-spacing: var(--tracking-ui, -0.02em);
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      overflow-x: clip;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* ─── Master Showcase Layout (Spacious, No Heavy Dropshadows) ─── */
+    .showcase-layout {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 60px 24px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+      box-sizing: border-box;
+    }
+
+    /* ─── Page Header (Clean, Minimal, Center Aligned) ─── */
+    .page-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border, #e4e4e7);
+    }
+
+    .header-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .header-customize-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      background: var(--surface, #ffffff);
+      color: var(--text, #09090b);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: var(--radius-pill, 9999px);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .header-customize-btn:hover {
+      background: var(--bg-subtle, #f4f4f5);
+      border-color: var(--border-strong, #d4d4d8);
+    }
+
+    .brand-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-badge {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(180deg, #F18774 0%, #ED5F45 100%);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: none;
+    }
+
+    .brand-name {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      color: var(--text, #09090b);
+    }
+
+    .page-desc {
+      font-size: 15px;
+      color: var(--text-muted, #52525b);
+      max-width: 580px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* ─── Equal Component Showcase Section (Zero Eyebrow Tags) ─── */
+    .component-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      scroll-margin-top: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 18px;
+      gap: 6px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--text, #09090b);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-muted, #52525b);
+      line-height: 1.4;
+      max-width: 540px;
+      margin: 0;
+    }
+
+    /* ─── Full-Width Equal Stage (ZERO Harsh Drop Shadows) ─── */
+    .component-stage {
+      width: 100%;
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: var(--radius-card, 20px);
+      box-shadow: none;
+      padding: 44px 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: 180px;
+      transition: background-color 0.2s ease, border-color 0.2s ease, border-radius 0.2s ease;
+    }
+
+    .component-float {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Dimension Constraints per Component Type */
+    .w-narrow  { max-width: 360px; }
+    .w-default { max-width: 540px; }
+    .w-medium  { max-width: 660px; }
+    .w-wide    { max-width: 820px; }
+
+    /* Helper Flex Layout for Mini Components */
+    .mini-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    /* ─── Loader States (Styled like Agent Thinking Bar) ─── */
+    .loader-states-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .loader-thinking-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 20px;
+      background: var(--surface, #ffffff);
+      color: var(--text, #09090b);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: var(--radius-pill, 9999px);
+      box-shadow: none;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .loader-thinking-pill:hover {
+      border-color: var(--border-strong, #d4d4d8);
+    }
+
+    .loader-pill-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex-grow: 1;
+    }
+
+    .loader-pill-brand {
+      font-size: 13px;
+      font-weight: 600;
+      color: #09090b;
+      text-align: right;
+      flex-shrink: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .loader-thinking-pill.is-progress-pill {
+      border-radius: 18px;
+      padding: 16px 20px;
+    }
+
+    .loader-progress-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .loader-progress-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .loader-progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--heat, #ED5F45);
+      flex-shrink: 0;
+      animation: ai-pulse 1.8s ease-in-out infinite;
+    }
+
+    .loader-progress-full {
+      width: 100%;
+    }
+
+    .loader-progress-full :global(.ai-loader),
+    .loader-progress-full :global(.ai-loader-progress-wrapper) {
+      width: 100%;
+      min-width: 100%;
+    }
+
+    /* Interactive Demo Controls for Toaster */
+    .demo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .demo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-pill, 9999px);
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: -0.02em;
+      transition: all 0.15s ease;
+      line-height: 1;
+    }
+
+    .demo-btn-primary {
+      background: linear-gradient(180deg, #F18774 0%, #ED5F45 100%);
+      color: #ffffff;
+      border: 0.5px solid rgba(255, 255, 255, 0.3);
+      box-shadow: none;
+    }
+
+    .demo-btn-primary:hover {
+      filter: brightness(1.05);
+    }
+
+    .demo-btn-outline {
+      background: var(--surface, #ffffff);
+      color: var(--text, #09090b);
+      border: 1px solid var(--border, #e4e4e7);
+      box-shadow: none;
+    }
+
+    /* ─── Michael Vereb /blog Rich Text Table Styles ─── */
+    .geo-table-outer-wrapper {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .geo-table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .geo-table-container table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 0.75px solid var(--border, #e4e4e7);
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      background: var(--surface, #ffffff);
+      color: var(--text, #09090b);
+      overflow: hidden;
+    }
+
+    .geo-table-container th,
+    .geo-table-container td {
+      border: 0.75px solid var(--border, #e4e4e7);
+      padding: 14px 18px;
+      text-align: left;
+      color: var(--text-muted, #52525b);
+      vertical-align: middle;
+    }
+
+    .geo-table-container th {
+      background-color: var(--bg-subtle, #fafafa);
+      color: var(--text, #09090b);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+    }
+
+    .geo-table-container th:first-child {
+      border-top-left-radius: 12px;
+    }
+
+    .geo-table-container th:last-child {
+      border-top-right-radius: 12px;
+    }
+
+    .geo-table-container tr:last-child td:first-child {
+      border-bottom-left-radius: 12px;
+    }
+
+    .geo-table-container tr:last-child td:last-child {
+      border-bottom-right-radius: 12px;
+    }
+
+    .geo-table-container td:first-child {
+      font-weight: 600;
+      color: var(--text, #09090b);
+    }
+
+    .table-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill, 9999px);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .table-badge-pass {
+      background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+      color: var(--heat, #ED5F45);
+      border: 1px solid rgba(237, 95, 69, 0.25);
+    }
+
+    /* ─── AI Text Animations Showcase (List View) ─── */
+    .anim-showcase-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .anim-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 18px;
+      background: var(--surface, #ffffff);
+      color: var(--text, #09090b);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: 12px;
+      transition: all 0.15s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .anim-list-item:hover {
+      border-color: var(--border-strong, #d4d4d8);
+      background: var(--bg-subtle, #fafafa);
+    }
+
+    .anim-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      width: 165px;
+    }
+
+    .anim-card-tag {
+      font-family: var(--font-mono, monospace);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--heat, #ED5F45);
+      background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(237, 95, 69, 0.2);
+      white-space: nowrap;
+    }
+
+    .anim-preview-area {
+      flex-grow: 1;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text, #09090b);
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+
+    .anim-replay-btn {
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #e4e4e7);
+      color: var(--text-muted, #71717a);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+
+    .anim-replay-btn:hover {
+      color: var(--text, #09090b);
+      background: var(--bg-subtle, #f4f4f5);
+      border-color: var(--border-strong, #d4d4d8);
+    }
+
+    @media (max-width: 680px) {
+      .geo-table-container table,
+      .geo-table-container tbody,
+      .geo-table-container th,
+      .geo-table-container td,
+      .geo-table-container tr {
+        display: block;
+        width: 100%;
+      }
+
+      .geo-table-container thead {
+        display: none;
+      }
+
+      .geo-table-container tr {
+        margin-bottom: 14px;
+        border: 0.75px solid var(--border, #e4e4e7);
+        border-radius: 12px;
+        padding: 14px;
+        background: var(--surface, #ffffff);
+      }
+
+      .geo-table-container td {
+        border: none;
+        position: relative;
+        padding: 8px 0;
+        text-align: left;
+        font-size: 13.5px;
+      }
+
+      .geo-table-container td:before {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+        font-size: 11.5px;
+        color: var(--text-subtle, #71717a);
+        content: attr(data-label);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .showcase-layout {
+        padding: 40px 16px 80px;
+        gap: 52px;
+      }
+
+      .component-stage {
+        padding: 28px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="showcase-layout">
+
+    <!-- ─── Minimal Page Header ─── -->
+    <header class="page-header">
+      <div class="brand-row">
+        <div class="logo-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+          </svg>
+        </div>
+        <span class="brand-name">ai-ui</span>
+      </div>
+
+      <p class="page-desc">
+        Lightweight, accessible Astro components for AI reasoning traces, streaming state, and autonomous audit interfaces.
+      </p>
+
+      <div class="header-actions-row">
+        <button
+          type="button"
+          class="header-customize-btn"
+          onclick="document.getElementById('ai-theme-trigger')?.click()"
+          title="Open Live Theme & Style Customizer"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span>Customize Theme</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ─── 1. Reasoning ─── -->
+    <section class="component-section" id="comp-reasoning">
+      <div class="section-header">
+        <h2 class="section-title">Reasoning</h2>
+        <p class="section-desc">Collapsible thought stream with sequential checkmark progression down each verification step.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <Reasoning defaultOpen={true} />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 2. Thinking Bar ─── -->
+    <section class="component-section" id="comp-thinking-bar">
+      <div class="section-header">
+        <h2 class="section-title">Thinking Bar</h2>
+        <p class="section-desc">Autonomous agent thinking state with rotating diagnostic phase descriptions and clean shimmer text.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <ThinkingBar
+            autoCycle={true}
+            isStreaming={true}
+            cycleIntervalMs={3000}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 3. Steps ─── -->
+    <section class="component-section" id="comp-steps">
+      <div class="section-header">
+        <h2 class="section-title">Steps</h2>
+        <p class="section-desc">Diagnostic pipeline with copy button on each card and drawer, white cards, and grey code preview.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-wide">
+          <Steps steps={auditSteps} title="Agent Diagnostic Pipeline" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 4. Audit Remediation Scorecard Table (/blog Rich Text Design Style) ─── -->
+    <section class="component-section" id="comp-blog-table">
+      <div class="section-header">
+        <h2 class="section-title">Audit Remediation Scorecard</h2>
+        <p class="section-desc">Michael Vereb /blog rich text table layout with hairline borders, generous cell padding, and responsive mobile conversion.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-wide">
+          <div class="geo-table-outer-wrapper">
+            <div class="geo-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 22%;">Audit Pillar</th>
+                    <th style="width: 28%;">Checkpoint</th>
+                    <th style="width: 32%;">Technical Specification</th>
+                    <th style="width: 18%;">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scorecardItems.map((item) => (
+                    <tr>
+                      <td data-label="Audit Pillar">{item.category}</td>
+                      <td data-label="Checkpoint">{item.check}</td>
+                      <td data-label="Specification" style="font-family: var(--font-mono, monospace); font-size: 12.5px;">
+                        {item.spec}
+                      </td>
+                      <td data-label="Status">
+                        <span class="table-badge table-badge-pass">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                          <span>{item.result}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 5. Tool Execution ─── -->
+    <section class="component-section" id="comp-tool">
+      <div class="section-header">
+        <h2 class="section-title">Tool Execution</h2>
+        <p class="section-desc">Structured tool call display with expandable JSON input/output payload inspection and copy action.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <Tool
+            name="probe_webmcp_bridge"
+            status="completed"
+            defaultOpen={true}
+            input={toolInput}
+            output={toolOutput}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 5. Chain of Thought ─── -->
+    <section class="component-section" id="comp-chain-of-thought">
+      <div class="section-header">
+        <h2 class="section-title">Chain of Thought</h2>
+        <p class="section-desc">Visual reasoning graph with seamless connected lines spanning continuously from node to node.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <ChainOfThought nodes={thoughtNodes} />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 6. Prompt Input ─── -->
+    <section class="component-section" id="comp-prompt-input">
+      <div class="section-header">
+        <h2 class="section-title">Prompt Input</h2>
+        <p class="section-desc">Generous prompt container with model indicator badge, attachment actions, and primary submit button.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-wide">
+          <PromptInput
+            placeholder="Audit domain (e.g. www.boss-textile.com) or enter agent prompt..."
+            submitLabel="Run Diagnostic"
+            selectedModel="Claude 3.5 Sonnet"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 7. Model Selector ─── -->
+    <section class="component-section" id="comp-model-selector">
+      <div class="section-header">
+        <h2 class="section-title">Model Selector</h2>
+        <p class="section-desc">Dropdown menu for selecting target orchestrator model with provider badges and descriptions.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-narrow">
+          <ModelSelector selectedId="claude-3-5-sonnet" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 8. Suggestions ─── -->
+    <section class="component-section" id="comp-suggestions">
+      <div class="section-header">
+        <h2 class="section-title">Suggestions</h2>
+        <p class="section-desc">One-click recommendation chips for standard audits and verification routines.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-wide">
+          <Suggestions suggestions={suggestionsList} />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 9. Questions ─── -->
+    <section class="component-section" id="comp-questions">
+      <div class="section-header">
+        <h2 class="section-title">Questions</h2>
+        <p class="section-desc">Interactive clarification options card with selectable items and radio controls.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <Questions
+            question="Select diagnostic crawl depth:"
+            description="Choose the evaluation intensity for this audit run."
+            options={questionOptions}
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 10. Feedback Bar ─── -->
+    <section class="component-section" id="comp-feedback-bar">
+      <div class="section-header">
+        <h2 class="section-title">Feedback Bar</h2>
+        <p class="section-desc">Inline response rating bar with thumbs up, thumbs down, copy to clipboard, and report triggers.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-narrow">
+          <FeedbackBar />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 11. Attachments ─── -->
+    <section class="component-section" id="comp-attachments">
+      <div class="section-header">
+        <h2 class="section-title">Attachments</h2>
+        <p class="section-desc">Uploaded log and schema chips with file icon, byte size readout, and dismiss actions.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <Attachments files={sampleFiles} />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 12. Citation ─── -->
+    <section class="component-section" id="comp-citation">
+      <div class="section-header">
+        <h2 class="section-title">Citation</h2>
+        <p class="section-desc">Numbered reference badge featuring live domain favicons and external link indicators.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-medium">
+          <div class="mini-grid">
+            <Citation
+              index={1}
+              title="RFC 8259 Standard"
+              url="https://www.rfc-editor.org/rfc/rfc8259"
+              domain="rfc-editor.org"
+            />
+            <Citation
+              index={2}
+              title="Cloudflare WebMCP Specification"
+              url="https://www.cloudflare.com/learning/bots"
+              domain="cloudflare.com"
+            />
+            <Citation
+              index={3}
+              title="Google AI Overview Guidelines"
+              url="https://developers.google.com/search/docs"
+              domain="google.com"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 13. Message ─── -->
+    <section class="component-section" id="comp-message">
+      <div class="section-header">
+        <h2 class="section-title">Message</h2>
+        <p class="section-desc">Message bubble container with author metadata, avatar fallback, and copy actions.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-medium">
+          <div style="display: flex; flex-direction: column; gap: 16px; width: 100%;">
+            <Message role="user" authorName="Michael Vereb" timestamp="12:40 PM">
+              Audit the edge security and schema escaping for <strong>www.boss-textile.com</strong>.
+            </Message>
+            <Message role="assistant" authorName="Agent Audit" timestamp="12:40 PM">
+              Running 30-point evaluation. TLS 1.3 is strict, edge TTFB is 124ms, and RFC 8259 compliance verified.
+            </Message>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 14. Thread ─── -->
+    <section class="component-section" id="comp-thread">
+      <div class="section-header">
+        <h2 class="section-title">Thread</h2>
+        <p class="section-desc">Full conversation wrapper grouping related user and assistant messages with an active session indicator.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-medium">
+          <Thread title="Autonomous Diagnostic Run" subtitle="Session ID: audit-8821">
+            <Message role="assistant" authorName="Agent Audit">
+              Diagnostics completed with 88% overall health index across 26 passing checks.
+            </Message>
+          </Thread>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 15. Loader ─── -->
+    <section class="component-section" id="comp-loader">
+      <div class="section-header">
+        <h2 class="section-title">Loader</h2>
+        <p class="section-desc">Live agent audit execution states designed identically to the agent thinking bar with pill containers and live indicators.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-medium">
+          <div class="loader-states-stack">
+            <div class="loader-thinking-pill">
+              <div class="loader-pill-left">
+                <Loader variant="spinner" size="md" />
+                <span class="loader-pill-text">Extracting DOM &amp; schema graphs (124ms TTFB)...</span>
+              </div>
+              <span class="loader-pill-brand">DOM Scan</span>
+            </div>
+
+            <div class="loader-thinking-pill">
+              <div class="loader-pill-left">
+                <Loader variant="dots" size="md" />
+                <span class="loader-pill-text">Evaluating WebMCP bridge readiness at /.webmcp/bridge.js...</span>
+              </div>
+              <span class="loader-pill-brand">WebMCP</span>
+            </div>
+
+            <div class="loader-thinking-pill">
+              <div class="loader-pill-left">
+                <Loader variant="pulse" size="md" />
+                <span class="loader-pill-text">Verifying RFC 8259 single-pass Unicode JSON-LD escaping...</span>
+              </div>
+              <span class="loader-pill-brand">RFC 8259</span>
+            </div>
+
+            <div class="loader-thinking-pill is-progress-pill">
+              <div class="loader-progress-inner">
+                <div class="loader-progress-top">
+                  <div class="loader-pill-left">
+                    <div class="loader-progress-dot"></div>
+                    <span class="loader-pill-text">Synthesizing 30-point Site-Ready remediation report...</span>
+                  </div>
+                  <span class="loader-pill-brand">78% Complete</span>
+                </div>
+                <div class="loader-progress-full">
+                  <Loader variant="progress" progress={78} label="" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 16. Text Shimmer ─── -->
+    <section class="component-section" id="comp-text-shimmer">
+      <div class="section-header">
+        <h2 class="section-title">Text Shimmer</h2>
+        <p class="section-desc">Smooth, high-contrast animated gradient sweep across text to signal active LLM reasoning.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default" style="text-align: center;">
+          <p style="font-size: 16px; font-weight: 500; margin: 0;">
+            <TextShimmer text="Autonomous agent synthesizing 30-point remediation report..." duration="3.8s" />
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 17. Image ─── -->
+    <section class="component-section" id="comp-image">
+      <div class="section-header">
+        <h2 class="section-title">Image</h2>
+        <p class="section-desc">Clean figure container with aspect ratio framing, hairline border, and caption metadata.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <Image
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'%3E%3Crect width='800' height='450' fill='%23fafafa'/%3E%3Crect x='100' y='60' width='600' height='330' rx='16' fill='%23ffffff' stroke='%23e4e4e7' stroke-width='1.5'/%3E%3Ccircle cx='140' cy='100' r='8' fill='%23ED5F45'/%3E%3Crect x='165' y='94' width='160' height='12' rx='6' fill='%2309090b'/%3E%3Crect x='100' y='140' width='600' height='1' fill='%23e4e4e7'/%3E%3Crect x='140' y='180' width='380' height='14' rx='7' fill='%23a1a1aa'/%3E%3Crect x='140' y='210' width='260' height='14' rx='7' fill='%23e4e4e7'/%3E%3Crect x='140' y='250' width='440' height='14' rx='7' fill='%23e4e4e7'/%3E%3Crect x='140' y='300' width='140' height='36' rx='10' fill='%23ED5F45'/%3E%3C/svg%3E"
+            alt="Agent Diagnostic Architecture"
+            caption="Figure 1.1 — Autonomous Edge & Knowledge Graph Inspection Pipeline"
+            aspectRatio="16/9"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 18. Toaster ─── -->
+    <section class="component-section" id="comp-toaster">
+      <div class="section-header">
+        <h2 class="section-title">Toaster</h2>
+        <p class="section-desc">Centered, title-only notification pills emerging from the bottom with zero drop shadow.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-default">
+          <div class="demo-actions">
+            <button
+              type="button"
+              class="demo-btn demo-btn-primary"
+              onclick="window.aiToast && window.aiToast('Audit Complete: 26 passing checks verified')"
+            >
+              Trigger Success Toast
+            </button>
+            <button
+              type="button"
+              class="demo-btn demo-btn-outline"
+              onclick="window.aiToast && window.aiToast({ title: 'Schema Warning: 2 schemas require Unicode hex', variant: 'warning' })"
+            >
+              Trigger Warning Toast
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 19. AI Text Animations & Loading Styles (All 20 Effects) ─── -->
+    <section class="component-section" id="comp-text-animations">
+      <div class="section-header">
+        <h2 class="section-title">AI Text Animations &amp; Loading Styles</h2>
+        <p class="section-desc">Complete catalog of 20 Web Animations API (WAAPI) and CSS text streaming, reveal, and loading effects in list view. Click replay to re-trigger.</p>
+      </div>
+      <div class="component-stage">
+        <div class="component-float w-wide">
+          <div class="anim-showcase-list">
+            {textAnimationDemos.map((demo) => (
+              <div class="anim-list-item">
+                <div class="anim-item-left">
+                  <span class="anim-card-tag">{demo.label}</span>
+                </div>
+                <div class="anim-preview-area">
+                  <AnimateText
+                    id={demo.id}
+                    effect={demo.effect}
+                    text={demo.sample}
+                    autoplay={true}
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="anim-replay-btn"
+                  onclick={`window.replayTextAnimation && window.replayTextAnimation('${demo.id}')`}
+                  title="Replay animation"
+                  aria-label={`Replay ${demo.label}`}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
+                  </svg>
+                  <span>Replay</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Centered Toaster Mount -->
+  <Toaster />
+
+  <!-- Live Theme & Settings Customizer (shadcn-style live editor) -->
+  <ThemeCustomizer />
+
+</body>
+</html>

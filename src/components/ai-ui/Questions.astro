@@ -1,0 +1,207 @@
+---
+interface Option {
+  id: string;
+  label: string;
+  description?: string;
+}
+
+interface Props {
+  question: string;
+  description?: string;
+  options: Option[];
+  isMultiSelect?: boolean;
+  class?: string;
+}
+
+const {
+  question,
+  description = '',
+  options = [],
+  isMultiSelect = false,
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-questions-card ${className}`} data-questions data-multiselect={isMultiSelect ? 'true' : 'false'}>
+  <div class="ai-questions-header">
+    <div class="ai-questions-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+      <span>Agent Prompt</span>
+    </div>
+    <h4 class="ai-questions-title">{question}</h4>
+    {description && <p class="ai-questions-desc">{description}</p>}
+  </div>
+
+  <div class="ai-questions-options">
+    {options.map((opt) => (
+      <button
+        type="button"
+        class="ai-question-opt-btn"
+        data-option-id={opt.id}
+        role={isMultiSelect ? 'checkbox' : 'radio'}
+        aria-checked="false"
+      >
+        <div class="ai-opt-check" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="ai-opt-text">
+          <span class="ai-opt-label">{opt.label}</span>
+          {opt.description && <span class="ai-opt-sub">{opt.description}</span>}
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ai-questions-card {
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: var(--radius-xl, 16px);
+    padding: 18px 20px;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    box-shadow: none;
+  }
+
+  .ai-questions-header {
+    margin-bottom: 14px;
+  }
+
+  .ai-questions-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: var(--font-semibold, 600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--heat, #ED5F45);
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+    padding: 2px 8px;
+    border-radius: var(--radius-pill, 9999px);
+    border: 1px solid rgba(237, 95, 69, 0.25);
+    margin-bottom: 8px;
+  }
+
+  .ai-questions-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text, #09090b);
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-questions-desc {
+    font-size: 13px;
+    color: var(--text-muted, #52525b);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .ai-questions-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-question-opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: var(--radius-sm, 10px);
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    transition: all 0.15s ease;
+    box-shadow: none;
+  }
+
+  .ai-question-opt-btn:hover {
+    border-color: var(--border-strong, #d4d4d8);
+    background: var(--bg-subtle, #fafafa);
+  }
+
+  .ai-question-opt-btn[aria-checked="true"] {
+    border-color: var(--heat, #ED5F45);
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+  }
+
+  .ai-opt-check {
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-xs, 4px);
+    border: 1px solid var(--border-strong, #36363d);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: transparent;
+    transition: all 0.15s ease;
+  }
+
+  .ai-question-opt-btn[aria-checked="true"] .ai-opt-check {
+    background: var(--heat, #ED5F45);
+    border-color: var(--heat, #ED5F45);
+    color: #ffffff;
+  }
+
+  .ai-opt-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .ai-opt-label {
+    font-size: var(--text-sm, 13px);
+    font-weight: var(--font-medium, 500);
+    color: var(--text, #fafafa);
+  }
+
+  .ai-opt-sub {
+    font-size: var(--text-xs, 12px);
+    color: var(--text-muted, #a1a1aa);
+  }
+</style>
+
+<script>
+  function initQuestions() {
+    document.querySelectorAll<HTMLElement>('[data-questions]').forEach((container) => {
+      const isMulti = container.getAttribute('data-multiselect') === 'true';
+      const buttons = container.querySelectorAll<HTMLButtonElement>('[data-option-id]');
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const isCurrentlyChecked = btn.getAttribute('aria-checked') === 'true';
+          if (isMulti) {
+            btn.setAttribute('aria-checked', isCurrentlyChecked ? 'false' : 'true');
+          } else {
+            buttons.forEach((b) => b.setAttribute('aria-checked', 'false'));
+            if (!isCurrentlyChecked) {
+              btn.setAttribute('aria-checked', 'true');
+            }
+          }
+          if (!isCurrentlyChecked && typeof (window as any).aiToast === 'function') {
+            (window as any).aiToast(btn.querySelector('.ai-opt-label')?.textContent || 'Option selected');
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initQuestions);
+  } else {
+    initQuestions();
+  }
+</script>

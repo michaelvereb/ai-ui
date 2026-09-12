@@ -1,0 +1,58 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  caption?: string;
+  aspectRatio?: '16/9' | '4/3' | '1/1' | 'auto';
+  class?: string;
+}
+
+const {
+  src,
+  alt = 'Generated visualization',
+  caption,
+  aspectRatio = '16/9',
+  class: className = '',
+} = Astro.props;
+---
+
+<figure class={`ai-image-wrapper ${className}`} data-image-wrapper>
+  <div class="ai-image-container" style={`aspect-ratio: ${aspectRatio};`}>
+    <img src={src} alt={alt} class="ai-img" loading="lazy" />
+  </div>
+  {caption && <figcaption class="ai-image-caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .ai-image-wrapper {
+    margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+
+  .ai-image-container {
+    border-radius: var(--radius-md, 16px);
+    overflow: hidden;
+    background: var(--surface-raised, #18181c);
+    border: 1px solid var(--border, #232328);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-image-caption {
+    font-size: 13px;
+    color: var(--text-muted, #a1a1aa);
+    text-align: center;
+  }
+</style>

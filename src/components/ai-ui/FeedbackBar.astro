@@ -1,0 +1,136 @@
+---
+interface Props {
+  onFeedback?: string;
+  class?: string;
+}
+
+const {
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-feedback-bar ${className}`} data-feedback-bar>
+  <div class="ai-feedback-group">
+    <button type="button" class="ai-feedback-btn" data-action="thumbs-up" title="Helpful audit report" aria-label="Helpful">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+      </svg>
+    </button>
+    <button type="button" class="ai-feedback-btn" data-action="thumbs-down" title="Report inaccurate or unhelpful" aria-label="Unhelpful">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="ai-feedback-divider"></div>
+
+  <div class="ai-feedback-group">
+    <button type="button" class="ai-feedback-btn" data-action="copy" title="Copy report markdown" aria-label="Copy markdown">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+      </svg>
+      <span class="ai-feedback-text">Copy</span>
+    </button>
+    <button type="button" class="ai-feedback-btn" data-action="retry" title="Re-run diagnostic probe" aria-label="Re-run probe">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+        <path d="M21 3v5h-5"></path>
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+        <path d="M8 16H3v5"></path>
+      </svg>
+      <span class="ai-feedback-text">Re-run</span>
+    </button>
+  </div>
+</div>
+
+<style>
+  .ai-feedback-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: var(--radius-pill, 9999px);
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    box-shadow: none;
+  }
+
+  .ai-feedback-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ai-feedback-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border, #e4e4e7);
+    margin: 0 4px;
+  }
+
+  .ai-feedback-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pill, 9999px);
+    color: var(--text-muted, #71717a);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    line-height: 1;
+  }
+
+  .ai-feedback-btn:hover {
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+  }
+
+  /* Primary orange active feedback (Strictly no green) */
+  .ai-feedback-btn.is-active {
+    color: var(--heat, #ED5F45);
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.1));
+  }
+</style>
+
+<script>
+  function initFeedbackBars() {
+    document.querySelectorAll<HTMLElement>('[data-feedback-bar]').forEach((bar) => {
+      bar.querySelectorAll<HTMLButtonElement>('[data-action]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const action = btn.getAttribute('data-action');
+          if (action === 'thumbs-up' || action === 'thumbs-down') {
+            bar.querySelectorAll('[data-action="thumbs-up"], [data-action="thumbs-down"]').forEach((b) => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+            if (typeof (window as any).aiToast === 'function') {
+              (window as any).aiToast(action === 'thumbs-up' ? 'Feedback: Marked as helpful' : 'Feedback: Marked as unhelpful');
+            }
+          } else if (action === 'copy') {
+            navigator.clipboard?.writeText('Autonomous Agent Diagnostic Report - 30 Checkpoints Verified');
+            // Do NOT change the button text! Trigger toast instead:
+            if (typeof (window as any).aiToast === 'function') {
+              (window as any).aiToast('Report copied to clipboard');
+            }
+          } else if (action === 'retry') {
+            if (typeof (window as any).aiToast === 'function') {
+              (window as any).aiToast('Re-running diagnostic probe...');
+            }
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeedbackBars);
+  } else {
+    initFeedbackBars();
+  }
+</script>

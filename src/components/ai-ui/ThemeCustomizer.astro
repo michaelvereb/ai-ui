@@ -1,0 +1,1434 @@
+---
+interface Props {
+  class?: string;
+  defaultOpen?: boolean;
+}
+
+const {
+  class: className = '',
+  defaultOpen = false,
+} = Astro.props;
+---
+
+<!-- ─── Floating Trigger Button (Bottom Right) ─── -->
+<div class="ai-customizer-trigger-wrapper">
+  <button
+    type="button"
+    class="ai-customizer-trigger"
+    id="ai-theme-trigger"
+    aria-label="Open Theme Customizer"
+    title="Customize Theme & Styles"
+  >
+    <svg class="ai-trigger-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+    <span class="ai-trigger-label">Customize</span>
+    <span class="ai-trigger-dot" id="ai-active-color-dot" aria-hidden="true"></span>
+  </button>
+</div>
+
+<!-- ─── Drawer Backdrop ─── -->
+<div class="ai-customizer-backdrop" id="ai-customizer-backdrop" hidden></div>
+
+<!-- ─── Sliding Settings Drawer Panel ─── -->
+<aside
+  class={`ai-customizer-drawer ${className}`}
+  id="ai-customizer-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="ai-customizer-title"
+  hidden
+>
+  <!-- Drawer Header -->
+  <div class="ai-drawer-header">
+    <div class="ai-drawer-title-group">
+      <div class="ai-title-row">
+        <h3 class="ai-drawer-title" id="ai-customizer-title">Theme Customizer</h3>
+        <span class="ai-badge-live">Live</span>
+      </div>
+      <p class="ai-drawer-subtitle">Live design & component token controls</p>
+    </div>
+    <div class="ai-drawer-header-actions">
+      <button
+        type="button"
+        class="ai-btn-reset"
+        id="ai-btn-reset-theme"
+        title="Reset all settings to defaults"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        <span>Reset</span>
+      </button>
+      <button
+        type="button"
+        class="ai-btn-close"
+        id="ai-btn-close-drawer"
+        aria-label="Close Theme Settings"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Drawer Scrollable Body -->
+  <div class="ai-drawer-body">
+
+    <!-- 1. Mode (Light / Dark) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Theme Mode</label>
+        <span class="ai-setting-value" id="ai-active-mode-label">Light</span>
+      </div>
+      <div class="ai-pill-grid cols-2" id="ai-theme-mode-group">
+        <button type="button" class="ai-mode-pill is-active" data-mode="light">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span>Light</span>
+        </button>
+        <button type="button" class="ai-mode-pill" data-mode="dark">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span>Dark</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Base Color (Primary / Accent) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Base Color</label>
+        <span class="ai-setting-value" id="ai-active-color-name">Heat Orange</span>
+      </div>
+      <div class="ai-swatches-grid" id="ai-color-swatches">
+        <!-- Heat Orange (Signature) -->
+        <button
+          type="button"
+          class="ai-color-swatch is-active"
+          data-color="#ED5F45"
+          data-oklch="oklch(0.66 0.19 32.5)"
+          data-name="Heat Orange"
+          style="--swatch-color: #ED5F45;"
+          title="Heat Orange (Default)"
+        >
+          <span class="ai-swatch-check">✓</span>
+        </button>
+        <!-- Zinc -->
+        <button
+          type="button"
+          class="ai-color-swatch"
+          data-color="#18181b"
+          data-oklch="oklch(0.205 0 0)"
+          data-name="Zinc"
+          style="--swatch-color: #18181b;"
+          title="Zinc"
+        >
+          <span class="ai-swatch-check">✓</span>
+        </button>
+        <!-- Blue -->
+        <button
+          type="button"
+          class="ai-color-swatch"
+          data-color="#2563eb"
+          data-oklch="oklch(0.54 0.22 258.4)"
+          data-name="Blue"
+          style="--swatch-color: #2563eb;"
+          title="Blue"
+        >
+          <span class="ai-swatch-check">✓</span>
+        </button>
+        <!-- Emerald -->
+        <button
+          type="button"
+          class="ai-color-swatch"
+          data-color="#059669"
+          data-oklch="oklch(0.59 0.17 160.2)"
+          data-name="Emerald"
+          style="--swatch-color: #059669;"
+          title="Emerald"
+        >
+          <span class="ai-swatch-check">✓</span>
+        </button>
+        <!-- Violet -->
+        <button
+          type="button"
+          class="ai-color-swatch"
+          data-color="#7c3aed"
+          data-oklch="oklch(0.53 0.25 293.7)"
+          data-name="Violet"
+          style="--swatch-color: #7c3aed;"
+          title="Violet"
+        >
+          <span class="ai-swatch-check">✓</span>
+        </button>
+        <!-- Rose -->
+        <button
+          type="button"
+          class="ai-color-swatch"
+          data-color="#e11d48"
+          data-oklch="oklch(0.58 0.23 15.3)"
+          data-name="Rose"
+          style="--swatch-color: #e11d48;"
+          title="Rose"
+        >
+          <span class="ai-swatch-check">✓</span>
+        </button>
+        <!-- Custom Color Picker -->
+        <label class="ai-color-picker-label" title="Custom color picker">
+          <input type="color" id="ai-custom-color-input" value="#ED5F45" />
+          <span class="ai-color-picker-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M2 12h20"></path>
+            </svg>
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 3. Neutral (Background / Surface Tone) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Neutral (Background)</label>
+        <span class="ai-setting-value" id="ai-active-neutral-name">Pure White</span>
+      </div>
+      <div class="ai-pill-grid cols-3" id="ai-neutral-group">
+        <button type="button" class="ai-opt-pill is-active" data-neutral="white" data-bg="#ffffff" data-name="Pure White">White</button>
+        <button type="button" class="ai-opt-pill" data-neutral="zinc" data-bg="#fafafa" data-name="Zinc">Zinc</button>
+        <button type="button" class="ai-opt-pill" data-neutral="slate" data-bg="#f8fafc" data-name="Slate">Slate</button>
+        <button type="button" class="ai-opt-pill" data-neutral="stone" data-bg="#fafaf9" data-name="Stone">Stone</button>
+        <button type="button" class="ai-opt-pill" data-neutral="cream" data-bg="#faf8f5" data-name="Warm Cream">Cream</button>
+        <label class="ai-neutral-custom-label" title="Custom background color">
+          <input type="color" id="ai-custom-bg-input" value="#ffffff" />
+          <span>Custom</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 4. Heading Font (Dropdown) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label" for="ai-heading-font-select">Heading Font</label>
+        <span class="ai-setting-value" id="ai-active-heading-font-name">SF Pro</span>
+      </div>
+      <div class="ai-select-wrapper">
+        <select id="ai-heading-font-select" class="ai-select-input">
+          <option value="-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Display', 'Segoe UI', sans-serif" selected>SF Pro (Apple System)</option>
+          <option value="'Geist', -apple-system, sans-serif">Geist (Modern Geometric)</option>
+          <option value="'Space Grotesk', sans-serif">Space Grotesk (Technical)</option>
+          <option value="'DM Sans', sans-serif">DM Sans (Clean Sans)</option>
+          <option value="'Outfit', sans-serif">Outfit (Editorial)</option>
+          <option value="'Inter', sans-serif">Inter (UI Sans)</option>
+          <option value="'Geist Mono', monospace">Geist Mono (Monospace)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 5. Body Font (Dropdown) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label" for="ai-body-font-select">Body Font</label>
+        <span class="ai-setting-value" id="ai-active-body-font-name">SF Pro</span>
+      </div>
+      <div class="ai-select-wrapper">
+        <select id="ai-body-font-select" class="ai-select-input">
+          <option value="-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Segoe UI', sans-serif" selected>SF Pro (Apple System)</option>
+          <option value="'Geist', -apple-system, sans-serif">Geist (Modern Geometric)</option>
+          <option value="'DM Sans', sans-serif">DM Sans (Clean Sans)</option>
+          <option value="'Inter', sans-serif">Inter (UI Sans)</option>
+          <option value="'Outfit', sans-serif">Outfit (Editorial)</option>
+          <option value="'Space Grotesk', sans-serif">Space Grotesk (Technical)</option>
+          <option value="'Geist Mono', monospace">Geist Mono (Monospace)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 6. Border Radii / Roundness (Presets without px + Custom entry for px, %, rem) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Border Radius</label>
+        <span class="ai-setting-value" id="ai-active-radius-name">0.75</span>
+      </div>
+      <!-- Presets (NO "px" text) -->
+      <div class="ai-pill-grid cols-6" id="ai-radius-group">
+        <button type="button" class="ai-opt-pill" data-radius="0px" data-rem="0" data-label="0">0</button>
+        <button type="button" class="ai-opt-pill" data-radius="5px" data-rem="0.3rem" data-label="0.3">0.3</button>
+        <button type="button" class="ai-opt-pill" data-radius="8px" data-rem="0.5rem" data-label="0.5">0.5</button>
+        <button type="button" class="ai-opt-pill" data-radius="10px" data-rem="0.625rem" data-label="0.62">0.62</button>
+        <button type="button" class="ai-opt-pill is-active" data-radius="14px" data-rem="0.75rem" data-label="0.75">0.75</button>
+        <button type="button" class="ai-opt-pill" data-radius="20px" data-rem="1.0rem" data-label="1.0">1.0</button>
+      </div>
+      <!-- Custom Radius Entry (supports px, %, rem, or raw number) -->
+      <div class="ai-custom-input-row">
+        <input
+          type="text"
+          id="ai-custom-radius-input"
+          class="ai-text-input"
+          placeholder="Custom radius (e.g. 14px, 50%, 0.8rem)"
+          value="14px"
+        />
+        <span class="ai-input-tip">Custom (px / % / rem)</span>
+      </div>
+    </div>
+
+    <!-- 7. Icon Library (Dropdown) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label" for="ai-icon-select">Icon Library</label>
+        <span class="ai-setting-value" id="ai-active-icon-name">Lucide</span>
+      </div>
+      <div class="ai-select-wrapper">
+        <select id="ai-icon-select" class="ai-select-input">
+          <option value="lucide" selected>Lucide (2.0 stroke)</option>
+          <option value="minimal">Minimal Line (1.5 stroke)</option>
+          <option value="tabler">Tabler Bold (2.4 stroke)</option>
+          <option value="phosphor">Phosphor (Round)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 8. Component Design Tweaks (Direct Levers) -->
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Card Border Weight</label>
+        <span class="ai-setting-value" id="ai-active-border-name">Hairline</span>
+      </div>
+      <div class="ai-pill-grid cols-4" id="ai-border-group">
+        <button type="button" class="ai-opt-pill is-active" data-border="1px" data-name="Hairline">1px</button>
+        <button type="button" class="ai-opt-pill" data-border="0px" data-name="Flush">0px</button>
+        <button type="button" class="ai-opt-pill" data-border="1.5px" data-name="Defined">1.5px</button>
+        <button type="button" class="ai-opt-pill" data-border="2px" data-name="Bold">2px</button>
+      </div>
+    </div>
+
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Letter Spacing (Tracking)</label>
+        <span class="ai-setting-value" id="ai-active-tracking-name">Tight</span>
+      </div>
+      <div class="ai-pill-grid cols-3" id="ai-tracking-group">
+        <button type="button" class="ai-opt-pill is-active" data-tracking="-0.02em" data-name="Tight">-0.02em</button>
+        <button type="button" class="ai-opt-pill" data-tracking="-0.035em" data-name="Compact">-0.035em</button>
+        <button type="button" class="ai-opt-pill" data-tracking="0em" data-name="Normal">0em</button>
+      </div>
+    </div>
+
+    <div class="ai-setting-section">
+      <div class="ai-setting-label-row">
+        <label class="ai-setting-label">Card Stage Padding</label>
+        <span class="ai-setting-value" id="ai-active-padding-name">Default</span>
+      </div>
+      <div class="ai-pill-grid cols-3" id="ai-padding-group">
+        <button type="button" class="ai-opt-pill" data-padding="28px 20px" data-name="Compact">Compact</button>
+        <button type="button" class="ai-opt-pill is-active" data-padding="44px 28px" data-name="Default">Default</button>
+        <button type="button" class="ai-opt-pill" data-padding="64px 36px" data-name="Spacious">Spacious</button>
+      </div>
+    </div>
+
+    <!-- 9. Code Export Panel (OKLCH & Standard CSS) -->
+    <div class="ai-setting-section ai-export-section">
+      <div class="ai-export-top">
+        <div class="ai-format-tabs" id="ai-code-format-tabs">
+          <button type="button" class="ai-format-tab is-active" data-fmt="oklch">OKLCH</button>
+          <button type="button" class="ai-format-tab" data-fmt="hex">CSS Hex</button>
+        </div>
+        <button
+          type="button"
+          class="ai-btn-copy-css"
+          id="ai-btn-copy-css"
+          title="Copy generated theme CSS variables to clipboard"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+          </svg>
+          <span id="ai-copy-css-label">Copy Code</span>
+        </button>
+      </div>
+
+      <div class="ai-code-preview-wrap">
+        <pre class="ai-code-pre"><code id="ai-css-code-output">/* Live theme CSS generated */</code></pre>
+      </div>
+    </div>
+
+  </div>
+</aside>
+
+<style>
+  /* ─── Floating Trigger Button (Bottom Right) ─── */
+  .ai-customizer-trigger-wrapper {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+  }
+
+  .ai-customizer-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: #09090b;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ai-customizer-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    background: #18181b;
+  }
+
+  .ai-trigger-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .ai-customizer-trigger:hover .ai-trigger-icon {
+    transform: rotate(45deg);
+  }
+
+  .ai-trigger-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--heat, #ED5F45);
+    display: inline-block;
+    box-shadow: 0 0 8px var(--heat, #ED5F45);
+    transition: background-color 0.2s ease;
+  }
+
+  /* ─── Drawer Backdrop ─── */
+  .ai-customizer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .ai-customizer-backdrop.is-visible {
+    opacity: 1;
+  }
+
+  /* ─── Sliding Drawer Panel ─── */
+  .ai-customizer-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    color: #09090b;
+    border-left: 1px solid var(--border, #e4e4e7);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    box-sizing: border-box;
+  }
+
+  .ai-customizer-drawer.is-open {
+    transform: translateX(0);
+  }
+
+  :global(.dark) .ai-customizer-drawer,
+  :global([data-theme="dark"]) .ai-customizer-drawer {
+    background: #131316;
+    color: #fafafa;
+    border-left-color: #27272a;
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.55);
+  }
+
+  /* ─── Drawer Header ─── */
+  .ai-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border, #e4e4e7);
+    flex-shrink: 0;
+  }
+
+  :global(.dark) .ai-drawer-header,
+  :global([data-theme="dark"]) .ai-drawer-header {
+    border-bottom-color: #27272a;
+  }
+
+  .ai-drawer-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .ai-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-drawer-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-badge-live {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.1));
+    color: var(--heat, #ED5F45);
+    border: 1px solid rgba(237, 95, 69, 0.25);
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  .ai-drawer-subtitle {
+    font-size: 12px;
+    color: var(--text-muted, #71717a);
+    margin: 0;
+  }
+
+  .ai-drawer-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-btn-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    background: transparent;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted, #71717a);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+
+  .ai-btn-reset:hover {
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+  }
+
+  .ai-btn-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-muted, #71717a);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .ai-btn-close:hover {
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+  }
+
+  /* ─── Drawer Scrollable Body ─── */
+  .ai-drawer-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ai-setting-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-setting-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12.5px;
+  }
+
+  .ai-setting-label {
+    font-weight: 600;
+    color: var(--text, #09090b);
+  }
+
+  .ai-setting-value {
+    font-size: 12px;
+    color: var(--text-muted, #71717a);
+    font-family: var(--font-mono, monospace);
+  }
+
+  /* ─── Dropdown Inputs ─── */
+  .ai-select-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-select-input {
+    width: 100%;
+    padding: 9px 14px;
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 34px;
+  }
+
+  :global(.dark) .ai-select-input,
+  :global([data-theme="dark"]) .ai-select-input {
+    background-color: #1c1c20;
+    border-color: #2e2e34;
+    color: #fafafa;
+  }
+
+  .ai-select-input:focus {
+    border-color: var(--heat, #ED5F45);
+    box-shadow: 0 0 0 2px var(--heat-subtle, rgba(237, 95, 69, 0.15));
+  }
+
+  /* ─── Text / Custom Inputs ─── */
+  .ai-custom-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .ai-text-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-family: var(--font-mono, monospace);
+    outline: none;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  :global(.dark) .ai-text-input,
+  :global([data-theme="dark"]) .ai-text-input {
+    background: #1c1c20;
+    border-color: #2e2e34;
+    color: #fafafa;
+  }
+
+  .ai-text-input:focus {
+    border-color: var(--heat, #ED5F45);
+    box-shadow: 0 0 0 2px var(--heat-subtle, rgba(237, 95, 69, 0.15));
+  }
+
+  .ai-input-tip {
+    font-size: 11px;
+    color: var(--text-muted, #71717a);
+    white-space: nowrap;
+  }
+
+  /* ─── Pill Grids ─── */
+  .ai-pill-grid {
+    display: grid;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .ai-pill-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .ai-pill-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .ai-pill-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .ai-pill-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+  .ai-mode-pill,
+  .ai-opt-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 8px;
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-muted, #52525b);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  :global(.dark) .ai-mode-pill,
+  :global(.dark) .ai-opt-pill,
+  :global([data-theme="dark"]) .ai-mode-pill,
+  :global([data-theme="dark"]) .ai-opt-pill {
+    background: #1c1c20;
+    border-color: #2e2e34;
+    color: #a1a1aa;
+  }
+
+  .ai-mode-pill:hover,
+  .ai-opt-pill:hover {
+    color: var(--text, #09090b);
+    border-color: var(--border-strong, #d4d4d8);
+  }
+
+  .ai-mode-pill.is-active,
+  .ai-opt-pill.is-active {
+    background: #ffffff;
+    color: #09090b;
+    border-color: var(--text, #09090b);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+  }
+
+  :global(.dark) .ai-mode-pill.is-active,
+  :global(.dark) .ai-opt-pill.is-active,
+  :global([data-theme="dark"]) .ai-mode-pill.is-active,
+  :global([data-theme="dark"]) .ai-opt-pill.is-active {
+    background: #27272a;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+
+  /* ─── Swatches Grid ─── */
+  .ai-swatches-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  .ai-color-swatch {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: var(--swatch-color);
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    padding: 0;
+    position: relative;
+  }
+
+  .ai-color-swatch:hover {
+    transform: scale(1.08);
+  }
+
+  .ai-color-swatch.is-active {
+    border-color: #09090b;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  :global(.dark) .ai-color-swatch.is-active,
+  :global([data-theme="dark"]) .ai-color-swatch.is-active {
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px #131316, 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  .ai-swatch-check {
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    display: none;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .ai-color-swatch.is-active .ai-swatch-check {
+    display: block;
+  }
+
+  .ai-color-picker-label {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px dashed var(--border-strong, #d4d4d8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.15s ease;
+  }
+
+  :global(.dark) .ai-color-picker-label,
+  :global([data-theme="dark"]) .ai-color-picker-label {
+    background: #1c1c20;
+    border-color: #3f3f46;
+  }
+
+  .ai-color-picker-label:hover {
+    border-color: var(--text, #09090b);
+  }
+
+  .ai-color-picker-label input[type="color"] {
+    position: absolute;
+    opacity: 0;
+    width: 200%;
+    height: 200%;
+    cursor: pointer;
+  }
+
+  .ai-color-picker-icon {
+    color: var(--text-muted, #71717a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-neutral-custom-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 8px;
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px dashed var(--border-strong, #d4d4d8);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted, #52525b);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.15s ease;
+  }
+
+  :global(.dark) .ai-neutral-custom-label,
+  :global([data-theme="dark"]) .ai-neutral-custom-label {
+    background: #1c1c20;
+    border-color: #3f3f46;
+    color: #a1a1aa;
+  }
+
+  .ai-neutral-custom-label input[type="color"] {
+    position: absolute;
+    opacity: 0;
+    width: 200%;
+    height: 200%;
+    cursor: pointer;
+  }
+
+  /* ─── Export CSS Section ─── */
+  .ai-export-section {
+    padding-top: 14px;
+    border-top: 1px solid var(--border, #e4e4e7);
+  }
+
+  :global(.dark) .ai-export-section,
+  :global([data-theme="dark"]) .ai-export-section {
+    border-top-color: #27272a;
+  }
+
+  .ai-export-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .ai-format-tabs {
+    display: inline-flex;
+    background: var(--bg-subtle, #f4f4f5);
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 6px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  :global(.dark) .ai-format-tabs,
+  :global([data-theme="dark"]) .ai-format-tabs {
+    background: #1c1c20;
+    border-color: #27272a;
+  }
+
+  .ai-format-tab {
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted, #71717a);
+    padding: 3px 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+
+  .ai-format-tab.is-active {
+    background: #ffffff;
+    color: #09090b;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+  }
+
+  :global(.dark) .ai-format-tab.is-active,
+  :global([data-theme="dark"]) .ai-format-tab.is-active {
+    background: #27272a;
+    color: #ffffff;
+  }
+
+  .ai-btn-copy-css {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    background: var(--text, #09090b);
+    color: var(--bg, #ffffff);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+
+  :global(.dark) .ai-btn-copy-css,
+  :global([data-theme="dark"]) .ai-btn-copy-css {
+    background: #fafafa;
+    color: #09090b;
+  }
+
+  .ai-btn-copy-css:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .ai-code-preview-wrap {
+    background: #0d0d10;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    overflow: hidden;
+    max-height: 180px;
+    position: relative;
+  }
+
+  .ai-code-pre {
+    margin: 0;
+    padding: 12px;
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    line-height: 1.45;
+    color: #e4e4e7;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 180px;
+    white-space: pre;
+  }
+</style>
+
+<script>
+  function initThemeCustomizer() {
+    const trigger = document.getElementById('ai-theme-trigger');
+    const drawer = document.getElementById('ai-customizer-drawer');
+    const backdrop = document.getElementById('ai-customizer-backdrop');
+    const closeBtn = document.getElementById('ai-btn-close-drawer');
+    const resetBtn = document.getElementById('ai-btn-reset-theme');
+    const copyCssBtn = document.getElementById('ai-btn-copy-css');
+    const codeOutput = document.getElementById('ai-css-code-output');
+    const activeColorDot = document.getElementById('ai-active-color-dot');
+    const activeColorName = document.getElementById('ai-active-color-name');
+    const activeNeutralName = document.getElementById('ai-active-neutral-name');
+    const activeModeLabel = document.getElementById('ai-active-mode-label');
+    const activeHeadingFontName = document.getElementById('ai-active-heading-font-name');
+    const activeBodyFontName = document.getElementById('ai-active-body-font-name');
+    const activeRadiusName = document.getElementById('ai-active-radius-name');
+    const activeIconName = document.getElementById('ai-active-icon-name');
+    const activeBorderName = document.getElementById('ai-active-border-name');
+    const activeTrackingName = document.getElementById('ai-active-tracking-name');
+    const activePaddingName = document.getElementById('ai-active-padding-name');
+
+    const headingFontSelect = document.getElementById('ai-heading-font-select') as HTMLSelectElement;
+    const bodyFontSelect = document.getElementById('ai-body-font-select') as HTMLSelectElement;
+    const iconSelect = document.getElementById('ai-icon-select') as HTMLSelectElement;
+    const customColorInput = document.getElementById('ai-custom-color-input') as HTMLInputElement;
+    const customBgInput = document.getElementById('ai-custom-bg-input') as HTMLInputElement;
+    const customRadiusInput = document.getElementById('ai-custom-radius-input') as HTMLInputElement;
+
+    // State
+    const defaultState = {
+      mode: 'light',
+      baseColor: '#ED5F45',
+      baseColorOklch: 'oklch(0.66 0.19 32.5)',
+      baseColorName: 'Heat Orange',
+      neutral: 'white',
+      neutralBg: '#ffffff',
+      neutralName: 'Pure White',
+      headingFont: "-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Display', 'Segoe UI', sans-serif",
+      headingFontName: 'SF Pro',
+      bodyFont: "-apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Segoe UI', sans-serif",
+      bodyFontName: 'SF Pro',
+      radius: '14px',
+      radiusLabel: '0.75',
+      icon: 'lucide',
+      iconName: 'Lucide',
+      borderWidth: '1px',
+      borderName: 'Hairline',
+      tracking: '-0.02em',
+      trackingName: 'Tight',
+      padding: '44px 28px',
+      paddingName: 'Default',
+      format: 'oklch',
+    };
+
+    let state = { ...defaultState };
+
+    // Open / Close Drawer
+    function openDrawer() {
+      if (!drawer || !backdrop) return;
+      drawer.removeAttribute('hidden');
+      backdrop.removeAttribute('hidden');
+      requestAnimationFrame(() => {
+        drawer.classList.add('is-open');
+        backdrop.classList.add('is-visible');
+      });
+    }
+
+    function closeDrawer() {
+      if (!drawer || !backdrop) return;
+      drawer.classList.remove('is-open');
+      backdrop.classList.remove('is-visible');
+      setTimeout(() => {
+        drawer.setAttribute('hidden', '');
+        backdrop.setAttribute('hidden', '');
+      }, 320);
+    }
+
+    trigger?.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    backdrop?.addEventListener('click', closeDrawer);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer?.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+
+    // Generate OKLCH or Standard CSS Variables Output
+    function generateCssCode(): string {
+      const isDark = state.mode === 'dark';
+
+      if (state.format === 'oklch') {
+        return `:root {
+  --background: ${isDark ? 'oklch(0.145 0 0)' : 'oklch(1 0 0)'};
+  --foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)'};
+  --card: ${isDark ? 'oklch(0.205 0 0)' : 'oklch(1 0 0)'};
+  --card-foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)'};
+  --popover: ${isDark ? 'oklch(0.205 0 0)' : 'oklch(1 0 0)'};
+  --popover-foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)'};
+  --primary: ${state.baseColorOklch};
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: ${isDark ? 'oklch(0.269 0 0)' : 'oklch(0.97 0 0)'};
+  --secondary-foreground: ${isDark ? 'oklch(0.985 0 0)' : 'oklch(0.205 0 0)'};
+  --muted: ${isDark ? 'oklch(0.269 0 0)' : 'oklch(0.97 0 0)'};
+  --muted-foreground: ${isDark ? 'oklch(0.708 0 0)' : 'oklch(0.556 0 0)'};
+  --accent: ${state.baseColorOklch};
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: ${isDark ? 'oklch(1 0 0 / 10%)' : 'oklch(0.922 0 0)'};
+  --input: ${isDark ? 'oklch(1 0 0 / 15%)' : 'oklch(0.922 0 0)'};
+  --ring: ${state.baseColorOklch};
+  --radius: ${state.radius};
+  --font-heading: ${state.headingFont};
+  --font-body: ${state.bodyFont};
+  --tracking-ui: ${state.tracking};
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --primary: ${state.baseColorOklch};
+  --primary-foreground: oklch(0.205 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --ring: ${state.baseColorOklch};
+}`;
+      }
+
+      // CSS Hex format
+      return `:root {
+  --theme-mode: ${state.mode};
+  --primary: ${state.baseColor};
+  --heat: ${state.baseColor};
+  --accent: ${state.baseColor};
+  --background: ${isDark ? '#09090b' : state.neutralBg};
+  --surface: ${isDark ? '#131316' : '#ffffff'};
+  --border: ${isDark ? '#27272a' : '#e4e4e7'};
+  --border-width: ${state.borderWidth};
+  --font-heading: ${state.headingFont};
+  --font-sans: ${state.bodyFont};
+  --radius: ${state.radius};
+  --radius-card: ${state.radius};
+  --tracking-ui: ${state.tracking};
+}
+
+.dark {
+  --background: #09090b;
+  --surface: #131316;
+  --border: #27272a;
+  --primary: ${state.baseColor};
+}`;
+    }
+
+    // Apply active state dynamically to DOM
+    function applyState() {
+      const root = document.documentElement;
+      const isDark = state.mode === 'dark';
+
+      // 1. Theme Mode & Background
+      if (isDark) {
+        root.setAttribute('data-theme', 'dark');
+        root.classList.add('dark');
+        document.body.style.backgroundColor = '#09090b';
+        root.style.setProperty('--bg', '#09090b');
+        root.style.setProperty('--surface', '#131316');
+      } else {
+        root.removeAttribute('data-theme');
+        root.classList.remove('dark');
+        document.body.style.backgroundColor = state.neutralBg;
+        root.style.setProperty('--bg', state.neutralBg);
+        root.style.setProperty('--surface', '#ffffff');
+      }
+      if (activeModeLabel) activeModeLabel.textContent = isDark ? 'Dark' : 'Light';
+      if (activeNeutralName) activeNeutralName.textContent = state.neutralName;
+
+      // 2. Base Color & Heat variables
+      root.style.setProperty('--heat', state.baseColor);
+      root.style.setProperty('--primary', state.baseColor);
+      root.style.setProperty('--accent', state.baseColor);
+      root.style.setProperty('--ring', state.baseColor);
+      root.style.setProperty('--heat-subtle', `${state.baseColor}18`);
+      root.style.setProperty('--heat-gradient', `linear-gradient(180deg, ${state.baseColor} 0%, ${state.baseColor}dd 100%)`);
+      root.style.setProperty('--btn-primary-bg', `linear-gradient(180deg, ${state.baseColor} 0%, ${state.baseColor}ee 100%)`);
+
+      if (activeColorDot) activeColorDot.style.backgroundColor = state.baseColor;
+      if (activeColorName) activeColorName.textContent = state.baseColorName;
+
+      // 3. Fonts (SF Pro & Select options)
+      root.style.setProperty('--font-heading', state.headingFont);
+      document.querySelectorAll<HTMLElement>('h1, h2, h3, .section-title, .brand-name').forEach((el) => {
+        el.style.fontFamily = state.headingFont;
+      });
+      if (activeHeadingFontName) activeHeadingFontName.textContent = state.headingFontName;
+
+      root.style.setProperty('--font-sans', state.bodyFont);
+      document.body.style.fontFamily = state.bodyFont;
+      if (activeBodyFontName) activeBodyFontName.textContent = state.bodyFontName;
+
+      // 4. Border Radius (Custom & Presets)
+      root.style.setProperty('--radius', state.radius);
+      root.style.setProperty('--radius-card', state.radius);
+      root.style.setProperty('--radius-md', state.radius);
+      document.querySelectorAll<HTMLElement>('.component-stage, .anim-list-item, .demo-card').forEach((el) => {
+        el.style.borderRadius = state.radius;
+      });
+      if (activeRadiusName) activeRadiusName.textContent = state.radiusLabel;
+      if (customRadiusInput && customRadiusInput.value !== state.radius) {
+        customRadiusInput.value = state.radius;
+      }
+
+      // 5. Border Weight / Width
+      root.style.setProperty('--border-width', state.borderWidth);
+      document.querySelectorAll<HTMLElement>('.component-stage, .anim-list-item, .loader-thinking-pill').forEach((el) => {
+        el.style.borderWidth = state.borderWidth;
+      });
+      if (activeBorderName) activeBorderName.textContent = state.borderName;
+
+      // 6. Letter Spacing Tracking
+      root.style.setProperty('--tracking-ui', state.tracking);
+      document.body.style.letterSpacing = state.tracking;
+      if (activeTrackingName) activeTrackingName.textContent = state.trackingName;
+
+      // 7. Card Stage Padding Density
+      document.querySelectorAll<HTMLElement>('.component-stage').forEach((el) => {
+        el.style.padding = state.padding;
+      });
+      if (activePaddingName) activePaddingName.textContent = state.paddingName;
+
+      // 8. Icon Library Stroke Width
+      if (state.icon === 'minimal') {
+        document.querySelectorAll<SVGElement>('svg:not(.ai-trigger-icon)').forEach((svg) => {
+          svg.setAttribute('stroke-width', '1.5');
+        });
+      } else if (state.icon === 'tabler') {
+        document.querySelectorAll<SVGElement>('svg:not(.ai-trigger-icon)').forEach((svg) => {
+          svg.setAttribute('stroke-width', '2.4');
+        });
+      } else {
+        document.querySelectorAll<SVGElement>('svg:not(.ai-trigger-icon)').forEach((svg) => {
+          svg.setAttribute('stroke-width', '2.0');
+        });
+      }
+      if (activeIconName) activeIconName.textContent = state.iconName;
+
+      // 9. Update Code Preview
+      if (codeOutput) {
+        codeOutput.textContent = generateCssCode();
+      }
+    }
+
+    // Bind Mode Buttons
+    document.querySelectorAll<HTMLButtonElement>('#ai-theme-mode-group [data-mode]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#ai-theme-mode-group [data-mode]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        state.mode = btn.getAttribute('data-mode') || 'light';
+        applyState();
+      });
+    });
+
+    // Bind Base Color Swatches
+    document.querySelectorAll<HTMLButtonElement>('#ai-color-swatches .ai-color-swatch').forEach((swatch) => {
+      swatch.addEventListener('click', () => {
+        document.querySelectorAll('#ai-color-swatches .ai-color-swatch').forEach((s) => s.classList.remove('is-active'));
+        swatch.classList.add('is-active');
+        state.baseColor = swatch.getAttribute('data-color') || '#ED5F45';
+        state.baseColorOklch = swatch.getAttribute('data-oklch') || 'oklch(0.66 0.19 32.5)';
+        state.baseColorName = swatch.getAttribute('data-name') || 'Custom';
+        applyState();
+      });
+    });
+
+    // Custom Color Input
+    customColorInput?.addEventListener('input', (e) => {
+      const val = (e.target as HTMLInputElement).value;
+      document.querySelectorAll('#ai-color-swatches .ai-color-swatch').forEach((s) => s.classList.remove('is-active'));
+      state.baseColor = val;
+      state.baseColorOklch = `oklch(from ${val} l c h)`;
+      state.baseColorName = val.toUpperCase();
+      applyState();
+    });
+
+    // Bind Neutral Background Buttons
+    document.querySelectorAll<HTMLButtonElement>('#ai-neutral-group [data-neutral]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#ai-neutral-group [data-neutral]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        state.neutral = btn.getAttribute('data-neutral') || 'white';
+        state.neutralBg = btn.getAttribute('data-bg') || '#ffffff';
+        state.neutralName = btn.getAttribute('data-name') || 'White';
+        applyState();
+      });
+    });
+
+    // Custom Neutral Background Input
+    customBgInput?.addEventListener('input', (e) => {
+      const val = (e.target as HTMLInputElement).value;
+      document.querySelectorAll('#ai-neutral-group [data-neutral]').forEach((b) => b.classList.remove('is-active'));
+      state.neutral = 'custom';
+      state.neutralBg = val;
+      state.neutralName = val.toUpperCase();
+      applyState();
+    });
+
+    // Heading Font Select (Dropdown)
+    headingFontSelect?.addEventListener('change', () => {
+      const val = headingFontSelect.value;
+      const text = headingFontSelect.options[headingFontSelect.selectedIndex].text.split(' (')[0];
+      state.headingFont = val;
+      state.headingFontName = text;
+      applyState();
+    });
+
+    // Body Font Select (Dropdown)
+    bodyFontSelect?.addEventListener('change', () => {
+      const val = bodyFontSelect.value;
+      const text = bodyFontSelect.options[bodyFontSelect.selectedIndex].text.split(' (')[0];
+      state.bodyFont = val;
+      state.bodyFontName = text;
+      applyState();
+    });
+
+    // Icon Select (Dropdown)
+    iconSelect?.addEventListener('change', () => {
+      const val = iconSelect.value;
+      const text = iconSelect.options[iconSelect.selectedIndex].text.split(' (')[0];
+      state.icon = val;
+      state.iconName = text;
+      applyState();
+    });
+
+    // Radius Preset Buttons (NO "px" shown)
+    document.querySelectorAll<HTMLButtonElement>('#ai-radius-group [data-radius]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#ai-radius-group [data-radius]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const r = btn.getAttribute('data-radius') || '14px';
+        state.radius = r;
+        state.radiusLabel = btn.getAttribute('data-label') || r;
+        applyState();
+      });
+    });
+
+    // Custom Radius Text Input (allows px, %, rem, raw numbers)
+    customRadiusInput?.addEventListener('input', () => {
+      let val = customRadiusInput.value.trim();
+      if (!val) return;
+      // If user types just a number (e.g. 16), interpret as px
+      if (/^\d+$/.test(val)) {
+        val = `${val}px`;
+      }
+      document.querySelectorAll('#ai-radius-group [data-radius]').forEach((b) => b.classList.remove('is-active'));
+      state.radius = val;
+      state.radiusLabel = val;
+      applyState();
+    });
+
+    // Card Border Width Buttons
+    document.querySelectorAll<HTMLButtonElement>('#ai-border-group [data-border]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#ai-border-group [data-border]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        state.borderWidth = btn.getAttribute('data-border') || '1px';
+        state.borderName = btn.getAttribute('data-name') || state.borderWidth;
+        applyState();
+      });
+    });
+
+    // Tracking Buttons
+    document.querySelectorAll<HTMLButtonElement>('#ai-tracking-group [data-tracking]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#ai-tracking-group [data-tracking]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        state.tracking = btn.getAttribute('data-tracking') || '-0.02em';
+        state.trackingName = btn.getAttribute('data-name') || state.tracking;
+        applyState();
+      });
+    });
+
+    // Card Stage Padding Buttons
+    document.querySelectorAll<HTMLButtonElement>('#ai-padding-group [data-padding]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#ai-padding-group [data-padding]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        state.padding = btn.getAttribute('data-padding') || '44px 28px';
+        state.paddingName = btn.getAttribute('data-name') || 'Default';
+        applyState();
+      });
+    });
+
+    // Code Format Tabs
+    document.querySelectorAll<HTMLButtonElement>('#ai-code-format-tabs [data-fmt]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#ai-code-format-tabs [data-fmt]').forEach((t) => t.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        state.format = tab.getAttribute('data-fmt') || 'oklch';
+        if (codeOutput) codeOutput.textContent = generateCssCode();
+      });
+    });
+
+    // Reset Button
+    resetBtn?.addEventListener('click', () => {
+      state = { ...defaultState };
+
+      // Reset controls
+      document.querySelectorAll('#ai-theme-mode-group [data-mode]').forEach((b) => {
+        b.classList.toggle('is-active', b.getAttribute('data-mode') === 'light');
+      });
+      document.querySelectorAll('#ai-color-swatches .ai-color-swatch').forEach((s) => {
+        s.classList.toggle('is-active', s.getAttribute('data-color') === '#ED5F45');
+      });
+      document.querySelectorAll('#ai-neutral-group [data-neutral]').forEach((b) => {
+        b.classList.toggle('is-active', b.getAttribute('data-neutral') === 'white');
+      });
+      document.querySelectorAll('#ai-radius-group [data-radius]').forEach((b) => {
+        b.classList.toggle('is-active', b.getAttribute('data-label') === '0.75');
+      });
+      document.querySelectorAll('#ai-border-group [data-border]').forEach((b) => {
+        b.classList.toggle('is-active', b.getAttribute('data-border') === '1px');
+      });
+      document.querySelectorAll('#ai-tracking-group [data-tracking]').forEach((b) => {
+        b.classList.toggle('is-active', b.getAttribute('data-tracking') === '-0.02em');
+      });
+      document.querySelectorAll('#ai-padding-group [data-padding]').forEach((b) => {
+        b.classList.toggle('is-active', b.getAttribute('data-name') === 'Default');
+      });
+
+      if (headingFontSelect) headingFontSelect.selectedIndex = 0;
+      if (bodyFontSelect) bodyFontSelect.selectedIndex = 0;
+      if (iconSelect) iconSelect.selectedIndex = 0;
+      if (customRadiusInput) customRadiusInput.value = '14px';
+
+      applyState();
+      if (typeof (window as any).aiToast === 'function') {
+        (window as any).aiToast('Theme reset to SF Pro & Michael Vereb defaults');
+      }
+    });
+
+    // Copy Code Button — triggers window.aiToast per guidelines
+    copyCssBtn?.addEventListener('click', () => {
+      const code = generateCssCode();
+      navigator.clipboard.writeText(code).then(() => {
+        if (typeof (window as any).aiToast === 'function') {
+          (window as any).aiToast('Theme CSS variables copied to clipboard');
+        }
+      });
+    });
+
+    // Initial render
+    applyState();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeCustomizer);
+  } else {
+    initThemeCustomizer();
+  }
+</script>

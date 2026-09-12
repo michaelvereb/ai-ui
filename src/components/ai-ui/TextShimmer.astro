@@ -1,0 +1,41 @@
+---
+interface Props {
+  text?: string;
+  as?: string;
+  duration?: string;
+  class?: string;
+}
+
+const {
+  text = '',
+  as: Tag = 'span',
+  duration = '2.5s',
+  class: className = '',
+} = Astro.props;
+---
+
+<Tag
+  class={`ai-text-shimmer ${className}`}
+  style={`--shimmer-duration: ${duration};`}
+>
+  <slot>{text}</slot>
+</Tag>
+
+<style>
+  .ai-text-shimmer {
+    display: inline-block;
+    background: linear-gradient(
+      90deg,
+      var(--shimmer-base, #71717a) 0%,
+      var(--shimmer-shine, #09090b) 45%,
+      var(--shimmer-accent, #ED5F45) 50%,
+      var(--shimmer-shine, #09090b) 55%,
+      var(--shimmer-base, #71717a) 100%
+    );
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: ai-shimmer var(--shimmer-duration, 3.8s) infinite linear;
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+</style>

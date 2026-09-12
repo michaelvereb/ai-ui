@@ -1,0 +1,674 @@
+---
+export interface StepItem {
+  id: string;
+  title: string;
+  status: 'completed' | 'running' | 'pending' | 'failed';
+  duration?: string;
+  details?: string;
+  summary?: string;
+}
+
+interface Props {
+  steps: StepItem[];
+  title?: string;
+  defaultOpen?: boolean;
+  class?: string;
+  id?: string;
+}
+
+const {
+  steps = [],
+  title = 'Agent Diagnostic Pipeline',
+  defaultOpen = true,
+  class: className = '',
+  id = `steps-${Math.random().toString(36).substring(2, 8)}`,
+} = Astro.props;
+
+const completedCount = steps.filter((s) => s.status === 'completed').length;
+const totalCount = steps.length;
+---
+
+<div
+  class={`ai-steps-card ${className}`}
+  data-steps-flow
+  id={id}
+  data-steps={JSON.stringify(steps)}
+>
+  <!-- Header matched identically to Reasoning -->
+  <button
+    type="button"
+    class="ai-steps-trigger"
+    aria-expanded={defaultOpen ? 'true' : 'false'}
+    data-trigger
+  >
+    <div class="ai-steps-meta">
+      <span class="ai-steps-status-icon" data-header-icon aria-hidden="true">
+        <!-- Spinner while running, checkmark when complete -->
+        <svg class="ai-icon-spinner animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+        <svg class="ai-icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </span>
+
+      <span class="ai-steps-label" data-header-label>
+        {title}
+      </span>
+
+      <span class="ai-steps-counter-pill" data-counter-pill>
+        {completedCount} of {totalCount} completed
+      </span>
+    </div>
+
+    <svg class="ai-steps-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+  </button>
+
+  <div class="ai-steps-content" data-content hidden={!defaultOpen}>
+    <div class="ai-steps-flow-list">
+      {steps.map((step, index) => {
+        const isCompleted = step.status === 'completed';
+        const isRunning = step.status === 'running';
+        const isPending = step.status === 'pending';
+        const isFailed = step.status === 'failed';
+
+        return (
+          <div
+            class={`ai-step-flow-item ${isCompleted ? 'is-completed' : isRunning ? 'is-active' : isFailed ? 'is-failed' : 'is-pending'}`}
+            data-step-index={index}
+            data-step-id={step.id}
+          >
+            <div class="ai-step-indicator">
+              <span class="ai-step-dot">
+                <svg class="ai-step-spinner animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                </svg>
+                <svg class="ai-step-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span class="ai-step-num">{index + 1}</span>
+              </span>
+            </div>
+
+            <div class="ai-step-body">
+              <div class="ai-step-header-row">
+                <div class="ai-step-title-wrap">
+                  <span class="ai-step-title">{step.title}</span>
+                  {step.duration && <span class="ai-step-duration">{step.duration}</span>}
+                </div>
+
+                <div class="ai-step-actions">
+                  <button
+                    type="button"
+                    class="ai-step-copy-btn"
+                    data-copy-step
+                    data-text={`${step.title}: ${step.summary || ''}`}
+                    title="Copy step telemetry"
+                    aria-label={`Copy info for ${step.title}`}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                    </svg>
+                    <span>Copy</span>
+                  </button>
+
+                  {step.details && (
+                    <button
+                      type="button"
+                      class="ai-step-drawer-toggle"
+                      data-drawer-toggle
+                      aria-expanded={isRunning ? 'true' : 'false'}
+                      title="Inspect payload"
+                    >
+                      <span>Inspect</span>
+                      <svg class="ai-drawer-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m6 9 6 6 6-6"></path>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {step.summary && (
+                <span class="ai-step-summary">{step.summary}</span>
+              )}
+
+              {step.details && (
+                <div class="ai-step-drawer" data-drawer hidden={!isRunning}>
+                  <div class="ai-drawer-top">
+                    <span class="ai-drawer-label">Diagnostic Telemetry Payload</span>
+                    <button
+                      type="button"
+                      class="ai-drawer-copy-code"
+                      data-copy-code={step.details}
+                      title="Copy code"
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                      </svg>
+                      <span>Copy Code</span>
+                    </button>
+                  </div>
+                  <pre class="ai-drawer-pre"><code>{step.details}</code></pre>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</div>
+
+<style>
+  .ai-steps-card {
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 20px;
+    overflow: hidden;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    width: 100%;
+    box-shadow: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+
+  .ai-steps-card:hover {
+    border-color: var(--border-strong, #d4d4d8);
+  }
+
+  .ai-steps-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text, #09090b);
+    text-align: left;
+    min-height: 54px;
+    font-family: inherit;
+  }
+
+  .ai-steps-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .ai-steps-status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-steps-label {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text, #09090b);
+  }
+
+  .ai-steps-counter-pill {
+    font-family: var(--font-mono, monospace);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--heat, #ED5F45);
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+    padding: 3px 9px;
+    border-radius: 9999px;
+    border: 1px solid rgba(237, 95, 69, 0.25);
+    line-height: 1;
+  }
+
+  .ai-steps-chevron {
+    color: var(--text-subtle, #71717a);
+    transition: transform 0.2s ease;
+  }
+
+  .ai-steps-trigger[aria-expanded="true"] .ai-steps-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ai-steps-content {
+    border-top: 1px solid var(--border, #e4e4e7);
+    background: #ffffff;
+    padding: 20px 22px;
+  }
+
+  .ai-steps-content[hidden] {
+    display: none;
+  }
+
+  .ai-steps-flow-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ai-step-flow-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    position: relative;
+    padding-bottom: 22px;
+    width: 100%;
+    transition: opacity 0.2s ease;
+  }
+
+  .ai-step-flow-item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* Step Indicator 22px circle identical to Reasoning */
+  .ai-step-indicator {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .ai-step-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    color: var(--text-subtle, #71717a);
+    z-index: 2;
+    transition: all 0.2s ease;
+    opacity: 1;
+  }
+
+  .ai-step-spinner {
+    display: none;
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-step-check {
+    display: none;
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-step-num {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono, monospace);
+    display: block;
+    line-height: 1;
+  }
+
+  /* Active step: Spinner spins */
+  .ai-step-flow-item.is-active .ai-step-dot {
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+    border-color: var(--heat, #ED5F45);
+  }
+
+  .ai-step-flow-item.is-active .ai-step-spinner {
+    display: block;
+  }
+
+  .ai-step-flow-item.is-active .ai-step-num {
+    display: none;
+  }
+
+  /* Completed step: Checkmark displays */
+  .ai-step-flow-item.is-completed .ai-step-dot {
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.12));
+    border-color: var(--heat, #ED5F45);
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-step-flow-item.is-completed .ai-step-check {
+    display: block;
+  }
+
+  .ai-step-flow-item.is-completed .ai-step-num {
+    display: none;
+  }
+
+  /* Opacity hierarchy identical to Reasoning */
+  .ai-step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .ai-step-flow-item.is-completed .ai-step-body {
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  .ai-step-flow-item.is-completed:hover .ai-step-body {
+    opacity: 1;
+  }
+
+  .ai-step-flow-item.is-active .ai-step-body {
+    opacity: 1;
+  }
+
+  .ai-step-flow-item.is-pending .ai-step-body {
+    opacity: 0.45;
+    transition: opacity 0.2s ease;
+  }
+
+  .ai-step-flow-item.is-pending:hover .ai-step-body {
+    opacity: 0.85;
+  }
+
+  .ai-step-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .ai-step-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ai-step-title {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--text, #09090b);
+    line-height: 1.4;
+  }
+
+  .ai-step-flow-item.is-pending .ai-step-title {
+    color: var(--text-muted, #52525b);
+  }
+
+  .ai-step-duration {
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    color: var(--text-subtle, #71717a);
+    background: var(--bg-subtle, #f4f4f5);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border, #e4e4e7);
+  }
+
+  /* Clean action buttons: Copy & Drawer toggle */
+  .ai-step-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .ai-step-copy-btn,
+  .ai-step-drawer-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 6px;
+    color: var(--text-muted, #71717a);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    line-height: 1;
+  }
+
+  .ai-step-copy-btn:hover,
+  .ai-step-drawer-toggle:hover {
+    background: var(--bg-subtle, #f4f4f5);
+    color: var(--text, #09090b);
+    border-color: var(--border-strong, #d4d4d8);
+  }
+
+  .ai-drawer-icon {
+    transition: transform 0.2s ease;
+  }
+
+  .ai-step-drawer-toggle[aria-expanded="true"] .ai-drawer-icon {
+    transform: rotate(180deg);
+  }
+
+  /* Subtext softer and lighter so it recedes gracefully */
+  .ai-step-summary {
+    font-size: 13px;
+    color: #a1a1aa;
+    font-weight: 400;
+    line-height: 1.45;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  /* Telemetry Drawer */
+  .ai-step-drawer {
+    margin-top: 8px;
+    border: 1px solid var(--border, #e4e4e7);
+    background: var(--bg-subtle, #fafafa);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-step-drawer[hidden] {
+    display: none;
+  }
+
+  .ai-drawer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .ai-drawer-label {
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    color: var(--text-subtle, #71717a);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .ai-drawer-copy-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--text-muted, #71717a);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+
+  .ai-drawer-copy-code:hover {
+    background: #f4f4f5;
+    color: #09090b;
+  }
+
+  .ai-drawer-pre {
+    margin: 0;
+    font-family: var(--font-mono, monospace);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #27272a;
+    background: transparent;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+</style>
+
+<script>
+  function initStepsFlow() {
+    document.querySelectorAll<HTMLElement>('[data-steps-flow]').forEach((container) => {
+      const trigger = container.querySelector<HTMLButtonElement>('[data-trigger]');
+      const content = container.querySelector<HTMLElement>('[data-content]');
+      const headerSpinner = container.querySelector<SVGElement>('.ai-icon-spinner');
+      const headerCheck = container.querySelector<SVGElement>('.ai-icon-check');
+      const headerLabel = container.querySelector<HTMLElement>('[data-header-label]');
+      const counterPill = container.querySelector<HTMLElement>('[data-counter-pill]');
+      const stepItems = Array.from(container.querySelectorAll<HTMLElement>('.ai-step-flow-item'));
+
+      // Collapsible toggle
+      if (trigger && content) {
+        trigger.addEventListener('click', () => {
+          const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+          trigger.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+          if (isExpanded) {
+            content.setAttribute('hidden', '');
+          } else {
+            content.removeAttribute('hidden');
+          }
+        });
+      }
+
+      // Drawer toggles
+      container.querySelectorAll<HTMLButtonElement>('[data-drawer-toggle]').forEach((toggleBtn) => {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const stepRow = toggleBtn.closest('.ai-step-flow-item');
+          const drawer = stepRow?.querySelector<HTMLElement>('[data-drawer]');
+          if (!drawer) return;
+
+          const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+          toggleBtn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+          if (isExpanded) {
+            drawer.setAttribute('hidden', '');
+          } else {
+            drawer.removeAttribute('hidden');
+          }
+        });
+      });
+
+      // Copy buttons without label changes
+      container.querySelectorAll<HTMLButtonElement>('[data-copy-step]').forEach((copyBtn) => {
+        copyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const text = copyBtn.getAttribute('data-text') || '';
+          navigator.clipboard.writeText(text).then(() => {
+            if (typeof (window as any).aiToast === 'function') {
+              (window as any).aiToast('Step telemetry copied to clipboard');
+            }
+          });
+        });
+      });
+
+      container.querySelectorAll<HTMLButtonElement>('[data-copy-code]').forEach((copyCodeBtn) => {
+        copyCodeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const code = copyCodeBtn.getAttribute('data-copy-code') || '';
+          navigator.clipboard.writeText(code).then(() => {
+            if (typeof (window as any).aiToast === 'function') {
+              (window as any).aiToast('Payload code copied to clipboard');
+            }
+          });
+        });
+      });
+
+      // Sequential progression animation matching Reasoning
+      if (stepItems.length === 0) return;
+
+      // Find first non-completed step
+      let activeIdx = stepItems.findIndex((el) => el.classList.contains('is-active'));
+      if (activeIdx === -1) {
+        activeIdx = stepItems.findIndex((el) => el.classList.contains('is-pending'));
+      }
+      if (activeIdx === -1) return; // All already complete
+
+      const stepInterval = 1800;
+
+      function updateCounter() {
+        const completed = container.querySelectorAll('.ai-step-flow-item.is-completed').length;
+        if (counterPill) {
+          counterPill.textContent = `${completed} of ${stepItems.length} completed`;
+        }
+      }
+
+      function advanceStep() {
+        if (activeIdx < stepItems.length) {
+          const curEl = stepItems[activeIdx];
+          curEl.classList.remove('is-active', 'is-pending');
+          curEl.classList.add('is-completed');
+
+          // Close active drawer on completion if open
+          const drawer = curEl.querySelector<HTMLElement>('[data-drawer]');
+          const drawerToggle = curEl.querySelector<HTMLButtonElement>('[data-drawer-toggle]');
+          if (drawer && drawerToggle) {
+            drawer.setAttribute('hidden', '');
+            drawerToggle.setAttribute('aria-expanded', 'false');
+          }
+
+          updateCounter();
+          activeIdx++;
+
+          if (activeIdx < stepItems.length) {
+            const nextEl = stepItems[activeIdx];
+            nextEl.classList.remove('is-pending');
+            nextEl.classList.add('is-active');
+
+            // Automatically open running step drawer if present
+            const nextDrawer = nextEl.querySelector<HTMLElement>('[data-drawer]');
+            const nextToggle = nextEl.querySelector<HTMLButtonElement>('[data-drawer-toggle]');
+            if (nextDrawer && nextToggle) {
+              nextDrawer.removeAttribute('hidden');
+              nextToggle.setAttribute('aria-expanded', 'true');
+            }
+
+            setTimeout(advanceStep, stepInterval);
+          } else {
+            // All steps completed
+            if (headerSpinner && headerCheck) {
+              headerSpinner.style.display = 'none';
+              headerCheck.style.display = 'inline-block';
+            }
+            if (headerLabel) {
+              headerLabel.textContent = 'Diagnostic Pipeline Verified (4 of 4 completed)';
+            }
+          }
+        }
+      }
+
+      setTimeout(advanceStep, stepInterval);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStepsFlow);
+  } else {
+    initStepsFlow();
+  }
+</script>

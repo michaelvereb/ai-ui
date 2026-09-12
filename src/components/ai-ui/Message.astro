@@ -1,0 +1,194 @@
+---
+interface Props {
+  role?: 'user' | 'assistant' | 'system';
+  avatar?: string;
+  authorName?: string;
+  timestamp?: string;
+  class?: string;
+}
+
+const {
+  role = 'assistant',
+  avatar,
+  authorName = role === 'user' ? 'You' : 'Agent Audit',
+  timestamp,
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-message ai-message-${role} ${className}`} data-message>
+  <div class="ai-message-header">
+    <div class="ai-message-author">
+      {avatar ? (
+        <img src={avatar} alt={authorName} class="ai-avatar" />
+      ) : (
+        <div class="ai-avatar-fallback">
+          {role === 'user' ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08A2.5 2.5 0 0 0 12 19.5a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 12 4.5Z"></path>
+            </svg>
+          )}
+        </div>
+      )}
+      <span class="ai-author-name">{authorName}</span>
+      {role === 'assistant' && <span class="ai-role-tag">Agent</span>}
+    </div>
+    {timestamp && <span class="ai-timestamp">{timestamp}</span>}
+  </div>
+
+  <div class="ai-message-content">
+    <slot />
+  </div>
+
+  <div class="ai-message-actions">
+    <button type="button" class="ai-action-btn" title="Copy message" data-copy-btn>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+      </svg>
+      <span class="ai-action-text">Copy</span>
+    </button>
+  </div>
+</div>
+
+<style>
+  .ai-message {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 18px;
+    border-radius: var(--radius-md, 16px);
+    background: var(--surface, #131316);
+    border: 1px solid var(--border, #232328);
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    transition: border-color 0.15s ease;
+  }
+
+  .ai-message:hover {
+    border-color: var(--border-strong, #36363d);
+  }
+
+  .ai-message-user {
+    background: var(--surface-raised, #18181c);
+  }
+
+  .ai-message-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ai-message-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-avatar-fallback {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface-raised, #18181c);
+    border: 1px solid var(--border, #232328);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-message-user .ai-avatar-fallback {
+    color: var(--text-muted, #a1a1aa);
+  }
+
+  .ai-author-name {
+    font-size: 15px;
+    font-weight: var(--font-semibold, 600);
+    color: var(--text, #fcfcfc);
+  }
+
+  .ai-role-tag {
+    font-size: 11px;
+    font-weight: var(--font-semibold, 600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(237, 95, 69, 0.14);
+    color: var(--heat, #ED5F45);
+    padding: 2px 8px;
+    border-radius: var(--radius-pill, 9999px);
+  }
+
+  .ai-timestamp {
+    font-size: 12px;
+    color: var(--text-dim, #52525b);
+    font-family: var(--font-mono, monospace);
+  }
+
+  .ai-message-content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text, #fcfcfc);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ai-message-content :global(p) {
+    margin: 0;
+  }
+
+  .ai-message-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .ai-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    color: var(--text-subtle, #71717a);
+    font-size: var(--text-xs, 12px);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: var(--radius-xs, 4px);
+    transition: all 0.15s ease;
+  }
+
+  .ai-action-btn:hover {
+    color: var(--text, #fafafa);
+    background: var(--surface-raised, #18181b);
+  }
+</style>
+
+<script>
+  function initMessages() {
+    document.querySelectorAll<HTMLElement>('[data-message]').forEach((msg) => {
+      const copyBtn = msg.querySelector<HTMLButtonElement>('[data-copy-btn]');
+      if (!copyBtn) return;
+
+      copyBtn.addEventListener('click', () => {
+        const text = msg.querySelector('.ai-message-content')?.textContent?.trim() || '';
+        navigator.clipboard.writeText(text).then(() => {
+          if (typeof (window as any).aiToast === 'function') {
+            (window as any).aiToast('Message copied to clipboard');
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMessages);
+  } else {
+    initMessages();
+  }
+</script>

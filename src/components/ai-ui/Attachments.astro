@@ -1,0 +1,121 @@
+---
+interface AttachmentItem {
+  id: string;
+  name: string;
+  size?: string;
+  type?: string;
+}
+
+interface Props {
+  files?: AttachmentItem[];
+  class?: string;
+}
+
+const {
+  files = [],
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-attachments-list ${className}`} data-attachments>
+  {files.map((file) => (
+    <div class="ai-attachment-chip" data-file-id={file.id}>
+      <span class="ai-attachment-icon" aria-hidden="true">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+      </span>
+      <span class="ai-attachment-name">{file.name}</span>
+      {file.size && <span class="ai-attachment-size">{file.size}</span>}
+      <button type="button" class="ai-attachment-remove" aria-label={`Remove ${file.name}`}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  ))}
+</div>
+
+<style>
+  .ai-attachments-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+
+  .ai-attachment-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--surface-raised, #18181c);
+    border: 1px solid var(--border, #232328);
+    border-radius: var(--radius-sm, 10px);
+    font-size: 13px;
+    color: var(--text, #fcfcfc);
+    transition: all 0.15s ease;
+  }
+
+  .ai-attachment-chip:hover {
+    border-color: var(--border-strong, #36363d);
+  }
+
+  .ai-attachment-icon {
+    color: var(--heat, #ED5F45);
+    display: flex;
+  }
+
+  .ai-attachment-name {
+    font-weight: var(--font-medium, 500);
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ai-attachment-size {
+    font-family: var(--font-mono, monospace);
+    font-size: 10px;
+    color: var(--text-subtle, #71717a);
+  }
+
+  .ai-attachment-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-subtle, #71717a);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    border-radius: 50%;
+    transition: color 0.15s ease;
+  }
+
+  .ai-attachment-remove:hover {
+    color: var(--status-error, #ef4444);
+  }
+</style>
+
+<script>
+  function initAttachments() {
+    document.querySelectorAll<HTMLElement>('[data-attachments]').forEach((container) => {
+      container.querySelectorAll('.ai-attachment-chip').forEach((chip) => {
+        chip.querySelector('.ai-attachment-remove')?.addEventListener('click', () => {
+          chip.remove();
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAttachments);
+  } else {
+    initAttachments();
+  }
+</script>

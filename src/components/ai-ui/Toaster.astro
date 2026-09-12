@@ -1,0 +1,162 @@
+---
+interface Props {
+  class?: string;
+}
+
+const {
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-toaster-center ${className}`} data-toaster id="ai-toaster-container">
+  <div class="ai-toast-stack" data-toast-stack></div>
+</div>
+
+<style>
+  .ai-toaster-center {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    max-width: 90vw;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+
+  .ai-toast-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Compact pill toast: small, title-only, centered, coming up from bottom, ZERO drop shadow */
+  :global(.ai-toast) {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill, 9999px);
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    color: var(--text, #09090b);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    box-shadow: none;
+    animation: ai-toast-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  :global(.ai-toast.removing) {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  :global(.ai-toast-icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--heat, #ED5F45);
+    flex-shrink: 0;
+  }
+
+  :global(.ai-toast-icon svg) {
+    width: 14px;
+    height: 14px;
+  }
+
+  :global(.ai-toast-title) {
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  :global(.ai-toast-close) {
+    background: transparent;
+    border: none;
+    color: var(--text-subtle, #71717a);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    margin-left: 4px;
+    border-radius: 50%;
+    transition: color 0.15s ease;
+  }
+
+  :global(.ai-toast-close:hover) {
+    color: var(--text, #09090b);
+  }
+
+  @keyframes ai-toast-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  interface ToastOptions {
+    title: string;
+    description?: string;
+    variant?: 'success' | 'error' | 'warning' | 'info' | 'default';
+    duration?: number;
+  }
+
+  const icons: Record<string, string> = {
+    success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    default: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+  };
+
+  function createToast(opts: ToastOptions | string) {
+    const stack = document.querySelector('[data-toast-stack]');
+    if (!stack) return;
+
+    const title = typeof opts === 'string' ? opts : opts.title;
+    const variant = (typeof opts === 'object' && opts.variant) || 'success';
+    const duration = (typeof opts === 'object' && opts.duration) || 3200;
+
+    const toast = document.createElement('div');
+    toast.className = `ai-toast ai-toast-${variant}`;
+
+    toast.innerHTML = `
+      <span class="ai-toast-icon">${icons[variant] || icons.default}</span>
+      <span class="ai-toast-title">${title}</span>
+      <button type="button" class="ai-toast-close" aria-label="Dismiss">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    `;
+
+    const closeBtn = toast.querySelector('.ai-toast-close');
+    const dismiss = () => {
+      toast.classList.add('removing');
+      setTimeout(() => toast.remove(), 160);
+    };
+
+    closeBtn?.addEventListener('click', dismiss);
+    setTimeout(dismiss, duration);
+
+    stack.appendChild(toast);
+  }
+
+  (window as any).aiToast = createToast;
+</script>

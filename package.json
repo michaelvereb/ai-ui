@@ -1,0 +1,36 @@
+{
+  "name": "@vereb/ai-ui",
+  "version": "1.0.0",
+  "description": "Lightweight, accessible Astro components for AI reasoning traces, streaming state, and autonomous agent interfaces. Zero React, zero Radix, zero Tailwind.",
+  "type": "module",
+  "author": "Michael Vereb",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelvereb/ai-ui.git"
+  },
+  "homepage": "https://www.michaelvereb.com/ai-ui",
+  "exports": {
+    "./theme.css": "./src/styles/theme.css",
+    "./components/*": "./src/components/ai-ui/*.astro",
+    "./animations/*": "./src/components/animations/*.astro"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  },
+  "keywords": [
+    "astro",
+    "ai",
+    "ui",
+    "reasoning",
+    "thinking-bar",
+    "agent",
+    "components"
+  ]
+}

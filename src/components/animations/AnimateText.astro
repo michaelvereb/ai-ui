@@ -1,0 +1,443 @@
+---
+type AnimationEffect =
+  | 'soft-blur-in'
+  | 'per-character-rise'
+  | 'per-word-crossfade'
+  | 'spring-scale-in'
+  | 'mask-reveal-up'
+  | 'line-by-line-slide'
+  | 'typewriter'
+  | 'micro-scale-fade'
+  | 'shimmer-sweep'
+  | 'fade-through'
+  | 'shared-axis-y'
+  | 'shared-axis-z'
+  | 'blur-out-up'
+  | 'scale-down-fade'
+  | 'focus-blur-resolve'
+  | 'bottom-up-letters'
+  | 'top-down-letters'
+  | 'kinetic-center-build'
+  | 'short-slide-right'
+  | 'short-slide-down';
+
+interface Props {
+  id?: string;
+  text?: string;
+  effect?: AnimationEffect;
+  as?: string;
+  duration?: number;
+  delay?: number;
+  stagger?: number;
+  autoplay?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  text = '',
+  effect = 'soft-blur-in',
+  as: Tag = 'div',
+  duration,
+  delay = 0,
+  stagger,
+  autoplay = true,
+  class: className = '',
+} = Astro.props;
+
+// Determine target splitting mode based on effect
+const getSplitMode = (eff: AnimationEffect): 'character' | 'word' | 'line' | 'whole' => {
+  switch (eff) {
+    case 'soft-blur-in':
+    case 'per-character-rise':
+    case 'bottom-up-letters':
+    case 'top-down-letters':
+      return 'character';
+    case 'per-word-crossfade':
+    case 'spring-scale-in':
+    case 'shared-axis-y':
+    case 'blur-out-up':
+    case 'kinetic-center-build':
+    case 'short-slide-right':
+    case 'short-slide-down':
+      return 'word';
+    case 'mask-reveal-up':
+    case 'line-by-line-slide':
+      return 'line';
+    default:
+      return 'whole';
+  }
+};
+
+const splitMode = getSplitMode(effect);
+const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
+---
+
+<Tag
+  class={`ai-animate-text effect-${effect} ${className}`}
+  data-animate-text
+  data-effect={effect}
+  data-split={splitMode}
+  data-duration={duration}
+  data-delay={delay}
+  data-stagger={stagger}
+  data-autoplay={autoplay ? 'true' : 'false'}
+  data-text={text}
+  id={animId}
+>
+  {text ? (
+    effect === 'typewriter' ? (
+      <span class="anim-unit anim-typewriter-wrap" data-full-text={text}>
+        <span class="anim-typewriter-text">{text}</span>
+        <span class="anim-typewriter-caret" aria-hidden="true">|</span>
+      </span>
+    ) : effect === 'shimmer-sweep' ? (
+      <span class="anim-unit anim-shimmer-text">{text}</span>
+    ) : splitMode === 'character' ? (
+      text.split(' ').map((word, wIdx) => (
+        <span class="anim-word-token" style="display: inline-block; white-space: nowrap;">
+          {word.split('').map((char, cIdx) => (
+            <span class="anim-unit anim-char" data-index={wIdx * 10 + cIdx} style={`--unit-idx: ${wIdx * 10 + cIdx};`}>
+              {char}
+            </span>
+          ))}
+          <span class="anim-unit anim-space">&nbsp;</span>
+        </span>
+      ))
+    ) : splitMode === 'word' ? (
+      text.split(' ').map((word, i) => (
+        <span class="anim-unit anim-word" data-index={i} style={`--unit-idx: ${i};`}>
+          {word}&nbsp;
+        </span>
+      ))
+    ) : splitMode === 'line' ? (
+      text.split('\n').map((line, i) => (
+        <div class="anim-unit anim-line-wrap" data-index={i} style={`--unit-idx: ${i};`}>
+          <div class="anim-line">{line}</div>
+        </div>
+      ))
+    ) : (
+      <span class="anim-unit anim-whole">{text}</span>
+    )
+  ) : (
+    <slot />
+  )}
+</Tag>
+
+<style>
+  .ai-animate-text {
+    display: inline-block;
+    font-family: var(--font-sans);
+    line-height: 1.4;
+  }
+
+  .anim-unit {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+  }
+
+  .anim-line-wrap {
+    overflow: hidden;
+    display: block;
+  }
+
+  /* Shimmer Sweep Effect: Sweeps Left-to-Right naturally */
+  .anim-shimmer-text {
+    display: inline-block;
+    background: linear-gradient(
+      90deg,
+      #71717a 0%,
+      #09090b 25%,
+      var(--heat, #ED5F45) 50%,
+      #09090b 75%,
+      #71717a 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmer-sweep-kf 3s linear infinite;
+  }
+
+  @keyframes shimmer-sweep-kf {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Typewriter progressive text & blinking caret */
+  .anim-typewriter-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    white-space: normal;
+  }
+
+  .anim-typewriter-text {
+    display: inline;
+    color: var(--text, #09090b);
+  }
+
+  .anim-typewriter-caret {
+    display: inline-block;
+    color: var(--heat, #ED5F45);
+    font-weight: 700;
+    margin-left: 2px;
+    animation: caret-blink 0.75s infinite steps(1);
+    vertical-align: baseline;
+  }
+
+  @keyframes caret-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<script>
+  function playAnimation(el: HTMLElement) {
+    const effect = el.getAttribute('data-effect') || 'soft-blur-in';
+    const userDelay = parseInt(el.getAttribute('data-delay') || '0', 10);
+    const userDuration = parseInt(el.getAttribute('data-duration') || '0', 10);
+    const userStagger = parseInt(el.getAttribute('data-stagger') || '0', 10);
+
+    // Dedicated Handler 1: Typewriter
+    if (effect === 'typewriter') {
+      const wrap = el.querySelector<HTMLElement>('.anim-typewriter-wrap');
+      const text = wrap?.getAttribute('data-full-text') || el.getAttribute('data-text') || '';
+      const textSpan = el.querySelector<HTMLElement>('.anim-typewriter-text');
+      if (!textSpan) return;
+
+      clearInterval((el as any).__typewriterTimer);
+      textSpan.textContent = '';
+      let charIdx = 0;
+      const speed = userStagger || 35;
+
+      (el as any).__typewriterTimer = setInterval(() => {
+        charIdx++;
+        textSpan.textContent = text.slice(0, charIdx);
+        if (charIdx >= text.length) {
+          clearInterval((el as any).__typewriterTimer);
+        }
+      }, speed);
+      return;
+    }
+
+    // Dedicated Handler 2: Shimmer Sweep
+    if (effect === 'shimmer-sweep') {
+      const shimmer = el.querySelector<HTMLElement>('.anim-shimmer-text');
+      if (shimmer) {
+        shimmer.style.animation = 'none';
+        void shimmer.offsetHeight;
+        shimmer.style.animation = 'shimmer-sweep-kf 3s linear infinite';
+      }
+      return;
+    }
+
+    const units = el.querySelectorAll<HTMLElement>('.anim-unit');
+    if (units.length === 0) return;
+
+    // Reset any active WAAPI animations first
+    units.forEach((unit) => {
+      unit.getAnimations().forEach((anim) => anim.cancel());
+    });
+
+    // Web Animations API (WAAPI) Keyframe Definitions
+    units.forEach((unit, idx) => {
+      let keyframes: Keyframe[] = [];
+      let duration = userDuration || 500;
+      let delay = userDelay + (idx * (userStagger || 35));
+      let easing = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+      switch (effect) {
+        case 'soft-blur-in':
+          duration = userDuration || 600;
+          delay = userDelay + (idx * (userStagger || 28));
+          keyframes = [
+            { opacity: 0, filter: 'blur(8px)', transform: 'translateY(12px)' },
+            { opacity: 1, filter: 'blur(0px)', transform: 'translateY(0px)' }
+          ];
+          break;
+
+        case 'per-character-rise':
+          duration = userDuration || 420;
+          delay = userDelay + (idx * (userStagger || 25));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(100%)' },
+            { opacity: 1, transform: 'translateY(0%)' }
+          ];
+          break;
+
+        case 'per-word-crossfade':
+          duration = userDuration || 550;
+          delay = userDelay + (idx * (userStagger || 60));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(8px)' },
+            { opacity: 1, transform: 'translateY(0px)' }
+          ];
+          break;
+
+        case 'spring-scale-in':
+          duration = userDuration || 500;
+          delay = userDelay + (idx * (userStagger || 50));
+          keyframes = [
+            { opacity: 0, transform: 'scale(0.82)' },
+            { opacity: 1, transform: 'scale(1.05)', offset: 0.7 },
+            { opacity: 1, transform: 'scale(1)' }
+          ];
+          easing = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+          break;
+
+        case 'mask-reveal-up':
+          duration = userDuration || 650;
+          delay = userDelay + (idx * (userStagger || 100));
+          keyframes = [
+            { transform: 'translateY(100%)' },
+            { transform: 'translateY(0%)' }
+          ];
+          break;
+
+        case 'line-by-line-slide':
+          duration = userDuration || 700;
+          delay = userDelay + (idx * (userStagger || 120));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(20px)' },
+            { opacity: 1, transform: 'translateY(0px)' }
+          ];
+          break;
+
+        case 'micro-scale-fade':
+          duration = userDuration || 400;
+          keyframes = [
+            { opacity: 0, transform: 'scale(0.95)' },
+            { opacity: 1, transform: 'scale(1)' }
+          ];
+          break;
+
+        case 'fade-through':
+          duration = userDuration || 450;
+          keyframes = [
+            { opacity: 0, filter: 'blur(6px)', transform: 'translateY(4px)' },
+            { opacity: 1, filter: 'blur(0)', transform: 'translateY(0)' }
+          ];
+          break;
+
+        case 'shared-axis-y':
+          duration = userDuration || 400;
+          delay = userDelay + (idx * (userStagger || 40));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(16px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ];
+          break;
+
+        case 'shared-axis-z':
+          duration = userDuration || 450;
+          keyframes = [
+            { opacity: 0, transform: 'scale(0.92)' },
+            { opacity: 1, transform: 'scale(1)' }
+          ];
+          break;
+
+        case 'focus-blur-resolve':
+          duration = userDuration || 700;
+          keyframes = [
+            { opacity: 0, filter: 'blur(16px)' },
+            { opacity: 1, filter: 'blur(0)' }
+          ];
+          break;
+
+        case 'bottom-up-letters':
+          duration = userDuration || 400;
+          delay = userDelay + (idx * (userStagger || 25));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(24px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ];
+          break;
+
+        case 'top-down-letters':
+          duration = userDuration || 400;
+          delay = userDelay + (idx * (userStagger || 25));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(-24px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ];
+          break;
+
+        case 'kinetic-center-build':
+          duration = userDuration || 550;
+          delay = userDelay + (idx * (userStagger || 70));
+          keyframes = [
+            { opacity: 0, filter: 'blur(6px)', transform: 'translateX(20px)' },
+            { opacity: 1, filter: 'blur(0)', transform: 'translateX(0)' }
+          ];
+          break;
+
+        case 'short-slide-down':
+          duration = userDuration || 500;
+          delay = userDelay + (idx * (userStagger || 60));
+          keyframes = [
+            { opacity: 0, transform: 'translateY(-16px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ];
+          break;
+
+        case 'short-slide-right':
+          duration = userDuration || 450;
+          delay = userDelay + (idx * (userStagger || 50));
+          keyframes = [
+            { opacity: 0, transform: 'translateX(-16px)' },
+            { opacity: 1, transform: 'translateX(0)' }
+          ];
+          break;
+
+        case 'blur-out-up':
+          duration = userDuration || 600;
+          delay = userDelay + (idx * (userStagger || 60));
+          keyframes = [
+            { opacity: 0, filter: 'blur(8px)', transform: 'translateY(-14px)' },
+            { opacity: 1, filter: 'blur(0px)', transform: 'translateY(0px)' }
+          ];
+          break;
+
+        case 'scale-down-fade':
+          duration = userDuration || 500;
+          delay = userDelay + (idx * (userStagger || 50));
+          keyframes = [
+            { opacity: 0, transform: 'scale(1.15)' },
+            { opacity: 1, transform: 'scale(1)' }
+          ];
+          break;
+
+        default:
+          return;
+      }
+
+      unit.animate(keyframes, {
+        duration,
+        delay,
+        easing,
+        fill: 'both'
+      });
+    });
+  }
+
+  function setupTextAnimations() {
+    document.querySelectorAll<HTMLElement>('[data-animate-text]').forEach((el) => {
+      const autoplay = el.getAttribute('data-autoplay') === 'true';
+      if ((el as any).__anim_init) return;
+      (el as any).__anim_init = true;
+      if (autoplay) {
+        playAnimation(el);
+      }
+    });
+  }
+
+  (window as any).replayTextAnimation = (target: string | HTMLElement) => {
+    const el = typeof target === 'string' ? document.getElementById(target) : target;
+    if (el) {
+      playAnimation(el);
+    }
+  };
+
+  setupTextAnimations();
+  document.addEventListener('astro:page-load', setupTextAnimations);
+</script>

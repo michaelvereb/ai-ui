@@ -1,0 +1,117 @@
+---
+interface Props {
+  index?: number;
+  title: string;
+  url: string;
+  domain?: string;
+  class?: string;
+}
+
+const {
+  index,
+  title,
+  url,
+  domain = '',
+  class: className = '',
+} = Astro.props;
+
+const displayDomain = domain || (() => {
+  try { return new URL(url).hostname.replace('www.', ''); } catch { return url; }
+})();
+
+const faviconUrl = `https://www.google.com/s2/favicons?domain=${displayDomain}&sz=32`;
+---
+
+<a
+  href={url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class={`ai-citation-pill ${className}`}
+  title={title}
+>
+  {typeof index === 'number' && <span class="ai-citation-index">{index}</span>}
+  <img
+    src={faviconUrl}
+    alt=""
+    class="ai-citation-favicon"
+    width="14"
+    height="14"
+    loading="lazy"
+  />
+  <span class="ai-citation-title">{title}</span>
+  <span class="ai-citation-domain">{displayDomain}</span>
+  <svg class="ai-citation-ext" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+    <polyline points="15 3 21 3 21 9"></polyline>
+    <line x1="10" y1="14" x2="21" y2="3"></line>
+  </svg>
+</a>
+
+<style>
+  .ai-citation-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: var(--radius-sm, 10px);
+    color: var(--text, #09090b);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: none;
+    max-width: 340px;
+    line-height: 1;
+  }
+
+  .ai-citation-pill:hover {
+    background: var(--bg-subtle, #fafafa);
+    border-color: var(--border-strong, #d4d4d8);
+    transform: translateY(-1px);
+  }
+
+  .ai-citation-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+    color: var(--heat, #ED5F45);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono, monospace);
+    flex-shrink: 0;
+  }
+
+  .ai-citation-favicon {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .ai-citation-title {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text, #09090b);
+  }
+
+  .ai-citation-domain {
+    font-size: 11px;
+    color: var(--text-subtle, #71717a);
+    font-family: var(--font-mono, monospace);
+    flex-shrink: 0;
+  }
+
+  .ai-citation-ext {
+    color: var(--text-subtle, #71717a);
+    flex-shrink: 0;
+  }
+</style>

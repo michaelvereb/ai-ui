@@ -1,0 +1,193 @@
+---
+interface Props {
+  phases?: string[];
+  isStreaming?: boolean;
+  autoCycle?: boolean;
+  cycleIntervalMs?: number;
+  class?: string;
+  id?: string;
+}
+
+const defaultPhases = [
+  'Auditing edge security headers & TLS 1.3...',
+  'Verifying RFC 8259 JSON-LD single-pass schemas...',
+  'Probing autonomous crawler reachability (Claude-User / CCBot)...',
+  'Inspecting WebMCP tool registrations & annotations...',
+  'Synthesizing 30-point Site-Ready remediation report...',
+];
+
+const {
+  phases = defaultPhases,
+  isStreaming = true,
+  autoCycle = true,
+  cycleIntervalMs = 4000,
+  class: className = '',
+  id = `thinking-bar-${Math.random().toString(36).substring(2, 8)}`,
+} = Astro.props;
+
+const initialPhase = phases[0] || 'Analyzing target domain...';
+---
+
+<div
+  class={`ai-thinking-bar ${isStreaming ? 'is-streaming' : 'is-idle'} ${className}`}
+  data-thinking-bar
+  id={id}
+  data-phases={JSON.stringify(phases)}
+  data-autocycle={autoCycle ? 'true' : 'false'}
+  data-interval={cycleIntervalMs}
+>
+  <div class="ai-thinking-left">
+    <!-- Clean, minimal primary orange spinner without heavy background blobs -->
+    <div class="ai-thinking-icon" aria-hidden="true">
+      <svg class="ai-thinking-spinner animate-spin" viewBox="0 0 24 24" fill="none" width="16" height="16">
+        <circle class="ai-spinner-bg" cx="12" cy="12" r="9" stroke="#e4e4e7" stroke-width="2.5"></circle>
+        <path class="ai-spinner-head" d="M12 3a9 9 0 0 1 9 9" stroke="#ED5F45" stroke-width="2.5" stroke-linecap="round"></path>
+      </svg>
+    </div>
+
+    <!-- Short Slide Right & Left-to-Right Shimmer Sweep -->
+    <div class="ai-thinking-text" data-phase-text>
+      <span class="ai-shimmer-sweep">{initialPhase}</span>
+    </div>
+  </div>
+
+  <span class="ai-thinking-brand">Agent Audit</span>
+</div>
+
+<style>
+  .ai-thinking-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 20px;
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: var(--radius-pill, 9999px);
+    box-shadow: none;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    width: 100%;
+    max-width: 640px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+
+  .ai-thinking-bar:hover {
+    border-color: var(--border-strong, #d4d4d8);
+  }
+
+  .ai-thinking-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  .ai-thinking-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--heat, #ED5F45);
+  }
+
+  .ai-thinking-spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Short Slide Right Transition Area */
+  .ai-thinking-text {
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.4;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Natural Left-to-Right Animated Shimmer Sweep */
+  .ai-shimmer-sweep {
+    display: inline-block;
+    background: linear-gradient(
+      90deg,
+      #71717a 0%,
+      #09090b 25%,
+      #ED5F45 50%,
+      #09090b 75%,
+      #71717a 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: ai-shimmer-left-to-right 3.2s linear infinite;
+  }
+
+  @keyframes ai-shimmer-left-to-right {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .ai-thinking-brand {
+    font-size: 13px;
+    font-weight: 600;
+    color: #09090b;
+    text-align: right;
+    flex-shrink: 0;
+    letter-spacing: -0.01em;
+  }
+</style>
+
+<script>
+  function initThinkingBars() {
+    document.querySelectorAll<HTMLElement>('[data-thinking-bar]').forEach((bar) => {
+      const phasesRaw = bar.getAttribute('data-phases');
+      const intervalMs = parseInt(bar.getAttribute('data-interval') || '4000', 10);
+      const textEl = bar.querySelector<HTMLElement>('[data-phase-text]');
+
+      if (!phasesRaw || !textEl) return;
+
+      try {
+        const phases: string[] = JSON.parse(phasesRaw);
+        if (phases.length <= 1) return;
+
+        let currentIndex = 0;
+        setInterval(() => {
+          currentIndex = (currentIndex + 1) % phases.length;
+
+          // Short slide right out
+          textEl.style.opacity = '0';
+          textEl.style.transform = 'translateX(16px)';
+
+          setTimeout(() => {
+            textEl.innerHTML = `<span class="ai-shimmer-sweep">${phases[currentIndex]}</span>`;
+            // Position to the left for incoming short slide right
+            textEl.style.transform = 'translateX(-16px)';
+
+            requestAnimationFrame(() => {
+              textEl.style.opacity = '1';
+              textEl.style.transform = 'translateX(0)';
+            });
+          }, 280);
+        }, Math.max(intervalMs, 4000));
+      } catch (err) {
+        // Fallback safety
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThinkingBars);
+  } else {
+    initThinkingBars();
+  }
+</script>

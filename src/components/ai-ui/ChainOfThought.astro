@@ -1,0 +1,171 @@
+---
+interface ThoughtNode {
+  title: string;
+  detail?: string;
+  status?: 'completed' | 'active' | 'pending';
+}
+
+interface Props {
+  nodes?: ThoughtNode[];
+  class?: string;
+}
+
+const {
+  nodes = [],
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-chain-of-thought ${className}`} data-chain-of-thought>
+  <div class="ai-cot-header">
+    <span class="ai-cot-icon" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </span>
+    <span class="ai-cot-title">Reasoning Graph</span>
+  </div>
+
+  <div class="ai-cot-nodes">
+    <div class="ai-cot-track-line" aria-hidden="true"></div>
+    {nodes.map((node, i) => (
+      <div class={`ai-cot-node status-${node.status || 'completed'}`}>
+        <div class="ai-cot-node-point">
+          <span class="ai-cot-dot"></span>
+        </div>
+        <div class="ai-cot-node-content">
+          <span class="ai-cot-node-title">{node.title}</span>
+          {node.detail && <p class="ai-cot-node-detail">{node.detail}</p>}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ai-chain-of-thought {
+    background: #ffffff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: var(--radius-lg, 18px);
+    padding: 22px 24px;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: none;
+  }
+
+  .ai-cot-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: var(--text-muted, #52525b);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ai-cot-icon {
+    color: var(--heat, #ED5F45);
+    display: flex;
+  }
+
+  .ai-cot-nodes {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Single continuous line running in the back with ZERO gaps */
+  .ai-cot-track-line {
+    position: absolute;
+    left: 7px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: var(--border, #e4e4e7);
+    z-index: 1;
+  }
+
+  .ai-cot-node {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 24px;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .ai-cot-node:last-child {
+    padding-bottom: 0;
+  }
+
+  .ai-cot-node-point {
+    position: relative;
+    width: 16px;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 5px;
+    z-index: 2;
+  }
+
+  .ai-cot-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--heat, #ED5F45);
+    z-index: 3;
+    position: relative;
+    box-shadow: none;
+  }
+
+  .status-active .ai-cot-dot {
+    background: var(--heat, #ED5F45);
+    box-shadow: 0 0 8px rgba(237, 95, 69, 0.4);
+    animation: ai-pulse 1.5s infinite;
+  }
+
+  .status-pending .ai-cot-dot {
+    background: var(--border-strong, #d4d4d8);
+    box-shadow: none;
+  }
+
+  .ai-cot-node-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .ai-cot-node-title {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text, #09090b);
+    line-height: 1.35;
+  }
+
+  .status-pending .ai-cot-node-title {
+    color: var(--text-muted, #52525b);
+  }
+
+  .ai-cot-node-detail {
+    font-size: 13px;
+    color: var(--text-muted, #52525b);
+    line-height: 1.45;
+    margin: 0;
+    word-break: break-word;
+  }
+
+  @keyframes ai-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.9); }
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  class?: string;
+}
+
+const {
+  title = 'Agent Audit Run',
+  subtitle = '30-point autonomous diagnostic session',
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`ai-thread-container ${className}`} data-thread>
+  <div class="ai-thread-header">
+    <div class="ai-thread-title-wrap">
+      <h3 class="ai-thread-title">{title}</h3>
+      {subtitle && <span class="ai-thread-sub">{subtitle}</span>}
+    </div>
+    <div class="ai-thread-badge">
+      <span class="ai-thread-pulse-dot"></span>
+      <span>Autonomous</span>
+    </div>
+  </div>
+
+  <div class="ai-thread-messages">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .ai-thread-container {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface, #131316);
+    border: 1px solid var(--border, #232328);
+    border-radius: var(--radius-md, 16px);
+    overflow: hidden;
+    font-family: var(--font-sans);
+    letter-spacing: var(--tracking-ui, -0.02em);
+  }
+
+  .ai-thread-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-muted, #1c1c20);
+    background: var(--surface-raised, #18181c);
+  }
+
+  .ai-thread-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ai-thread-title {
+    font-size: 16px;
+    font-weight: var(--font-semibold, 600);
+    color: var(--text, #fcfcfc);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .ai-thread-sub {
+    font-size: 13px;
+    color: var(--text-muted, #a1a1aa);
+  }
+
+  .ai-thread-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    background: rgba(237, 95, 69, 0.12);
+    border: 1px solid rgba(237, 95, 69, 0.3);
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 11px;
+    color: var(--heat, #ED5F45);
+    font-weight: var(--font-medium, 500);
+  }
+
+  .ai-thread-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--heat, #ED5F45);
+    animation: ai-pulse 1.2s infinite;
+  }
+
+  .ai-thread-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+</style>
