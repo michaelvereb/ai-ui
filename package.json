@@ -1,5 +1,5 @@
 {
-  "name": "@vereb/ai-ui",
+  "name": "@michaelvereb/ai-ui",
   "version": "1.0.0",
   "description": "Lightweight, accessible Astro components for AI reasoning traces, streaming state, and autonomous agent interfaces. Zero React, zero Radix, zero Tailwind.",
   "type": "module",

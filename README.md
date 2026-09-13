@@ -23,32 +23,32 @@
 
 ## Installation
 
-Install `@vereb/ai-ui` using your preferred package manager:
+Install `@michaelvereb/ai-ui` directly from GitHub using your preferred package manager:
 
 ### npm
 ```bash
-npm install @vereb/ai-ui
+npm install github:michaelvereb/ai-ui
 ```
 
 ### pnpm
 ```bash
-pnpm add @vereb/ai-ui
+pnpm add github:michaelvereb/ai-ui
 ```
 
 ### bun
 ```bash
-bun add @vereb/ai-ui
+bun add github:michaelvereb/ai-ui
 ```
 
 ### yarn
 ```bash
-yarn add @vereb/ai-ui
+yarn add github:michaelvereb/ai-ui
 ```
 
 ### 1-Line Agent Install Prompt (Autonomous Coding Agents)
 If using Claude Code, Cursor, Antigravity, or OpenAI Operator, provide this single instruction:
 ```
-Fetch and execute the instructions to install @vereb/ai-ui from https://www.michaelvereb.com/ai-ui/prompt.md
+Fetch and execute the instructions to install @michaelvereb/ai-ui from https://www.michaelvereb.com/ai-ui/prompt.md
 ```
 
 ### Direct Component Copy (Zero-Dependency CLI)
@@ -81,7 +81,7 @@ rm -rf ./tmp-ai-ui
 
 - **Runtime:** Node.js 18.0+, Bun 1.0+, or Deno 1.38+
 - **Project:** Existing [Astro](https://astro.build) project (`astro >= 4.0.0` or `astro >= 5.0.0`)
-- **Setup:** Import `@vereb/ai-ui/theme.css` in your root layout or global stylesheet.
+- **Setup:** Import `@michaelvereb/ai-ui/theme.css` in your root layout or global stylesheet.
 
 ---
 
@@ -92,7 +92,7 @@ Import the core design tokens in your root layout (`src/layouts/Layout.astro` or
 
 ```astro
 ---
-import '@vereb/ai-ui/theme.css';
+import '@michaelvereb/ai-ui/theme.css';
 ---
 
 <!DOCTYPE html>
@@ -107,15 +107,15 @@ import '@vereb/ai-ui/theme.css';
 ```
 
 ### 2. Use Components
-Import any component from `@vereb/ai-ui/components/*`:
+Import any component from `@michaelvereb/ai-ui/components/*`:
 
 ```astro
 ---
-import ThinkingBar from '@vereb/ai-ui/components/ThinkingBar.astro';
-import Reasoning from '@vereb/ai-ui/components/Reasoning.astro';
-import Steps from '@vereb/ai-ui/components/Steps.astro';
-import PromptInput from '@vereb/ai-ui/components/PromptInput.astro';
-import Toaster from '@vereb/ai-ui/components/Toaster.astro';
+import ThinkingBar from '@michaelvereb/ai-ui/components/ThinkingBar.astro';
+import Reasoning from '@michaelvereb/ai-ui/components/Reasoning.astro';
+import Steps from '@michaelvereb/ai-ui/components/Steps.astro';
+import PromptInput from '@michaelvereb/ai-ui/components/PromptInput.astro';
+import Toaster from '@michaelvereb/ai-ui/components/Toaster.astro';
 ---
 
 <!-- Active LLM Thinking Indicator -->

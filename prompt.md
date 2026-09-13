@@ -1,6 +1,6 @@
-# Agent Setup: @vereb/ai-ui
+# Agent Setup: @michaelvereb/ai-ui
 
-You are configuring and installing the `@vereb/ai-ui` component library in this workspace.
+You are configuring and installing the `@michaelvereb/ai-ui` component library in this workspace.
 
 ## 1. Core Directives
 - **Zero Bloat / 100% Astro**: Pure `.astro` components, Vanilla JavaScript, and native CSS custom properties.
@@ -9,9 +9,13 @@ You are configuring and installing the `@vereb/ai-ui` component library in this 
 
 ## 2. Installation
 
-### Option A: Install from npm
+### Option A: Install via Package Manager (Direct GitHub Resolver)
 ```bash
-npm install @vereb/ai-ui
+npm install github:michaelvereb/ai-ui
+# Or:
+# pnpm add github:michaelvereb/ai-ui
+# bun add github:michaelvereb/ai-ui
+# yarn add github:michaelvereb/ai-ui
 ```
 
 ### Option B: Direct Component Copy (Zero Dependency)

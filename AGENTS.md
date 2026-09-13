@@ -1,6 +1,6 @@
 # AGENTS.md — ai-ui Component Integration Guidelines
 
-> Machine-readable operating manual for AI coding assistants (Claude Code, Antigravity, Cursor, OpenAI Codex) installing or modifying components from `@vereb/ai-ui`.
+> Machine-readable operating manual for AI coding assistants (Claude Code, Antigravity, Cursor, OpenAI Codex) installing or modifying components from `@michaelvereb/ai-ui`.
 
 ---
 
