@@ -1,3 +1,5 @@
+/// <reference path="./env.d.ts" />
+
 // Core AI-UI Astro Components
 export { default as Reasoning } from './components/ai-ui/Reasoning.astro';
 export { default as ThinkingBar } from './components/ai-ui/ThinkingBar.astro';
