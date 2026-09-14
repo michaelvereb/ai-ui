@@ -433,12 +433,12 @@ Use the live **[ThemeCustomizer](https://www.michaelvereb.com/ai-ui)** on the de
 
 ### Universal Endpoint
 ```
-https://www.michaelvereb.com/mcp
+https://www.michaelvereb.com/ai-ui/mcp
 ```
 
 ### Claude CLI
 ```bash
-claude mcp add ai-ui -- https://www.michaelvereb.com/mcp
+claude mcp add ai-ui -- https://www.michaelvereb.com/ai-ui/mcp
 ```
 
 ### Config JSON (Claude Desktop, Cursor, Antigravity)
@@ -446,7 +446,7 @@ claude mcp add ai-ui -- https://www.michaelvereb.com/mcp
 {
   "mcpServers": {
     "ai-ui": {
-      "url": "https://www.michaelvereb.com/mcp"
+      "url": "https://www.michaelvereb.com/ai-ui/mcp"
     }
   }
 }
