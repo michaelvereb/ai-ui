@@ -107,15 +107,11 @@ import '@michaelvereb/ai-ui/theme.css';
 ```
 
 ### 2. Use Components
-Import any component from `@michaelvereb/ai-ui/components/*`:
+Import components directly via clean named imports:
 
 ```astro
 ---
-import ThinkingBar from '@michaelvereb/ai-ui/components/ThinkingBar.astro';
-import Reasoning from '@michaelvereb/ai-ui/components/Reasoning.astro';
-import Steps from '@michaelvereb/ai-ui/components/Steps.astro';
-import PromptInput from '@michaelvereb/ai-ui/components/PromptInput.astro';
-import Toaster from '@michaelvereb/ai-ui/components/Toaster.astro';
+import { ThinkingBar, Reasoning, Steps, PromptInput, Toaster } from '@michaelvereb/ai-ui';
 ---
 
 <!-- Active LLM Thinking Indicator -->
@@ -130,6 +126,30 @@ import Toaster from '@michaelvereb/ai-ui/components/Toaster.astro';
 <!-- Floating Toaster Container -->
 <Toaster />
 ```
+
+Direct subpath imports (`import Reasoning from '@michaelvereb/ai-ui/Reasoning.astro'`) are also fully supported.
+
+---
+
+## Keeping Components Updated
+
+When installed as a dependency, your app is **always linked** to the library:
+
+- **External Projects:** To pull the latest components, fixes, and optimizations anytime commits are pushed to `main`:
+  ```bash
+  npm update @michaelvereb/ai-ui
+  # or
+  pnpm update @michaelvereb/ai-ui
+  # or
+  bun update @michaelvereb/ai-ui
+  ```
+- **Monorepo / Local Workspaces:** Reference the package locally in `package.json`:
+  ```json
+  "dependencies": {
+    "@michaelvereb/ai-ui": "file:../../packages/ai-ui"
+  }
+  ```
+  All component edits in `packages/ai-ui` reflect **instantly in real time via Vite HMR with zero build or install steps required**.
 
 ---
 
