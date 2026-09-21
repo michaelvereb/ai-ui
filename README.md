@@ -282,8 +282,8 @@ import { Citation } from '@michaelvereb/ai-ui';
 
 <Citation 
   index={1} 
-  title="RFC 8259 JSON-LD Single-Pass Parsing Standard" 
-  url="https://www.michaelvereb.com/blog/google-json-ld-single-pass" 
+  title="ai-ui — Astro AI Design System & Chat Interfaces" 
+  url="https://www.michaelvereb.com/ai-ui" 
 />
 ```
 
@@ -467,17 +467,31 @@ claude mcp add ai-ui -- https://www.michaelvereb.com/ai-ui/mcp
 
 ---
 
-## AI Agent Integration
+## AI Agent Integration & Autonomous Skills
 
-`ai-ui` is built from the ground up to be machine-actionable:
+`ai-ui` is built from the ground up to be fully machine-actionable by autonomous AI coding assistants (Claude Code, Cursor, Antigravity, OpenAI Codex, ChatGPT Operator):
 
+- **Agent Skill (Ready to Use):** [`.agents/skills/ai-ui/SKILL.md`](./.agents/skills/ai-ui/SKILL.md)  
+  *Provides complete step-by-step instructions, component prop schemas, and composition workflows for agents to automatically install, configure, and compose AI UI components in any Astro workspace.*
 - **1-Line Setup Prompt:** [https://www.michaelvereb.com/ai-ui/prompt.md](https://www.michaelvereb.com/ai-ui/prompt.md)
-- **Machine-Readable LLM Index:** [https://www.michaelvereb.com/ai-ui/llms.txt](https://www.michaelvereb.com/ai-ui/llms.txt)
-- **Agent Skill Manifest:** `.agents/skills/ai-ui/SKILL.md`
 - **Developer Guidelines:** [AGENTS.md](./AGENTS.md)
+- **Universal MCP Endpoint:** [https://www.michaelvereb.com/ai-ui/mcp](https://www.michaelvereb.com/ai-ui/mcp)
+
+### How to Activate the Agent Skill in Your Project
+
+To equip your AI assistant (Claude Code, Cursor, Antigravity) with the `ai-ui` skill directly:
+
+```bash
+mkdir -p .agents/skills/ai-ui
+curl -sSL https://raw.githubusercontent.com/michaelvereb/ai-ui/main/.agents/skills/ai-ui/SKILL.md > .agents/skills/ai-ui/SKILL.md
+```
+
+Then prompt your agent:
+> *"Use the ai-ui skill to install and compose reasoning trace and streaming components in this Astro project."*
 
 ---
 
 ## License
 
 MIT License © 2026 [Michael Vereb](https://www.michaelvereb.com).
+

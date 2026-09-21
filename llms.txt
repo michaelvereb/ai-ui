@@ -6,24 +6,26 @@
 
 - [Interactive Component Showcase](https://www.michaelvereb.com/ai-ui): Full live playground with interactive theme customizer and all 18 components.
 - [GitHub Repository](https://github.com/michaelvereb/ai-ui): Open source codebase, component templates, and Astro installation guide.
+- [Agent Skill](https://github.com/michaelvereb/ai-ui/blob/main/.agents/skills/ai-ui/SKILL.md): Machine-readable skill instructions for autonomous AI agents.
+- [Agent Setup Prompt](https://www.michaelvereb.com/ai-ui/prompt.md): 1-line agent setup prompt for automated component installation.
 - [AGENTS.md](https://github.com/michaelvereb/ai-ui/blob/main/AGENTS.md): Machine-readable integration rules and specifications for AI coding agents.
 
 ## Component Specifications
 
-- [Reasoning](https://www.michaelvereb.com/ai-ui#comp-reasoning): Collapsible thought stream with sequential verification checkmarks.
-- [Thinking Bar](https://www.michaelvereb.com/ai-ui#comp-thinking-bar): Autonomous agent thinking indicator with rotating diagnostic descriptions and clean shimmer.
-- [Steps](https://www.michaelvereb.com/ai-ui#comp-steps): Technical diagnostic pipeline with copy action, drawer expansion, and execution timings.
-- [Tool Execution](https://www.michaelvereb.com/ai-ui#comp-tool): Structured tool call card with JSON input & output payload inspection.
-- [Chain of Thought](https://www.michaelvereb.com/ai-ui#comp-chain-of-thought): Visual reasoning graph with continuous connecting lines between nodes.
-- [Prompt Input](https://www.michaelvereb.com/ai-ui#comp-prompt-input): Multiline AI prompt container with model badge, attachment actions, and submit trigger.
-- [Model Selector](https://www.michaelvereb.com/ai-ui#comp-model-selector): Dropdown menu for selecting orchestrator models with provider metadata.
-- [Suggestions](https://www.michaelvereb.com/ai-ui#comp-suggestions): One-click query chips for autonomous audits and common workflows.
-- [Questions](https://www.michaelvereb.com/ai-ui#comp-questions): Interactive clarification card with selectable option pills and radio controls.
-- [Feedback Bar](https://www.michaelvereb.com/ai-ui#comp-feedback-bar): Response satisfaction rating with copy and report triggers.
-- [Attachments](https://www.michaelvereb.com/ai-ui#comp-attachments): File chips with byte size indicator and dismiss action.
-- [Citation](https://www.michaelvereb.com/ai-ui#comp-citation): Numbered external reference badge with live domain favicons.
-- [Message & Thread](https://www.michaelvereb.com/ai-ui#comp-thread): Message bubble and full conversation wrappers for streaming sessions.
-- [Loader](https://www.michaelvereb.com/ai-ui#comp-loader): Agent execution states (spinner, dots, pulse, and progress bar).
-- [Text Shimmer](https://www.michaelvereb.com/ai-ui#comp-text-shimmer): Animated gradient sweep signaling active LLM token streaming.
+- [Reasoning](https://www.michaelvereb.com/ai-ui/component/reasoning): Collapsible thought stream with sequential verification checkmarks.
+- [Thinking Bar](https://www.michaelvereb.com/ai-ui/component/thinking-bar): Autonomous agent thinking indicator with rotating diagnostic descriptions and clean shimmer.
+- [Steps](https://www.michaelvereb.com/ai-ui/component/steps): Technical diagnostic pipeline with copy action, drawer expansion, and execution timings.
+- [Tool Execution](https://www.michaelvereb.com/ai-ui/component/tool): Structured tool call card with JSON input & output payload inspection.
+- [Chain of Thought](https://www.michaelvereb.com/ai-ui/component/chain-of-thought): Visual reasoning graph with continuous connecting lines between nodes.
+- [Prompt Input](https://www.michaelvereb.com/ai-ui/component/prompt-input): Multiline AI prompt container with model badge, attachment actions, and submit trigger.
+- [Model Selector](https://www.michaelvereb.com/ai-ui/component/model-selector): Dropdown menu for selecting orchestrator models with provider metadata.
+- [Suggestions](https://www.michaelvereb.com/ai-ui/component/suggestions): One-click query chips for autonomous audits and common workflows.
+- [Questions](https://www.michaelvereb.com/ai-ui/component/questions): Interactive clarification card with selectable option pills and radio controls.
+- [Feedback Bar](https://www.michaelvereb.com/ai-ui/component/feedback-bar): Response satisfaction rating with copy and report triggers.
+- [Attachments](https://www.michaelvereb.com/ai-ui/component/attachments): File chips with byte size indicator and dismiss action.
+- [Citation](https://www.michaelvereb.com/ai-ui/component/citation): Numbered external reference badge with live domain favicons.
+- [Message & Thread](https://www.michaelvereb.com/ai-ui/component/thread): Message bubble and full conversation wrappers for streaming sessions.
+- [Loader](https://www.michaelvereb.com/ai-ui/component/loader): Agent execution states (spinner, dots, pulse, and progress bar).
+- [Text Shimmer](https://www.michaelvereb.com/ai-ui/component/text-shimmer): Animated gradient sweep signaling active LLM token streaming.
 - [Theme Customizer](https://www.michaelvereb.com/ai-ui): Live slide-out drawer for adjusting mode, base colors, SF Pro typography, and radii.
-- [Text Animations](https://www.michaelvereb.com/ai-ui#comp-text-animations): 20 Web Animations API (WAAPI) and CSS text effects.
+- [Text Animations](https://www.michaelvereb.com/ai-ui/component/text-animations): 20 Web Animations API (WAAPI) and CSS text effects.

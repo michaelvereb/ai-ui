@@ -62,8 +62,11 @@ Dark mode is triggered by adding `.dark` or `data-theme="dark"` to `<html>`.
 
 ---
 
-## 4. Live Reference
+## 4. Live Reference & Agent Resources
 
 - Interactive Showcase: [https://www.michaelvereb.com/ai-ui](https://www.michaelvereb.com/ai-ui)
 - GitHub Repository: [https://github.com/michaelvereb/ai-ui](https://github.com/michaelvereb/ai-ui)
-- LLM Index: [https://www.michaelvereb.com/ai-ui/llms.txt](https://www.michaelvereb.com/ai-ui/llms.txt)
+- Agent Setup Prompt: [https://www.michaelvereb.com/ai-ui/prompt.md](https://www.michaelvereb.com/ai-ui/prompt.md)
+- Agent Skill Manifest: [./.agents/skills/ai-ui/SKILL.md](./.agents/skills/ai-ui/SKILL.md)
+- Universal MCP Endpoint: [https://www.michaelvereb.com/ai-ui/mcp](https://www.michaelvereb.com/ai-ui/mcp)
+
