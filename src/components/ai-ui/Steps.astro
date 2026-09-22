@@ -42,15 +42,16 @@ const totalCount = steps.length;
     data-trigger
   >
     <div class="ai-steps-meta">
-      <span class="ai-steps-status-icon" data-header-icon aria-hidden="true">
-        <!-- Spinner while running, checkmark when complete -->
-        <svg class="ai-icon-spinner animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-        </svg>
-        <svg class="ai-icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </span>
+      <div class="ai-step-indicator ai-steps-header-indicator" data-header-indicator>
+        <span class="ai-step-dot">
+          <svg class="ai-step-spinner animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+          </svg>
+          <svg class="ai-step-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </span>
+      </div>
 
       <span class="ai-steps-label" data-header-label>
         {title}
@@ -187,7 +188,7 @@ const totalCount = steps.length;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 16px 20px;
+    padding: 16px 22px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -195,27 +196,79 @@ const totalCount = steps.length;
     text-align: left;
     min-height: 54px;
     font-family: inherit;
+    box-sizing: border-box;
   }
 
   .ai-steps-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
   }
 
-  .ai-steps-status-icon {
-    display: inline-flex;
+  /* Formatted Circle Indicator with Outline for Top Header */
+  .ai-steps-header-indicator {
+    position: relative;
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .ai-steps-header-indicator .ai-step-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
+    border: 1px solid var(--heat, #ED5F45);
+    color: var(--heat, #ED5F45);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .ai-steps-header-indicator.is-all-completed .ai-step-dot {
+    background: var(--heat-subtle, rgba(237, 95, 69, 0.14));
+    border: 1px solid var(--heat, #ED5F45);
     color: var(--heat, #ED5F45);
   }
 
+  .ai-steps-header-indicator .ai-step-spinner {
+    display: block;
+    color: var(--heat, #ED5F45);
+    width: 13px;
+    height: 13px;
+  }
+
+  .ai-steps-header-indicator.is-all-completed .ai-step-spinner {
+    display: none;
+  }
+
+  .ai-steps-header-indicator .ai-step-check {
+    display: none;
+    color: var(--heat, #ED5F45);
+    width: 13px;
+    height: 13px;
+  }
+
+  .ai-steps-header-indicator.is-all-completed .ai-step-check {
+    display: block;
+  }
+
   .ai-steps-label {
-    font-size: 16px;
+    font-size: 15.5px;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--text, #09090b);
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
+    margin: 0;
   }
 
   .ai-steps-counter-pill {
@@ -228,6 +281,8 @@ const totalCount = steps.length;
     border-radius: 9999px;
     border: 1px solid rgba(237, 95, 69, 0.25);
     line-height: 1;
+    display: inline-flex;
+    align-items: center;
   }
 
   .ai-steps-chevron {
@@ -263,36 +318,35 @@ const totalCount = steps.length;
     padding-bottom: 22px;
     width: 100%;
     transition: opacity 0.2s ease;
+    box-sizing: border-box;
   }
 
   .ai-step-flow-item:last-child {
     padding-bottom: 0;
   }
 
-  /* Step Indicator 22px circle identical to Reasoning */
-  .ai-step-indicator {
+  /* Step Indicator 22x24px centered vertically with title line */
+  .ai-step-flow-item .ai-step-indicator {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 22px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .ai-step-dot {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    border: 1px solid var(--border, #e4e4e7);
-    color: var(--text-subtle, #71717a);
-    z-index: 2;
+    width: 22px;
+    height: 24px;
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .ai-step-flow-item .ai-step-dot {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    box-shadow: none;
     transition: all 0.2s ease;
-    opacity: 1;
   }
 
   .ai-step-spinner {
@@ -311,34 +365,62 @@ const totalCount = steps.length;
     font-family: var(--font-mono, monospace);
     display: block;
     line-height: 1;
+    color: var(--text-subtle, #71717a);
   }
 
-  /* Active step: Spinner spins */
+  /* Active step: Pure Spinner */
   .ai-step-flow-item.is-active .ai-step-dot {
-    background: var(--heat-subtle, rgba(237, 95, 69, 0.08));
-    border-color: var(--heat, #ED5F45);
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 
   .ai-step-flow-item.is-active .ai-step-spinner {
     display: block;
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.2;
+    margin: auto;
   }
 
   .ai-step-flow-item.is-active .ai-step-num {
     display: none;
   }
 
-  /* Completed step: Checkmark displays */
+  /* Completed step: PURE CHECK (Swapped from outline badge) */
   .ai-step-flow-item.is-completed .ai-step-dot {
-    background: var(--heat-subtle, rgba(237, 95, 69, 0.12));
-    border-color: var(--heat, #ED5F45);
-    color: var(--heat, #ED5F45);
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 
   .ai-step-flow-item.is-completed .ai-step-check {
     display: block;
+    color: var(--heat, #ED5F45);
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.2;
+    margin: auto;
   }
 
   .ai-step-flow-item.is-completed .ai-step-num {
+    display: none;
+  }
+
+  /* Pending step: Pure subtle number */
+  .ai-step-flow-item.is-pending .ai-step-dot {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .ai-step-flow-item.is-pending .ai-step-num {
+    display: block;
+    margin: auto;
+  }
+
+  .ai-step-flow-item.is-pending .ai-step-spinner,
+  .ai-step-flow-item.is-pending .ai-step-check {
     display: none;
   }
 
@@ -537,8 +619,9 @@ const totalCount = steps.length;
     document.querySelectorAll<HTMLElement>('[data-steps-flow]').forEach((container) => {
       const trigger = container.querySelector<HTMLButtonElement>('[data-trigger]');
       const content = container.querySelector<HTMLElement>('[data-content]');
-      const headerSpinner = container.querySelector<SVGElement>('.ai-icon-spinner');
-      const headerCheck = container.querySelector<SVGElement>('.ai-icon-check');
+      const headerIndicator = container.querySelector<HTMLElement>('[data-header-indicator]');
+      const headerSpinner = container.querySelector<SVGElement>('.ai-steps-header-indicator .ai-step-spinner');
+      const headerCheck = container.querySelector<SVGElement>('.ai-steps-header-indicator .ai-step-check');
       const headerLabel = container.querySelector<HTMLElement>('[data-header-label]');
       const counterPill = container.querySelector<HTMLElement>('[data-counter-pill]');
       const stepItems = Array.from(container.querySelectorAll<HTMLElement>('.ai-step-flow-item'));
@@ -651,10 +734,9 @@ const totalCount = steps.length;
             setTimeout(advanceStep, stepInterval);
           } else {
             // All steps completed
-            if (headerSpinner && headerCheck) {
-              headerSpinner.style.display = 'none';
-              headerCheck.style.display = 'inline-block';
-            }
+            if (headerIndicator) headerIndicator.classList.add('is-all-completed');
+            if (headerSpinner) headerSpinner.style.display = 'none';
+            if (headerCheck) headerCheck.style.display = 'block';
             if (headerLabel) {
               headerLabel.textContent = 'Diagnostic Pipeline Verified (4 of 4 completed)';
             }
