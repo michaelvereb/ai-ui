@@ -169,3 +169,59 @@ const {
     50% { opacity: 0.4; transform: scale(0.9); }
   }
 </style>
+
+<script>
+  function initChainOfThought() {
+    document.querySelectorAll<HTMLElement>('[data-chain-of-thought]').forEach((container) => {
+      const nodes = Array.from(container.querySelectorAll<HTMLElement>('.ai-cot-node'));
+      if (nodes.length === 0) return;
+
+      let timer: any = null;
+      let curIdx = 2;
+      const stepInterval = 1400;
+
+      function step() {
+        if (curIdx < nodes.length) {
+          if (curIdx > 0) {
+            nodes[curIdx - 1].classList.remove('status-active', 'status-pending');
+            nodes[curIdx - 1].classList.add('status-completed');
+          }
+          nodes[curIdx].classList.remove('status-pending');
+          nodes[curIdx].classList.add('status-active');
+          curIdx++;
+          timer = setTimeout(step, stepInterval);
+        } else {
+          if (nodes.length > 0) {
+            nodes[nodes.length - 1].classList.remove('status-active');
+            nodes[nodes.length - 1].classList.add('status-completed');
+          }
+        }
+      }
+
+      timer = setTimeout(step, stepInterval);
+
+      (window as any).replayChainOfThought = () => {
+        if (timer) clearTimeout(timer);
+        nodes.forEach((node, idx) => {
+          node.classList.remove('status-completed', 'status-active', 'status-pending');
+          if (idx === 0) {
+            node.classList.add('status-active');
+          } else {
+            node.classList.add('status-pending');
+          }
+        });
+        curIdx = 1;
+        timer = setTimeout(step, stepInterval);
+        if (typeof (window as any).aiToast === 'function') {
+          (window as any).aiToast('Replaying reasoning graph');
+        }
+      };
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChainOfThought);
+  } else {
+    initChainOfThought();
+  }
+</script>
