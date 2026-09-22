@@ -293,12 +293,13 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
           break;
 
         case 'line-by-line-slide':
-          duration = userDuration || 700;
+          duration = userDuration || 650;
           delay = userDelay + (idx * (userStagger || 120));
           keyframes = [
-            { opacity: 0, transform: 'translateY(20px)' },
-            { opacity: 1, transform: 'translateY(0px)' }
+            { opacity: 0, transform: 'translateX(-48px)' },
+            { opacity: 1, transform: 'translateX(0px)' }
           ];
+          easing = 'cubic-bezier(0.16, 1, 0.3, 1)';
           break;
 
         case 'micro-scale-fade':
