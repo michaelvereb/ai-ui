@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://www.michaelvereb.com/ai-ui">
-    <img src="./ai-ui-preview.png" alt="ai-ui — Astro Component Library for Autonomous AI Agents" width="100%" style="max-width: 820px; border-radius: 12px; border: 1px solid #e4e4e7; box-shadow: 0 10px 30px rgba(0,0,0,0.06);" />
+    <img src="./public/ai-ui-preview.png" alt="ai-ui — Astro Component Library for Autonomous AI Agents" width="100%" style="max-width: 820px; border-radius: 12px; border: 1px solid #e4e4e7; box-shadow: 0 10px 30px rgba(0,0,0,0.06);" />
   </a>
 </p>
 

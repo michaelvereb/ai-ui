@@ -97,9 +97,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
       text.split(' ').map((word, wIdx) => (
         <span class="anim-word-token" style="display: inline-block; white-space: nowrap;">
           {word.split('').map((char, cIdx) => (
-            <span class="anim-unit anim-char" data-index={wIdx * 10 + cIdx} style={`--unit-idx: ${wIdx * 10 + cIdx};`}>
-              {char}
-            </span>
+            <span class="anim-unit anim-char" data-index={wIdx * 10 + cIdx} style={`--unit-idx: ${wIdx * 10 + cIdx};`}>{char}</span>
           ))}
           <span class="anim-unit anim-space">&nbsp;</span>
         </span>
