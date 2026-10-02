@@ -124,19 +124,28 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
 
 <style>
   .ai-animate-text {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    vertical-align: middle;
     font-family: var(--font-sans);
     line-height: 1.4;
+    margin: 0;
+    padding: 0;
   }
 
   .anim-unit {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
     will-change: transform, opacity, filter;
   }
 
   .anim-line-wrap {
     overflow: hidden;
-    display: block;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1.4;
   }
 
   /* Shimmer Sweep Effect: Sweeps Left-to-Right naturally */
