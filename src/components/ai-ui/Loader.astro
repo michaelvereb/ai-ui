@@ -68,7 +68,10 @@ const isDeterminate = typeof progress === 'number';
 </div>
 
 <style>
+  @layer components {
   .ai-loader {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: inline-flex;
     align-items: center;
     font-family: var(--font-sans);
@@ -81,7 +84,7 @@ const isDeterminate = typeof progress === 'number';
     font-weight: var(--font-medium, 500);
   }
 
-  /* ── Spinner ── */
+  
   .ai-loader-spinner-wrapper {
     display: inline-flex;
     align-items: center;
@@ -104,7 +107,7 @@ const isDeterminate = typeof progress === 'number';
     stroke: var(--primary, var(--heat, #ED5F45));
   }
 
-  /* ── Progress Bar ── */
+  
   .ai-loader-progress-wrapper {
     display: flex;
     flex-direction: column;
@@ -162,7 +165,7 @@ const isDeterminate = typeof progress === 'number';
     100% { transform: translateX(350%); }
   }
 
-  /* ── Dots ── */
+  
   .ai-loader-dots-wrapper {
     display: inline-flex;
     align-items: center;
@@ -191,7 +194,7 @@ const isDeterminate = typeof progress === 'number';
     40%           { transform: scale(1); opacity: 1; }
   }
 
-  /* ── Pulse ── */
+  
   .ai-loader-pulse-wrapper {
     display: inline-flex;
     align-items: center;
@@ -221,5 +224,6 @@ const isDeterminate = typeof progress === 'number';
   @keyframes ai-ring-pulse {
     0%   { transform: scale(0.6); opacity: 1; }
     100% { transform: scale(2.2); opacity: 0; }
+  }
   }
 </style>

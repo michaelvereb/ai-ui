@@ -51,23 +51,20 @@ import Toaster from './components/ai-ui/Toaster.astro';
 import ThemeCustomizer from './components/ai-ui/ThemeCustomizer.astro';
 ---
 
-<!-- Active LLM Thinking Bar -->
 <ThinkingBar phases={['Analyzing codebase...', 'Synthesizing output...']} />
-
-<!-- Collapsible Reasoning Trace -->
 <Reasoning steps={[{ text: 'Verifying edge DNS', detail: 'HSTS max-age=31536000' }]} />
-
-<!-- Diagnostic Step Flow -->
 <Steps steps={[{ id: 'step-1', title: 'Edge Security', status: 'completed' }]} />
-
-<!-- Tool Call & Output Inspector -->
 <Tool name="probe_api" status="completed" input={{ domain: 'example.com' }} output={{ status: 200 }} />
-
-<!-- Interactive Theme Customizer Drawer -->
 <ThemeCustomizer />
 ```
 
-## 5. Live Showcase & Discovery
+## 5. Lumos for Astro Compatibility
+- **Cascade Layers**: Components declare styles in `@layer components`, inheriting from `@layer base` and overridden by `@layer utilities`.
+- **Scaling**: All spacing, radius, and typography scales are rem-based.
+- **Contextual Inversion**: Full support for `.theme-invert`, `.theme-dark`, and `.theme-light`.
+- **Container Queries**: Components automatically adapt via `@container ai-ui`.
+
+## 6. Live Showcase & Discovery
 - **Live Preview & Theme Customizer**: https://www.michaelvereb.com/ai-ui
 - **GitHub Repository**: https://github.com/michaelvereb/ai-ui
 - **LLM Index**: https://www.michaelvereb.com/llms.txt

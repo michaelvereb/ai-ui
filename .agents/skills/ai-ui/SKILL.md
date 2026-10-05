@@ -455,3 +455,25 @@ import {
    - Interactive Demo: `https://www.michaelvereb.com/ai-ui`
    - Agent Setup Prompt: `https://www.michaelvereb.com/ai-ui/prompt.md`
    - GitHub Repository: `https://github.com/michaelvereb/ai-ui`
+
+---
+
+## 6. Lumos for Astro Framework Integration
+
+`@michaelvereb/ai-ui` is 100% compatible with the [Lumos for Astro](https://github.com/lumosframework/lumos-for-astro) ecosystem:
+
+### 1. Cascade Layer Harmony
+- `@michaelvereb/ai-ui` wraps all component rules in `@layer components`.
+- In a Lumos site, Lumos defines `@layer base, patterns, components, utilities;`.
+- AI-UI components sit inside `@layer components`, automatically inheriting `@layer base` resets and `@layer patterns` layout flow, while remaining fully overridable by `@layer utilities` without `!important` specificity overrides.
+
+### 2. Contextual Theme Inversion
+- In Lumos, placing a component inside `.theme-invert` dynamically flips its color palette based on ancestor themes.
+- AI-UI components natively support `.theme-dark`, `.theme-light`, and `.theme-invert`.
+
+### 3. Container Queries
+- Wrap any AI-UI component in a container (`container-type: inline-size; container-name: ai-ui;` or `.ai-container`).
+- Components adapt their internal controls, chevron alignments, and pill counters based on container width rather than viewport window size.
+
+### 4. Discriminated Union Props
+- When generating markup with AI agents, use the discriminated union variants (e.g. `<PromptInput variant="compact" />` vs `<PromptInput variant="full" showModelSelector />`) to guarantee type-safe props during Astro builds.

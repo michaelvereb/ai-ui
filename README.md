@@ -423,7 +423,17 @@ html.dark, html[data-theme="dark"] {
 }
 ```
 
-Use the live **[ThemeCustomizer](https://www.michaelvereb.com/ai-ui)** on the demo site to visually tweak base colors, light/dark mode, border radii, and export customized CSS directly into your clipboard.
+---
+
+## Lumos for Astro Compatibility
+
+`@michaelvereb/ai-ui` is architected to work seamlessly with [Lumos for Astro](https://github.com/lumosframework/lumos-for-astro):
+
+- **4-Tier Cascade Layers**: All `@michaelvereb/ai-ui` component styles are wrapped in `@layer components`. They respect `@layer patterns` (like `.section`, `.container`) and can be overridden by `@layer utilities` without `!important` wars.
+- **Fluid `rem` Scaling**: All typography, radii, and spacing scales are defined in `rem` units, scaling fluidly with user font settings and browser zoom.
+- **Container Queries (`@container`)**: Components measure their immediate parent container (`container-name: ai-ui`) instead of the browser viewport, making them drop-in ready for narrow sidebars, drawers, modals, or wide content wrappers.
+- **Theme Inversion (`.theme-invert`)**: Full support for Lumos theme classes (`.theme-dark`, `.theme-light`, `.theme-invert`). Place any AI component inside `.theme-invert` and its surfaces and borders invert automatically.
+- **Discriminated Union Types**: Strict TypeScript prop contracts prevent impossible states during development and agent execution.
 
 ---
 

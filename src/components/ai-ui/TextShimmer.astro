@@ -22,7 +22,10 @@ const {
 </Tag>
 
 <style>
+  @layer components {
   .ai-text-shimmer {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: inline-block;
     background: linear-gradient(
       90deg,
@@ -37,5 +40,6 @@ const {
     -webkit-text-fill-color: transparent;
     animation: ai-shimmer var(--shimmer-duration, 3.8s) infinite linear;
     letter-spacing: var(--tracking-ui, -0.02em);
+  }
   }
 </style>

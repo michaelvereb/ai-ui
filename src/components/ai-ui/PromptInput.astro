@@ -1,12 +1,24 @@
 ---
-interface Props {
+interface BasePromptProps {
   placeholder?: string;
   submitLabel?: string;
-  allowAttachments?: boolean;
-  selectedModel?: string;
   class?: string;
   id?: string;
 }
+
+interface CompactPromptProps extends BasePromptProps {
+  variant?: 'compact';
+  allowAttachments?: false;
+  selectedModel?: never;
+}
+
+interface FullPromptProps extends BasePromptProps {
+  variant?: 'full' | 'floating';
+  allowAttachments?: boolean;
+  selectedModel?: string;
+}
+
+export type Props = CompactPromptProps | FullPromptProps;
 
 const {
   placeholder = 'Audit domain (e.g. www.boss-textile.com) or enter agent prompt...',
@@ -102,7 +114,10 @@ const {
 </div>
 
 <style>
+  @layer components {
   .ai-prompt-input-container {
+    container-type: inline-size;
+    container-name: ai-ui;
     width: 100%;
     font-family: var(--font-sans);
     letter-spacing: var(--tracking-ui, -0.02em);
@@ -351,6 +366,7 @@ const {
   .ai-prompt-submit-btn:active {
     transform: scale(0.96);
   }
+  }
 </style>
 
 <script>
@@ -425,7 +441,7 @@ const {
 
         const currentModel = modelSelectedName?.textContent?.trim() || 'Claude 3.5 Sonnet';
 
-        // Dispatch custom event so parent containers/chat areas can display the message
+        
         const event = new CustomEvent('ai-prompt-submit', {
           bubbles: true,
           detail: { prompt: val, model: currentModel },

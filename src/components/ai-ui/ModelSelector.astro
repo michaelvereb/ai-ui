@@ -32,7 +32,7 @@ const current = models.find((m) => m.id === selectedId) || models[0];
 <div class={`ai-model-selector ${className}`} data-model-selector>
   <button type="button" class="ai-model-trigger" data-model-trigger aria-expanded="false" aria-haspopup="listbox">
     <div class="ai-model-current-info">
-      <!-- Primary Orange Dot (Strictly no green) -->
+      
       <span class="ai-model-dot"></span>
       <span class="ai-model-selected-name" data-selected-name>{current.name}</span>
     </div>
@@ -63,7 +63,10 @@ const current = models.find((m) => m.id === selectedId) || models[0];
 </div>
 
 <style>
+  @layer components {
   .ai-model-selector {
+    container-type: inline-size;
+    container-name: ai-ui;
     position: relative;
     display: inline-block;
     font-family: var(--font-sans);
@@ -108,7 +111,7 @@ const current = models.find((m) => m.id === selectedId) || models[0];
     gap: 8px;
   }
 
-  /* Primary Dot (Dynamic theme color) */
+  
   .ai-model-dot {
     width: 8px;
     height: 8px;
@@ -201,6 +204,7 @@ const current = models.find((m) => m.id === selectedId) || models[0];
     font-size: var(--text-xs, 13px);
     color: var(--text-muted, #a1a1aa);
     line-height: 1.35;
+  }
   }
 </style>
 

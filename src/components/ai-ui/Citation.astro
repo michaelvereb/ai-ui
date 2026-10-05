@@ -48,7 +48,10 @@ const faviconUrl = `https://www.google.com/s2/favicons?domain=${displayDomain}&s
 </a>
 
 <style>
+  @layer components {
   .ai-citation-pill {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -113,5 +116,6 @@ const faviconUrl = `https://www.google.com/s2/favicons?domain=${displayDomain}&s
   .ai-citation-ext {
     color: var(--text-subtle, #71717a);
     flex-shrink: 0;
+  }
   }
 </style>

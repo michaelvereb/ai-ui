@@ -8,13 +8,24 @@ export interface StepItem {
   summary?: string;
 }
 
-interface Props {
+interface BaseStepsProps {
   steps: StepItem[];
   title?: string;
-  defaultOpen?: boolean;
   class?: string;
   id?: string;
 }
+
+interface CollapsibleStepsProps extends BaseStepsProps {
+  collapsible?: true;
+  defaultOpen?: boolean;
+}
+
+interface StaticStepsProps extends BaseStepsProps {
+  collapsible: false;
+  defaultOpen?: never;
+}
+
+export type Props = CollapsibleStepsProps | StaticStepsProps;
 
 const {
   steps = [],
@@ -34,7 +45,7 @@ const totalCount = steps.length;
   id={id}
   data-steps={JSON.stringify(steps)}
 >
-  <!-- Header matched identically to Reasoning -->
+  
   <button
     type="button"
     class="ai-steps-trigger"
@@ -166,7 +177,10 @@ const totalCount = steps.length;
 </div>
 
 <style>
+  @layer components {
   .ai-steps-card {
+    container-type: inline-size;
+    container-name: ai-ui;
     background: #ffffff;
     border: 1px solid var(--border, #e4e4e7);
     border-radius: 20px;
@@ -206,7 +220,7 @@ const totalCount = steps.length;
     flex-wrap: wrap;
   }
 
-  /* Formatted Circle Indicator with Outline for Top Header */
+  
   .ai-steps-header-indicator {
     position: relative;
     display: flex;
@@ -325,7 +339,7 @@ const totalCount = steps.length;
     padding-bottom: 0;
   }
 
-  /* Step Indicator 22x24px centered vertically with title line */
+  
   .ai-step-flow-item .ai-step-indicator {
     position: relative;
     display: flex;
@@ -368,7 +382,7 @@ const totalCount = steps.length;
     color: var(--text-subtle, #71717a);
   }
 
-  /* Active step: Pure Spinner */
+  
   .ai-step-flow-item.is-active .ai-step-dot {
     background: transparent;
     border: none;
@@ -387,7 +401,7 @@ const totalCount = steps.length;
     display: none;
   }
 
-  /* Completed step: PURE CHECK (Swapped from outline badge) */
+  
   .ai-step-flow-item.is-completed .ai-step-dot {
     background: transparent;
     border: none;
@@ -407,7 +421,7 @@ const totalCount = steps.length;
     display: none;
   }
 
-  /* Pending step: Pure subtle number */
+  
   .ai-step-flow-item.is-pending .ai-step-dot {
     background: transparent;
     border: none;
@@ -424,7 +438,7 @@ const totalCount = steps.length;
     display: none;
   }
 
-  /* Opacity hierarchy identical to Reasoning */
+  
   .ai-step-body {
     display: flex;
     flex-direction: column;
@@ -490,7 +504,7 @@ const totalCount = steps.length;
     border: 1px solid var(--border, #e4e4e7);
   }
 
-  /* Clean action buttons: Copy & Drawer toggle */
+  
   .ai-step-actions {
     display: inline-flex;
     align-items: center;
@@ -531,7 +545,7 @@ const totalCount = steps.length;
     transform: rotate(180deg);
   }
 
-  /* Subtext softer and lighter so it recedes gracefully */
+  
   .ai-step-summary {
     font-size: 13px;
     color: #a1a1aa;
@@ -541,7 +555,7 @@ const totalCount = steps.length;
     word-break: break-word;
   }
 
-  /* Telemetry Drawer */
+  
   .ai-step-drawer {
     margin-top: 8px;
     border: 1px solid var(--border, #e4e4e7);
@@ -612,6 +626,7 @@ const totalCount = steps.length;
   .animate-spin {
     animation: spin 1s linear infinite;
   }
+  }
 </style>
 
 <script>
@@ -626,7 +641,7 @@ const totalCount = steps.length;
       const counterPill = container.querySelector<HTMLElement>('[data-counter-pill]');
       const stepItems = Array.from(container.querySelectorAll<HTMLElement>('.ai-step-flow-item'));
 
-      // Collapsible toggle
+      
       if (trigger && content) {
         trigger.addEventListener('click', () => {
           const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
@@ -639,7 +654,7 @@ const totalCount = steps.length;
         });
       }
 
-      // Drawer toggles
+      
       container.querySelectorAll<HTMLButtonElement>('[data-drawer-toggle]').forEach((toggleBtn) => {
         toggleBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -657,7 +672,7 @@ const totalCount = steps.length;
         });
       });
 
-      // Copy buttons without label changes
+      
       container.querySelectorAll<HTMLButtonElement>('[data-copy-step]').forEach((copyBtn) => {
         copyBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -682,15 +697,15 @@ const totalCount = steps.length;
         });
       });
 
-      // Sequential progression animation matching Reasoning
+      
       if (stepItems.length === 0) return;
 
-      // Find first non-completed step
+      
       let activeIdx = stepItems.findIndex((el) => el.classList.contains('is-active'));
       if (activeIdx === -1) {
         activeIdx = stepItems.findIndex((el) => el.classList.contains('is-pending'));
       }
-      if (activeIdx === -1) return; // All already complete
+      if (activeIdx === -1) return; 
 
       const stepInterval = 1800;
 
@@ -707,7 +722,7 @@ const totalCount = steps.length;
           curEl.classList.remove('is-active', 'is-pending');
           curEl.classList.add('is-completed');
 
-          // Close active drawer on completion if open
+          
           const drawer = curEl.querySelector<HTMLElement>('[data-drawer]');
           const drawerToggle = curEl.querySelector<HTMLButtonElement>('[data-drawer-toggle]');
           if (drawer && drawerToggle) {
@@ -723,7 +738,7 @@ const totalCount = steps.length;
             nextEl.classList.remove('is-pending');
             nextEl.classList.add('is-active');
 
-            // Automatically open running step drawer if present
+            
             const nextDrawer = nextEl.querySelector<HTMLElement>('[data-drawer]');
             const nextToggle = nextEl.querySelector<HTMLButtonElement>('[data-drawer-toggle]');
             if (nextDrawer && nextToggle) {
@@ -733,7 +748,7 @@ const totalCount = steps.length;
 
             setTimeout(advanceStep, stepInterval);
           } else {
-            // All steps completed
+            
             if (headerIndicator) headerIndicator.classList.add('is-all-completed');
             if (headerSpinner) headerSpinner.style.display = 'none';
             if (headerCheck) headerCheck.style.display = 'block';

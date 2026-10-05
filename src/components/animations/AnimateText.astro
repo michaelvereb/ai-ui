@@ -45,7 +45,7 @@ const {
   class: className = '',
 } = Astro.props;
 
-// Determine target splitting mode based on effect
+
 const getSplitMode = (eff: AnimationEffect): 'character' | 'word' | 'line' | 'whole' => {
   switch (eff) {
     case 'soft-blur-in':
@@ -123,6 +123,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
 </Tag>
 
 <style>
+  @layer components {
   .ai-animate-text {
     display: inline-flex;
     align-items: center;
@@ -148,7 +149,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
     line-height: 1.4;
   }
 
-  /* Shimmer Sweep Effect: Sweeps Left-to-Right naturally */
+  
   .anim-shimmer-text {
     display: inline-block;
     background: linear-gradient(
@@ -171,7 +172,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
     100% { background-position: 200% 0; }
   }
 
-  /* Typewriter progressive text & blinking caret */
+  
   .anim-typewriter-wrap {
     display: inline-flex;
     align-items: baseline;
@@ -196,6 +197,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
+  }
 </style>
 
 <script>
@@ -205,7 +207,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
     const userDuration = parseInt(el.getAttribute('data-duration') || '0', 10);
     const userStagger = parseInt(el.getAttribute('data-stagger') || '0', 10);
 
-    // Dedicated Handler 1: Typewriter
+    
     if (effect === 'typewriter') {
       const wrap = el.querySelector<HTMLElement>('.anim-typewriter-wrap');
       const text = wrap?.getAttribute('data-full-text') || el.getAttribute('data-text') || '';
@@ -227,7 +229,7 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
       return;
     }
 
-    // Dedicated Handler 2: Shimmer Sweep
+    
     if (effect === 'shimmer-sweep') {
       const shimmer = el.querySelector<HTMLElement>('.anim-shimmer-text');
       if (shimmer) {
@@ -241,12 +243,12 @@ const animId = id || ('anim-' + Math.random().toString(36).substring(2, 7));
     const units = el.querySelectorAll<HTMLElement>('.anim-unit');
     if (units.length === 0) return;
 
-    // Reset any active WAAPI animations first
+    
     units.forEach((unit) => {
       unit.getAnimations().forEach((anim) => anim.cancel());
     });
 
-    // Web Animations API (WAAPI) Keyframe Definitions
+    
     units.forEach((unit, idx) => {
       let keyframes: Keyframe[] = [];
       let duration = userDuration || 500;

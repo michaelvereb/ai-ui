@@ -57,7 +57,10 @@ const {
 </div>
 
 <style>
+  @layer components {
   .ai-message {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -166,6 +169,7 @@ const {
   .ai-action-btn:hover {
     color: var(--text, #fafafa);
     background: var(--surface-raised, #18181b);
+  }
   }
 </style>
 

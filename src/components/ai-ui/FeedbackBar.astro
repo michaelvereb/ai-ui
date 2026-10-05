@@ -46,7 +46,10 @@ const {
 </div>
 
 <style>
+  @layer components {
   .ai-feedback-bar {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -93,10 +96,11 @@ const {
     color: var(--text, #09090b);
   }
 
-  /* Primary orange active feedback (Strictly no green) */
+  
   .ai-feedback-btn.is-active {
     color: var(--heat, #ED5F45);
     background: var(--heat-subtle, rgba(237, 95, 69, 0.1));
+  }
   }
 </style>
 
@@ -114,7 +118,7 @@ const {
             }
           } else if (action === 'copy') {
             navigator.clipboard?.writeText('Autonomous Agent Diagnostic Report - 30 Checkpoints Verified');
-            // Do NOT change the button text! Trigger toast instead:
+            
             if (typeof (window as any).aiToast === 'function') {
               (window as any).aiToast('Report copied to clipboard');
             }

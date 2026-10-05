@@ -1,20 +1,23 @@
 ---
-interface Props {
+interface StreamingThinkingProps {
+  isStreaming?: true;
   phases?: string[];
-  isStreaming?: boolean;
   autoCycle?: boolean;
   cycleIntervalMs?: number;
   class?: string;
   id?: string;
 }
 
-const defaultPhases = [
-  'Auditing edge security headers & TLS 1.3...',
-  'Verifying RFC 8259 JSON-LD single-pass schemas...',
-  'Probing autonomous crawler reachability (Claude-User / CCBot)...',
-  'Inspecting WebMCP tool registrations & annotations...',
-  'Synthesizing 30-point Site-Ready remediation report...',
-];
+interface IdleThinkingProps {
+  isStreaming: false;
+  phases?: never;
+  autoCycle?: never;
+  cycleIntervalMs?: never;
+  class?: string;
+  id?: string;
+}
+
+export type Props = StreamingThinkingProps | IdleThinkingProps;
 
 const {
   phases = defaultPhases,
@@ -37,7 +40,7 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
   data-interval={cycleIntervalMs}
 >
   <div class="ai-thinking-left">
-    <!-- Clean, minimal primary spinner without heavy background blobs -->
+    
     <div class="ai-thinking-icon" aria-hidden="true">
       <svg class="ai-thinking-spinner animate-spin" viewBox="0 0 24 24" fill="none" width="16" height="16">
         <circle class="ai-spinner-bg" cx="12" cy="12" r="9" stroke="#e4e4e7" stroke-width="2.5"></circle>
@@ -45,7 +48,7 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
       </svg>
     </div>
 
-    <!-- Continuous Left-to-Right Shimmer Sweep (No Sliding) -->
+    
     <div class="ai-thinking-text" data-phase-text>
       <span class="ai-shimmer-sweep">{initialPhase}</span>
     </div>
@@ -55,7 +58,10 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
 </div>
 
 <style>
+  @layer components {
   .ai-thinking-bar {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -105,7 +111,7 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
     text-overflow: ellipsis;
   }
 
-  /* Pure High-Contrast Animated Text Shimmer Sweep */
+  
   .ai-shimmer-sweep {
     display: inline-block;
     background-image: linear-gradient(
@@ -151,6 +157,7 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
     flex-shrink: 0;
     letter-spacing: -0.01em;
   }
+  }
 </style>
 
 <script>
@@ -177,7 +184,7 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
           }
         }, Math.max(intervalMs, 3000));
       } catch (err) {
-        // Fallback safety
+        
       }
     });
   }

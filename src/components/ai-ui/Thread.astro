@@ -30,7 +30,10 @@ const {
 </div>
 
 <style>
+  @layer components {
   .ai-thread-container {
+    container-type: inline-size;
+    container-name: ai-ui;
     display: flex;
     flex-direction: column;
     background: var(--surface, #131316);
@@ -95,5 +98,6 @@ const {
     flex-direction: column;
     gap: 12px;
     padding: 16px;
+  }
   }
 </style>

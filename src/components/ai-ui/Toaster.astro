@@ -13,7 +13,10 @@ const {
 </div>
 
 <style>
+  @layer components {
   .ai-toaster-center {
+    container-type: inline-size;
+    container-name: ai-ui;
     position: fixed;
     bottom: 24px;
     left: 50%;
@@ -36,7 +39,7 @@ const {
     gap: 8px;
   }
 
-  /* Compact pill toast: small, title-only, centered, coming up from bottom, subtle primary shadow */
+  
   :global(.ai-toast) {
     pointer-events: auto;
     display: inline-flex;
@@ -105,6 +108,7 @@ const {
       opacity: 1;
       transform: translateY(0);
     }
+  }
   }
 </style>
 
