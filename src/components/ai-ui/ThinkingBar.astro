@@ -1,4 +1,5 @@
 ---
+import { uniqueId } from '../../utils/unique-id';
 interface StreamingThinkingProps {
   isStreaming?: true;
   phases?: string[];
@@ -25,7 +26,7 @@ const {
   autoCycle = true,
   cycleIntervalMs = 4000,
   class: className = '',
-  id = `thinking-bar-${Math.random().toString(36).substring(2, 8)}`,
+  id = uniqueId('thinking-bar'),
 } = Astro.props;
 
 const initialPhase = phases[0] || 'Analyzing target domain...';

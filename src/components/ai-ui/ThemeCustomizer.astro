@@ -31,7 +31,7 @@ const {
 <div class="ai-customizer-backdrop" id="ai-customizer-backdrop" hidden></div>
 
 
-<aside
+<div
   class={`ai-customizer-drawer ${className}`}
   id="ai-customizer-drawer"
   role="dialog"
@@ -157,8 +157,8 @@ const {
         >
           <span class="ai-swatch-check">✓</span>
         </button>
-        <label class="ai-color-picker-btn" title="Pick custom color">
-          <input type="color" id="ai-custom-color-input" value="#ED5F45" />
+        <label class="ai-color-picker-btn" for="ai-custom-color-input" title="Pick custom color">
+          <input type="color" id="ai-custom-color-input" value="#ED5F45" aria-label="Custom brand accent color" />
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M12 2v20M2 12h20"></path>
           </svg>
@@ -295,7 +295,7 @@ const {
     </div>
 
   </div>
-</aside>
+</div>
 
 <style>
   @layer components {

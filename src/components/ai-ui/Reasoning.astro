@@ -1,4 +1,5 @@
 ---
+import { uniqueId } from '../../utils/unique-id';
 interface ReasoningStep {
   text: string;
   detail?: string;
@@ -28,7 +29,7 @@ const {
   title = 'Reasoning',
   defaultOpen = true,
   class: className = '',
-  id = `reasoning-${Math.random().toString(36).substring(2, 8)}`,
+  id = uniqueId('reasoning'),
 } = Astro.props;
 ---
 

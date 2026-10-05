@@ -1,7 +1,7 @@
-// Core AI-UI Astro Components (Pure Vanilla JS Exports)
 export { default as Reasoning } from './components/ai-ui/Reasoning.astro';
 export { default as ThinkingBar } from './components/ai-ui/ThinkingBar.astro';
 export { default as Steps } from './components/ai-ui/Steps.astro';
+export { default as Scorecard } from './components/ai-ui/Scorecard.astro';
 export { default as Tool } from './components/ai-ui/Tool.astro';
 export { default as ChainOfThought } from './components/ai-ui/ChainOfThought.astro';
 export { default as PromptInput } from './components/ai-ui/PromptInput.astro';
@@ -18,6 +18,4 @@ export { default as TextShimmer } from './components/ai-ui/TextShimmer.astro';
 export { default as Image } from './components/ai-ui/Image.astro';
 export { default as Toaster } from './components/ai-ui/Toaster.astro';
 export { default as ThemeCustomizer } from './components/ai-ui/ThemeCustomizer.astro';
-
-// Animation Components (20 WAAPI & CSS Text Effects)
 export { default as AnimateText } from './components/animations/AnimateText.astro';

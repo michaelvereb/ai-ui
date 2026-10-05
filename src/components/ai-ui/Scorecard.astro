@@ -1,0 +1,406 @@
+---
+export interface ScorecardItem {
+  pillar: string;
+  checkpoint: string;
+  spec: string;
+  status: 'verified' | 'passed' | 'active' | 'warning' | 'failed' | string;
+  statusLabel?: string;
+}
+
+export interface ScorecardFilter {
+  id: string;
+  label: string;
+}
+
+interface Props {
+  items?: ScorecardItem[];
+  filters?: ScorecardFilter[];
+  showFilters?: boolean;
+  class?: string;
+}
+
+const defaultItems: ScorecardItem[] = [
+  {
+    pillar: 'Edge Security',
+    checkpoint: 'TLS 1.3 & Strict HSTS',
+    spec: 'max-age=31536000; includeSubDomains',
+    status: 'verified',
+    statusLabel: 'Verified (124ms TTFB)'
+  },
+  {
+    pillar: 'Structured Data',
+    checkpoint: 'RFC 8259 Single-Pass Escaping',
+    spec: 'Zero double-escaped & entities; clean Unicode hex',
+    status: 'passed',
+    statusLabel: 'Passed (10 Schemas)'
+  },
+  {
+    pillar: 'Agent Readiness',
+    checkpoint: 'WebMCP Bridge & Tool Manifest',
+    spec: 'navigator.modelContext + /.webmcp/bridge.js',
+    status: 'active',
+    statusLabel: 'Active (readOnlyHint)'
+  },
+  {
+    pillar: 'AI Discovery',
+    checkpoint: 'Dual llms.txt Discovery',
+    spec: '<head> alternate link + visible footer anchor',
+    status: 'passed',
+    statusLabel: '200 OK (Clean Index)'
+  },
+  {
+    pillar: 'DNS Hygiene',
+    checkpoint: 'Canonical WWW Redirection',
+    spec: 'Strict 301 from apex to www subdomain',
+    status: 'passed',
+    statusLabel: 'Enforced (Zero Loops)'
+  },
+  {
+    pillar: 'Analytics',
+    checkpoint: 'Cloudflare Zaraz Edge Execution',
+    spec: 'Zero client-side GTM or gtag.js script overhead',
+    status: 'active',
+    statusLabel: 'Active (0ms CPU)'
+  }
+];
+
+const defaultFilters: ScorecardFilter[] = [
+  { id: 'all', label: 'All (6)' },
+  { id: 'security', label: 'Security' },
+  { id: 'data', label: 'Data' },
+  { id: 'agent', label: 'Agent' },
+  { id: 'seo', label: 'SEO' },
+  { id: 'analytics', label: 'Analytics' }
+];
+
+const {
+  items = defaultItems,
+  filters = defaultFilters,
+  showFilters = true,
+  class: className = ''
+} = Astro.props;
+---
+
+<div class={`geo-table-outer-wrapper ${className}`} data-scorecard>
+  {showFilters && (
+    <div class="scorecard-filters-bar" role="tablist" aria-label="Scorecard filter categories">
+      {filters.map((f, i) => (
+        <button
+          type="button"
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          class={`scorecard-filter-btn ${i === 0 ? 'is-active' : ''}`}
+          data-filter={f.id}
+        >
+          {f.label}
+        </button>
+      ))}
+    </div>
+  )}
+
+  <div class="geo-table-container">
+    <table role="table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">Audit Pillar</th>
+          <th style="width: 28%;">Checkpoint</th>
+          <th style="width: 32%;">Technical Specification</th>
+          <th style="width: 18%;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map((row) => (
+          <tr data-pillar={row.pillar.toLowerCase()}>
+            <td data-label="Audit Pillar">{row.pillar}</td>
+            <td data-label="Checkpoint">{row.checkpoint}</td>
+            <td data-label="Specification" class="scorecard-spec-cell">
+              {row.spec}
+            </td>
+            <td data-label="Status">
+              <span class={`table-badge table-badge-${row.status}`}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>{row.statusLabel || row.status}</span>
+              </span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function initScorecard() {
+    document.querySelectorAll('[data-scorecard]').forEach((card) => {
+      const filterBtns = card.querySelectorAll('.scorecard-filter-btn');
+      const tableRows = card.querySelectorAll('tbody tr');
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach((b) => {
+            b.classList.remove('is-active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-selected', 'true');
+          const filter = (btn.getAttribute('data-filter') || 'all').toLowerCase();
+
+          tableRows.forEach((row) => {
+            const pillar = (row.getAttribute('data-pillar') || '').toLowerCase();
+            let show = false;
+            if (filter === 'all') show = true;
+            else if (filter === 'security' && pillar.includes('security')) show = true;
+            else if (filter === 'data' && (pillar.includes('data') || pillar.includes('structured'))) show = true;
+            else if (filter === 'agent' && (pillar.includes('agent') || pillar.includes('readiness'))) show = true;
+            else if (filter === 'seo' && (pillar.includes('ai') || pillar.includes('discovery') || pillar.includes('dns'))) show = true;
+            else if (filter === 'analytics' && pillar.includes('analytics')) show = true;
+
+            (row as HTMLElement).style.display = show ? '' : 'none';
+          });
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScorecard);
+  } else {
+    initScorecard();
+  }
+</script>
+
+<style>
+  @layer components {
+    .geo-table-outer-wrapper {
+      container-type: inline-size;
+      container-name: ai-ui;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 0 auto;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    .scorecard-filters-bar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-bottom: 0.125rem;
+      width: 100%;
+    }
+
+    .scorecard-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6875rem;
+      background: var(--surface, #ffffff);
+      border: 1px solid var(--border, #e4e4e7);
+      border-radius: var(--radius-pill, 9999px);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted, #52525b);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+
+    .scorecard-filter-btn:hover {
+      background: var(--bg-subtle, #f4f4f5);
+      color: var(--text, #09090b);
+      border-color: var(--border-strong, #d4d4d8);
+    }
+
+    .scorecard-filter-btn.is-active {
+      background: color-mix(in srgb, var(--primary, #ED5F45) 12%, transparent);
+      border-color: var(--primary, #ED5F45);
+      color: #C23820;
+      font-weight: 600;
+    }
+
+    .geo-table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-lg, 0.75rem);
+      border: 1px solid var(--border, #e4e4e7);
+      background: var(--surface, #ffffff);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--text, #09090b);
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--bg-subtle, #fafafa);
+      color: var(--text, #09090b);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      letter-spacing: -0.01em;
+      padding: 0.875rem 1.125rem;
+      border-bottom: 1px solid var(--border, #e4e4e7);
+      border-right: 1px solid var(--border, #e4e4e7);
+    }
+
+    th:last-child {
+      border-right: none;
+    }
+
+    td {
+      padding: 0.875rem 1.125rem;
+      border-bottom: 1px solid var(--border, #e4e4e7);
+      border-right: 1px solid var(--border, #e4e4e7);
+      color: var(--text-muted, #52525b);
+      vertical-align: middle;
+    }
+
+    td:first-child {
+      font-weight: 600;
+      color: var(--text, #09090b);
+    }
+
+    td:last-child {
+      border-right: none;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .scorecard-spec-cell {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78125rem;
+      color: var(--text-muted, #52525b);
+    }
+
+    .table-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3125rem;
+      font-size: 0.71875rem;
+      font-weight: 600;
+      padding: 0.1875rem 0.5625rem;
+      border-radius: var(--radius-pill, 9999px);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .table-badge-verified,
+    .table-badge-passed,
+    .table-badge-active {
+      background: color-mix(in srgb, var(--primary, #ED5F45) 10%, transparent);
+      color: #C23820;
+      border: 1px solid color-mix(in srgb, var(--primary, #ED5F45) 25%, transparent);
+    }
+
+    :root[data-theme="dark"] .scorecard-filter-btn,
+    .dark .scorecard-filter-btn,
+    .theme-invert .scorecard-filter-btn {
+      background: var(--surface-raised, #18181c);
+      border-color: var(--border, #232328);
+      color: #a1a1aa;
+    }
+
+    :root[data-theme="dark"] .scorecard-filter-btn:hover,
+    .dark .scorecard-filter-btn:hover,
+    .theme-invert .scorecard-filter-btn:hover {
+      background: var(--surface-hover, #1e1e24);
+      color: #fcfcfc;
+    }
+
+    :root[data-theme="dark"] .scorecard-filter-btn.is-active,
+    .dark .scorecard-filter-btn.is-active,
+    .theme-invert .scorecard-filter-btn.is-active {
+      background: color-mix(in srgb, var(--primary, #ED5F45) 14%, transparent);
+      border-color: var(--primary, #ED5F45);
+      color: #F18774;
+    }
+
+    :root[data-theme="dark"] .geo-table-container,
+    .dark .geo-table-container,
+    .theme-invert .geo-table-container {
+      background: var(--surface, #111113);
+      border-color: var(--border, #27272a);
+    }
+
+    :root[data-theme="dark"] th,
+    .dark th,
+    .theme-invert th {
+      background-color: var(--surface-raised, #18181c);
+      color: #f4f4f5;
+      border-color: var(--border, #27272a);
+    }
+
+    :root[data-theme="dark"] td,
+    .dark td,
+    .theme-invert td {
+      border-color: var(--border, #27272a);
+      color: #a1a1aa;
+    }
+
+    :root[data-theme="dark"] td:first-child,
+    .dark td:first-child,
+    .theme-invert td:first-child {
+      color: #f4f4f5;
+    }
+
+    :root[data-theme="dark"] .table-badge-verified,
+    :root[data-theme="dark"] .table-badge-passed,
+    :root[data-theme="dark"] .table-badge-active,
+    .dark .table-badge-verified,
+    .dark .table-badge-passed,
+    .dark .table-badge-active,
+    .theme-invert .table-badge-verified,
+    .theme-invert .table-badge-passed,
+    .theme-invert .table-badge-active {
+      color: #F18774;
+    }
+
+    @container ai-ui (max-width: 48rem) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+      thead {
+        display: none;
+      }
+      tr {
+        margin-bottom: 0.875rem;
+        border: 1px solid var(--border, #e4e4e7);
+        border-radius: var(--radius-md, 0.5rem);
+        padding: 0.875rem;
+        background: var(--surface, #ffffff);
+      }
+      td {
+        border: none;
+        border-bottom: 1px solid var(--border-subtle, #f4f4f5);
+        padding: 0.5rem 0;
+        text-align: left;
+        font-size: 0.84375rem;
+      }
+      td:last-child {
+        border-bottom: none;
+      }
+      td::before {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        font-size: 0.71875rem;
+        color: var(--text-muted, #52525b);
+        content: attr(data-label);
+      }
+    }
+  }
+</style>
