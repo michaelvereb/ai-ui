@@ -119,8 +119,17 @@ const current = models.find((m) => m.id === selectedId) || models[0];
   }
 
   .ai-model-trigger[aria-expanded="true"] {
-    border-color: var(--primary, #ED5F45);
-    box-shadow: 0 0 0 1px var(--primary, #ED5F45), 0 0 8px color-mix(in srgb, var(--primary, #ED5F45) 20%, transparent);
+    border-color: #52525b;
+    box-shadow: 0 0 0 1px #52525b;
+    color: var(--text, #09090b);
+  }
+
+  :root[data-theme="dark"] .ai-model-trigger[aria-expanded="true"],
+  .dark .ai-model-trigger[aria-expanded="true"],
+  .theme-invert .ai-model-trigger[aria-expanded="true"] {
+    border-color: #a1a1aa;
+    box-shadow: 0 0 0 1px #a1a1aa;
+    color: #fcfcfc;
   }
 
   .ai-model-current-info {
