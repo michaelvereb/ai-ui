@@ -219,6 +219,11 @@ const selectedModelId = selectedModel === 'Claude 3.5 Sonnet' ? 'claude-3-5-sonn
     line-height: 1 !important;
   }
 
+  :global(.ai-prompt-model-selector .ai-model-trigger *),
+  :global(.ai-prompt-model-trigger *) {
+    pointer-events: none !important;
+  }
+
   :global(.ai-prompt-model-selector .ai-model-trigger:hover),
   :global(.ai-prompt-model-trigger:hover) {
     background: var(--bg-subtle, #f4f4f5) !important;
