@@ -1,5 +1,6 @@
 ---
 import { uniqueId } from '../../utils/unique-id';
+import TextShimmer from './TextShimmer.astro';
 interface StreamingThinkingProps {
   isStreaming?: true;
   phases?: string[];
@@ -51,7 +52,7 @@ const initialPhase = phases[0] || 'Analyzing target domain...';
 
     
     <div class="ai-thinking-text" data-phase-text>
-      <span class="ai-shimmer-sweep">{initialPhase}</span>
+      <TextShimmer class="ai-shimmer-sweep">{initialPhase}</TextShimmer>
     </div>
   </div>
 
