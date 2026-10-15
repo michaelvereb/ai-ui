@@ -11,6 +11,7 @@ interface Props {
   options: Option[];
   isMultiSelect?: boolean;
   class?: string;
+  [key: string]: any;
 }
 
 const {
@@ -19,10 +20,11 @@ const {
   options = [],
   isMultiSelect = false,
   class: className = '',
+  ...rest
 } = Astro.props;
 ---
 
-<div class={`ai-questions-card ${className}`} data-questions data-multiselect={isMultiSelect ? 'true' : 'false'}>
+<div class={`ai-questions-card ${className}`} data-questions data-multiselect={isMultiSelect ? 'true' : 'false'} {...rest}>
   <div class="ai-questions-header">
     <div class="ai-questions-badge">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -187,6 +189,9 @@ const {
       buttons.forEach((btn) => {
         btn.addEventListener('click', () => {
           const isCurrentlyChecked = btn.getAttribute('aria-checked') === 'true';
+          const optId = btn.getAttribute('data-option-id') || '';
+          const label = btn.querySelector('.ai-opt-label')?.textContent || '';
+
           if (isMulti) {
             btn.setAttribute('aria-checked', isCurrentlyChecked ? 'false' : 'true');
           } else {
@@ -195,8 +200,34 @@ const {
               btn.setAttribute('aria-checked', 'true');
             }
           }
+
+          const selectedButtons = Array.from(container.querySelectorAll<HTMLButtonElement>('[data-option-id][aria-checked="true"]'));
+          const selectedIds = selectedButtons.map((b) => b.getAttribute('data-option-id') || '');
+          const selectedLabels = selectedButtons.map((b) => b.querySelector('.ai-opt-label')?.textContent || '');
+
+          const detail = {
+            optionId: optId,
+            label: label,
+            checked: !isCurrentlyChecked,
+            selectedIds: selectedIds,
+            selectedLabels: selectedLabels,
+            value: isMulti ? selectedIds : (selectedIds[0] || '')
+          };
+
+          container.dispatchEvent(new CustomEvent('ai:question-change', {
+            bubbles: true,
+            composed: true,
+            detail: detail
+          }));
+
+          container.dispatchEvent(new CustomEvent('change', {
+            bubbles: true,
+            composed: true,
+            detail: detail
+          }));
+
           if (!isCurrentlyChecked && typeof (window as any).aiToast === 'function') {
-            (window as any).aiToast(btn.querySelector('.ai-opt-label')?.textContent || 'Option selected');
+            (window as any).aiToast(label || 'Option selected');
           }
         });
       });

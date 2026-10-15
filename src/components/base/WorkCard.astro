@@ -1,0 +1,435 @@
+---
+import Tag from './Tag.astro';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  logoSrc?: string;
+  logoBg?: string;
+  logoText?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  href?: string;
+  buttonText?: string;
+  tags?: string[];
+  metrics?: { label: string; value: string }[];
+  class?: string;
+}
+
+const {
+  title,
+  subtitle,
+  logoSrc,
+  logoBg = '#0e6655',
+  logoText,
+  imageSrc,
+  imageAlt = `${title} case study preview`,
+  href = '#',
+  buttonText = 'See work',
+  tags = [],
+  metrics = [],
+  class: className = '',
+} = Astro.props;
+---
+
+<div class={`base-work-card-wrap ${className}`}>
+  <a href={href} class="base-work-teaser">
+    <!-- Header: Customer details + See work button -->
+    <div class="base-work-header">
+      <div class="base-customer-info">
+        <div class="base-customer-logo" style={`background-color: ${logoBg};`}>
+          {logoSrc ? (
+            <img src={logoSrc} alt={`${title} logo`} class="base-logo-img" loading="lazy" />
+          ) : (
+            <span class="base-logo-fallback">{logoText || title.slice(0, 2).toUpperCase()}</span>
+          )}
+        </div>
+        <div class="base-customer-copy">
+          <h3 class="base-customer-title">{title}</h3>
+          <p class="base-customer-subtitle">{subtitle}</p>
+        </div>
+      </div>
+
+      <div class="base-btn-see-work">
+        <span class="base-btn-text">{buttonText}</span>
+        <svg class="base-btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M13 6l6 6-6 6"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Optional Metrics strip -->
+    {metrics.length > 0 && (
+      <div class="base-work-metrics">
+        {metrics.map(m => (
+          <div class="base-metric-item">
+            <span class="base-metric-val">{m.value}</span>
+            <span class="base-metric-lbl">{m.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <!-- Visual: Featured project showcase -->
+    <div class="base-work-visual">
+      {imageSrc ? (
+        <div class="base-visual-frame">
+          <img src={imageSrc} alt={imageAlt} class="base-visual-img" loading="lazy" />
+        </div>
+      ) : (
+        <div class="base-visual-placeholder">
+          <slot name="visual">
+            <div class="base-visual-mockup">
+              <div class="base-mockup-bar">
+                <div class="base-mockup-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="base-mockup-url">https://{title.toLowerCase().replace(/\s+/g, '')}.com</div>
+              </div>
+              <div class="base-mockup-content">
+                <div class="base-mockup-hero">
+                  <div class="base-mockup-heading">{title}</div>
+                  <div class="base-mockup-sub">{subtitle}</div>
+                </div>
+              </div>
+            </div>
+          </slot>
+        </div>
+      )}
+    </div>
+
+    <!-- Tags footer -->
+    {tags.length > 0 && (
+      <div class="base-work-tags">
+        {tags.map(t => (
+          <Tag variant="grey" shape="pill" size="sm">{t}</Tag>
+        ))}
+      </div>
+    )}
+  </a>
+</div>
+
+<style>
+  .base-work-card-wrap {
+    border: 1px solid #e6e6e6;
+    border-radius: 24px;
+    background-color: #ffffff;
+    width: 100%;
+    overflow: hidden;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+    box-sizing: border-box;
+  }
+
+  .base-work-card-wrap:hover {
+    border-color: #d8d8d8;
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.07), 0 4px 12px rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
+  }
+
+  .base-work-teaser {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-decoration: none;
+    background-color: #ffffff;
+    transition: background-color 0.2s ease;
+  }
+
+  .base-work-teaser:hover {
+    background-color: #fafafa;
+  }
+
+  /* Header */
+  .base-work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 36px 40px;
+    gap: 20px;
+  }
+
+  .base-customer-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .base-customer-logo {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .base-logo-img {
+    max-width: 65%;
+    max-height: 65%;
+    object-fit: contain;
+  }
+
+  .base-logo-fallback {
+    color: #ffffff;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .base-customer-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .base-customer-title {
+    margin: 0;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 26px;
+    font-weight: 550;
+    letter-spacing: -0.03em;
+    color: #222222;
+    line-height: 120%;
+  }
+
+  .base-customer-subtitle {
+    margin: 0;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: #666666;
+    line-height: 140%;
+  }
+
+  /* Button: "See work" Pill with Shimmer Sheen */
+  .base-btn-see-work {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 20px 0 24px;
+    background-color: rgba(237, 95, 69, 0.06);
+    color: #ed5f45;
+    border: 1px solid rgba(237, 95, 69, 0.14);
+    border-radius: 999px;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .base-btn-see-work::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+  }
+
+  .base-work-teaser:hover .base-btn-see-work {
+    background-color: #ed5f45;
+    color: #ffffff;
+    border-color: #ed5f45;
+    box-shadow: 0 4px 14px rgba(237, 95, 69, 0.35);
+  }
+
+  .base-work-teaser:hover .base-btn-see-work::after {
+    animation: shine-slide 1.8s ease-in-out infinite;
+  }
+
+  .base-work-teaser:hover .base-btn-arrow {
+    transform: translateX(3px);
+  }
+
+  .base-btn-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  @keyframes shine-slide {
+    0% { transform: translateX(0) skewX(-20deg); }
+    100% { transform: translateX(250%) skewX(-20deg); }
+  }
+
+  /* Metrics Strip */
+  .base-work-metrics {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 40px 20px 40px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 24px;
+  }
+
+  .base-metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .base-metric-val {
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: #111111;
+  }
+
+  .base-metric-lbl {
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 450;
+    color: #888888;
+  }
+
+  /* Visual Container */
+  .base-work-visual {
+    padding: 0 40px 32px;
+  }
+
+  .base-visual-frame {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #ebebeb;
+    background-color: #f7f7f8;
+  }
+
+  .base-visual-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Interactive placeholder if no image passed */
+  .base-visual-placeholder {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid #eaeaea;
+    background: linear-gradient(180deg, #fbfbfc 0%, #f4f5f7 100%);
+    overflow: hidden;
+    padding: 24px;
+  }
+
+  .base-visual-mockup {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e5e7;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+  }
+
+  .base-mockup-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #fafafa;
+    border-bottom: 1px solid #ededed;
+  }
+
+  .base-mockup-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .base-mockup-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #dedede;
+  }
+
+  .base-mockup-url {
+    font-family: Geist Mono, monospace;
+    font-size: 11px;
+    color: #888;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    padding: 2px 10px;
+  }
+
+  .base-mockup-content {
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  }
+
+  .base-mockup-heading {
+    font-family: Geist, sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #111;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .base-mockup-sub {
+    font-family: Geist, sans-serif;
+    font-size: 14px;
+    color: #777;
+    max-width: 440px;
+  }
+
+  /* Tags Row */
+  .base-work-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 40px 36px;
+  }
+
+  @media (max-width: 768px) {
+    .base-work-header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px;
+      gap: 16px;
+    }
+
+    .base-customer-info {
+      gap: 14px;
+    }
+
+    .base-customer-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+    }
+
+    .base-customer-title {
+      font-size: 22px;
+    }
+
+    .base-btn-see-work {
+      width: 100%;
+    }
+
+    .base-work-visual {
+      padding: 0 20px 20px;
+    }
+
+    .base-work-tags {
+      padding: 0 20px 24px;
+    }
+  }
+</style>

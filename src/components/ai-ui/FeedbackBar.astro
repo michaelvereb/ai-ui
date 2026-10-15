@@ -2,14 +2,16 @@
 interface Props {
   onFeedback?: string;
   class?: string;
+  [key: string]: any;
 }
 
 const {
   class: className = '',
+  ...rest
 } = Astro.props;
 ---
 
-<div class={`ai-feedback-bar ${className}`} data-feedback-bar>
+<div class={`ai-feedback-bar ${className}`} data-feedback-bar {...rest}>
   <div class="ai-feedback-group">
     <button type="button" class="ai-feedback-btn" data-action="thumbs-up" title="Helpful audit report" aria-label="Helpful">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -109,23 +111,40 @@ const {
     document.querySelectorAll<HTMLElement>('[data-feedback-bar]').forEach((bar) => {
       bar.querySelectorAll<HTMLButtonElement>('[data-action]').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const action = btn.getAttribute('data-action');
+          const action = btn.getAttribute('data-action') || '';
+
           if (action === 'thumbs-up' || action === 'thumbs-down') {
             bar.querySelectorAll('[data-action="thumbs-up"], [data-action="thumbs-down"]').forEach((b) => b.classList.remove('is-active'));
             btn.classList.add('is-active');
-            if (typeof (window as any).aiToast === 'function') {
-              (window as any).aiToast(action === 'thumbs-up' ? 'Feedback: Marked as helpful' : 'Feedback: Marked as unhelpful');
-            }
-          } else if (action === 'copy') {
-            navigator.clipboard?.writeText('Autonomous Agent Diagnostic Report - 30 Checkpoints Verified');
-            
-            if (typeof (window as any).aiToast === 'function') {
-              (window as any).aiToast('Report copied to clipboard');
-            }
-          } else if (action === 'retry') {
-            if (typeof (window as any).aiToast === 'function') {
-              (window as any).aiToast('Re-running diagnostic probe...');
-            }
+          }
+
+          if (action === 'copy') {
+            const parentMsg = bar.closest('.ai-message') || bar.closest('[data-message]') || bar.parentElement;
+            const textToCopy = parentMsg?.querySelector('.ai-message-content')?.textContent?.trim() ||
+                               parentMsg?.textContent?.trim() ||
+                               'Autonomous Agent Diagnostic Report';
+            navigator.clipboard?.writeText(textToCopy);
+          }
+
+          const detail = { action, button: btn };
+
+          bar.dispatchEvent(new CustomEvent('ai:feedback', {
+            bubbles: true,
+            composed: true,
+            detail: detail
+          }));
+
+          btn.dispatchEvent(new CustomEvent(`ai:${action}`, {
+            bubbles: true,
+            composed: true,
+            detail: detail
+          }));
+
+          if (typeof (window as any).aiToast === 'function') {
+            if (action === 'thumbs-up') (window as any).aiToast('Feedback: Marked as helpful');
+            else if (action === 'thumbs-down') (window as any).aiToast('Feedback: Marked as unhelpful');
+            else if (action === 'copy') (window as any).aiToast('Report copied to clipboard');
+            else if (action === 'retry') (window as any).aiToast('Re-running diagnostic probe...');
           }
         });
       });

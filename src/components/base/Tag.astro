@@ -1,0 +1,302 @@
+---
+interface Props {
+  variant?: 'grey' | 'primary' | 'link' | 'customer' | 'customer-v2' | 'outline' | 'dark';
+  shape?: 'pill' | 'rounded';
+  size?: 'sm' | 'md' | 'lg';
+  style?: 'filled' | 'outlined';
+  href?: string;
+  target?: string;
+  icon?: string;
+  iconPosition?: 'left' | 'right' | 'only';
+  removable?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'grey',
+  shape = 'pill',
+  size = 'md',
+  style = 'filled',
+  href,
+  target,
+  icon,
+  iconPosition = 'left',
+  removable = false,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const TagElement = href ? 'a' : 'div';
+const isIconOnly = iconPosition === 'only';
+---
+
+<TagElement
+  href={href}
+  target={target}
+  rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+  class:list={[
+    'base-tag',
+    `variant-${variant}`,
+    `shape-${shape}`,
+    `size-${size}`,
+    `style-${style}`,
+    { 'is-icon-only': isIconOnly },
+    className,
+  ]}
+  {...rest}
+>
+  {icon && (iconPosition === 'left' || isIconOnly) && (
+    <span class="base-tag-icon" aria-hidden="true" set:html={icon} />
+  )}
+
+  {!isIconOnly && (
+    <span class="base-tag-text">
+      <slot />
+    </span>
+  )}
+
+  {icon && iconPosition === 'right' && !removable && (
+    <span class="base-tag-icon" aria-hidden="true" set:html={icon} />
+  )}
+
+  {removable && !isIconOnly && (
+    <button type="button" class="base-tag-remove" aria-label="Remove tag" tabindex="-1">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+    </button>
+  )}
+</TagElement>
+
+<style>
+  .base-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    white-space: nowrap;
+    user-select: none;
+    font-weight: 450;
+  }
+
+  /* Shapes */
+  .shape-pill {
+    border-radius: 999px;
+  }
+
+  .shape-rounded {
+    border-radius: 12px;
+  }
+
+  /* Sizes */
+  .size-sm {
+    height: 28px;
+    padding: 0 10px;
+    font-size: 13px;
+    letter-spacing: -0.15px;
+  }
+
+  .size-md {
+    height: 36px;
+    padding: 0 14px;
+    font-size: 15px;
+    letter-spacing: -0.2px;
+  }
+
+  .size-lg {
+    height: 42px;
+    padding: 0 18px;
+    font-size: 17px;
+    letter-spacing: -0.25px;
+  }
+
+  .is-icon-only.size-sm { width: 28px; padding: 0; }
+  .is-icon-only.size-md { width: 36px; padding: 0; }
+  .is-icon-only.size-lg { width: 42px; padding: 0; }
+
+  /* ─── 1. Michael's Iconic "tag grey" ─── */
+  .variant-grey.style-filled {
+    background-color: #f5f5f5;
+    color: #777777;
+    border: 1px solid transparent;
+  }
+
+  .variant-grey.style-filled:hover {
+    background-color: #ebebeb;
+    color: #444444;
+  }
+
+  .variant-grey.style-outlined {
+    background-color: #ffffff;
+    color: #666666;
+    border: 1px solid #e1e4e8;
+  }
+
+  .variant-grey.style-outlined:hover {
+    background-color: #f8f9fa;
+    border-color: #d1d5db;
+    color: #222222;
+  }
+
+  /* ─── 2. Primary Accent Wash ─── */
+  .variant-primary.style-filled {
+    background-color: rgba(237, 95, 69, 0.08);
+    color: #ed5f45;
+    border: 1px solid rgba(237, 95, 69, 0.16);
+  }
+
+  .variant-primary.style-filled:hover {
+    background-color: rgba(237, 95, 69, 0.15);
+  }
+
+  .variant-primary.style-outlined {
+    background-color: #ffffff;
+    color: #ed5f45;
+    border: 1px solid #ed5f45;
+  }
+
+  .variant-primary.style-outlined:hover {
+    background-color: rgba(237, 95, 69, 0.05);
+  }
+
+  /* ─── 3. Link Tag ─── */
+  .variant-link {
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    color: #4b5563;
+    cursor: pointer;
+  }
+
+  .variant-link:hover {
+    background-color: #ed5f45;
+    color: #ffffff;
+    border-color: #ed5f45;
+    box-shadow: 0 2px 8px rgba(237, 95, 69, 0.25);
+  }
+
+  /* ─── 4. Customer Emerald ─── */
+  .variant-customer.style-filled {
+    background-color: rgba(14, 102, 85, 0.08);
+    color: #0e6655;
+    border: 1px solid rgba(14, 102, 85, 0.16);
+  }
+
+  .variant-customer.style-filled:hover {
+    background-color: rgba(14, 102, 85, 0.14);
+  }
+
+  .variant-customer.style-outlined {
+    background-color: #ffffff;
+    color: #0e6655;
+    border: 1px solid #0e6655;
+  }
+
+  /* ─── 5. Customer Blue ─── */
+  .variant-customer-v2.style-filled {
+    background-color: rgba(0, 11, 133, 0.06);
+    color: #000b85;
+    border: 1px solid rgba(0, 11, 133, 0.14);
+  }
+
+  .variant-customer-v2.style-outlined {
+    background-color: #ffffff;
+    color: #000b85;
+    border: 1px solid #000b85;
+  }
+
+  /* ─── 6. Outline Clean ─── */
+  .variant-outline {
+    background-color: transparent;
+    color: #555555;
+    border: 1px solid #dcdfe3;
+  }
+
+  .variant-outline:hover {
+    background-color: #f7f8f9;
+    color: #111111;
+    border-color: #cbd3d7;
+  }
+
+  /* ─── 7. Dark Minimal ─── */
+  .variant-dark.style-filled {
+    background-color: #1a1a1a;
+    color: #f5f5f5;
+    border: 1px solid #282828;
+  }
+
+  .variant-dark.style-filled:hover {
+    background-color: #000000;
+  }
+
+  .variant-dark.style-outlined {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+  }
+
+  .base-tag-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .base-tag-text {
+    display: inline-block;
+  }
+
+  .base-tag-remove {
+    background: transparent;
+    border: none;
+    padding: 2px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.6;
+    border-radius: 50%;
+    transition: opacity 0.15s, background-color 0.15s;
+  }
+
+  .base-tag-remove:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+</style>
+
+<script>
+  function initTags() {
+    document.querySelectorAll('.base-tag').forEach((tag) => {
+      const removeBtn = tag.querySelector('.base-tag-remove');
+      if (removeBtn && !(removeBtn as any).__tagInit) {
+        (removeBtn as any).__tagInit = true;
+        removeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const text = tag.querySelector('.base-tag-text')?.textContent?.trim() || '';
+          tag.dispatchEvent(new CustomEvent('ai:tag-remove', {
+            bubbles: true,
+            composed: true,
+            detail: { tag, text }
+          }));
+          tag.remove();
+        });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTags);
+  } else {
+    initTags();
+  }
+</script>

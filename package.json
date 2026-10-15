@@ -1,6 +1,6 @@
 {
   "name": "@michaelvereb/ai-ui",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Lightweight, accessible Astro components for AI reasoning traces, streaming state, and autonomous agent interfaces. Zero React, zero Radix, zero Tailwind.",
   "type": "module",
   "author": "Michael Vereb",
@@ -19,6 +19,13 @@
     "./animations/*": "./src/components/animations/*.astro",
     "./AnimateText.astro": "./src/components/animations/AnimateText.astro",
     "./Scorecard.astro": "./src/components/ai-ui/Scorecard.astro",
+    "./base/*": "./src/components/base/*.astro",
+    "./components/base/*": "./src/components/base/*.astro",
+    "./Button.astro": "./src/components/base/Button.astro",
+    "./EmailField.astro": "./src/components/base/EmailField.astro",
+    "./Label.astro": "./src/components/base/Label.astro",
+    "./Tag.astro": "./src/components/base/Tag.astro",
+    "./TabSelector.astro": "./src/components/base/TabSelector.astro",
     "./utils/*": "./src/utils/*.ts"
   },
   "scripts": {

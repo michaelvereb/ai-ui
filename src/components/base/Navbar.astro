@@ -1,0 +1,257 @@
+---
+interface Props {
+  brandName?: string;
+  avatarSrc?: string;
+  connectUrl?: string;
+  class?: string;
+}
+
+const {
+  brandName = "Michael Vereb",
+  avatarSrc = "https://www.michaelvereb.com/images/Michael-Vereb-Profile-Pic.avif",
+  connectUrl = "https://www.linkedin.com/in/michael-vereb/",
+  class: className = "",
+} = Astro.props;
+---
+
+<header class={`base-navbar-wrapper ${className}`}>
+  <div class="base-navbar" id="base-navbar">
+    <div class="base-nav-left">
+      <a href="/ai-ui/base" class="base-brand">
+        <img
+          src={avatarSrc}
+          alt={brandName}
+          class="base-avatar"
+          width="36"
+          height="36"
+          loading="eager"
+        />
+        <span class="base-brand-name">{brandName}</span>
+      </a>
+    </div>
+
+    <nav class="base-nav-links" id="base-nav-links">
+      <a href="#work" class="base-nav-item">Work</a>
+      <a href="#tabs" class="base-nav-item">Tabs</a>
+      <a href="#tags" class="base-nav-item">Tags</a>
+      <a href="#buttons" class="base-nav-item">Buttons</a>
+      <a href="#inputs" class="base-nav-item">Inputs</a>
+      <a href={connectUrl} target="_blank" rel="noopener noreferrer" class="base-nav-connect">
+        <span>Connect</span>
+      </a>
+    </nav>
+
+    <button
+      type="button"
+      class="base-menu-toggle"
+      id="base-menu-toggle"
+      aria-label="Toggle Navigation Menu"
+      aria-expanded="false"
+    >
+      <svg class="base-menu-open-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+      <svg class="base-menu-close-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  .base-navbar-wrapper {
+    position: sticky;
+    top: 16px;
+    z-index: 100;
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .base-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 58px;
+    padding: 6px 12px 6px 16px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid #ebebeb;
+    border-radius: 999px;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .base-navbar.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #e1e7ea;
+    box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  }
+
+  .base-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .base-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #222;
+  }
+
+  .base-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .base-brand-name {
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #222;
+  }
+
+  .base-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .base-nav-item {
+    padding: 8px 14px;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 450;
+    letter-spacing: -0.01em;
+    color: #666;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: all 0.15s ease;
+  }
+
+  .base-nav-item:hover {
+    color: #111;
+    background-color: #f5f5f5;
+  }
+
+  .base-nav-connect {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 18px;
+    margin-left: 6px;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #ed5f45;
+    background-color: rgba(237, 95, 69, 0.08);
+    border: 1px solid rgba(237, 95, 69, 0.15);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .base-nav-connect:hover {
+    background-color: #ed5f45;
+    color: #ffffff;
+    border-color: #ed5f45;
+    box-shadow: 0 2px 10px rgba(237, 95, 69, 0.3);
+  }
+
+  .base-menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #333;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .base-menu-close-icon {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .base-menu-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .base-nav-links {
+      display: none;
+      position: absolute;
+      top: 66px;
+      left: 16px;
+      right: 16px;
+      background: #ffffff;
+      border: 1px solid #ebebeb;
+      border-radius: 20px;
+      padding: 12px;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .base-nav-links.active {
+      display: flex;
+    }
+
+    .base-nav-links.active ~ .base-menu-toggle .base-menu-open-icon {
+      display: none;
+    }
+
+    .base-nav-links.active ~ .base-menu-toggle .base-menu-close-icon {
+      display: block;
+    }
+
+    .base-nav-connect {
+      margin-left: 0;
+      margin-top: 6px;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const navbar = document.getElementById('base-navbar');
+    const toggleBtn = document.getElementById('base-menu-toggle');
+    const links = document.getElementById('base-nav-links');
+
+    if (toggleBtn && links) {
+      toggleBtn.addEventListener('click', () => {
+        const isExpanded = links.classList.toggle('active');
+        toggleBtn.setAttribute('aria-expanded', String(isExpanded));
+      });
+    }
+
+    function onScroll() {
+      if (!navbar) return;
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>

@@ -24,12 +24,13 @@ const {
   models = defaultModels,
   selectedId = 'claude-3-5-sonnet',
   class: className = '',
+  ...rest
 } = Astro.props;
 
 const current = models.find((m) => m.id === selectedId) || models[0];
 ---
 
-<div class={`ai-model-selector ${className}`} data-model-selector>
+<div class={`ai-model-selector ${className}`} data-model-selector {...rest}>
   <button type="button" class="ai-model-trigger" data-model-trigger aria-expanded="false" aria-haspopup="listbox" title="Select target model">
     <div class="ai-model-current-info">
       <span class="ai-model-dot" style="background: rgb(237, 95, 69);"></span>
@@ -293,10 +294,25 @@ const current = models.find((m) => m.id === selectedId) || models[0];
         opt.addEventListener('click', () => {
           menu.querySelectorAll('.ai-model-opt').forEach((o) => o.classList.remove('is-selected'));
           opt.classList.add('is-selected');
+          const id = opt.getAttribute('data-model-id') || '';
           const name = opt.getAttribute('data-model-name') || '';
           if (selectedName) selectedName.textContent = name;
           trigger.setAttribute('aria-expanded', 'false');
           menu.setAttribute('hidden', '');
+
+          const detail = { modelId: id, modelName: name, selectedModel: id };
+
+          container.dispatchEvent(new CustomEvent('ai:model-change', {
+            bubbles: true,
+            composed: true,
+            detail: detail
+          }));
+
+          container.dispatchEvent(new CustomEvent('change', {
+            bubbles: true,
+            composed: true,
+            detail: detail
+          }));
 
           if (typeof (window as any).aiToast === 'function') {
             (window as any).aiToast({

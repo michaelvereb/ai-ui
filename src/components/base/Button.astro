@@ -1,0 +1,335 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary' | 'see-work' | 'icon-square' | 'outline' | 'ghost' | 'dark' | 'link';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  target?: string;
+  type?: 'button' | 'submit' | 'reset';
+  icon?: string;
+  iconPosition?: 'left' | 'right' | 'only';
+  disabled?: boolean;
+  loading?: boolean;
+  focused?: boolean;
+  class?: string;
+  'aria-label'?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  target,
+  type = 'button',
+  icon,
+  iconPosition = 'right',
+  disabled = false,
+  loading = false,
+  focused = false,
+  class: className = '',
+  'aria-label': ariaLabel,
+  ...rest
+} = Astro.props;
+
+const Element = href ? 'a' : 'button';
+const isIconOnly = iconPosition === 'only' || variant === 'icon-square';
+---
+
+<Element
+  href={href}
+  target={target}
+  rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+  type={href ? undefined : type}
+  disabled={disabled || loading}
+  aria-label={ariaLabel}
+  class:list={[
+    'base-button',
+    `variant-${variant}`,
+    `size-${size}`,
+    { 'is-icon-only': isIconOnly },
+    { 'is-focused': focused },
+    { 'is-loading': loading },
+    className,
+  ]}
+  {...rest}
+>
+  {loading && (
+    <span class="base-btn-spinner" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="1"></path>
+      </svg>
+    </span>
+  )}
+
+  {!loading && icon && (iconPosition === 'left' || isIconOnly) && (
+    <span class="base-btn-icon" set:html={icon} />
+  )}
+
+  {!isIconOnly && (
+    <span class="base-btn-label">
+      <slot />
+    </span>
+  )}
+
+  {!loading && icon && iconPosition === 'right' && (
+    <span class="base-btn-icon" set:html={icon} />
+  )}
+
+  {variant === 'see-work' && !icon && !isIconOnly && (
+    <svg class="base-btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14"></path>
+      <path d="M13 6l6 6-6 6"></path>
+    </svg>
+  )}
+</Element>
+
+<style>
+  .base-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    box-sizing: border-box;
+    white-space: nowrap;
+    user-select: none;
+    outline: none;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .base-button:disabled,
+  .base-button[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* Sizes matching Copy Markdown & AI-UI */
+  .size-sm {
+    height: 34px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 12px;
+  }
+
+  .size-md {
+    height: 44px;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    border-radius: 16px;
+  }
+
+  .size-lg {
+    height: 52px;
+    padding: 0 26px;
+    font-size: 16px;
+    font-weight: 550;
+    letter-spacing: -0.015em;
+    border-radius: 16px;
+  }
+
+  /* Icon only square buttons */
+  .is-icon-only.size-sm {
+    width: 34px;
+    height: 34px;
+    padding: 0 !important;
+  }
+
+  .is-icon-only.size-md {
+    width: 42px;
+    height: 42px;
+    padding: 0 !important;
+  }
+
+  .is-icon-only.size-lg {
+    width: 50px;
+    height: 50px;
+    padding: 0 !important;
+  }
+
+  /* Focused State */
+  .is-focused,
+  .base-button:focus-visible {
+    box-shadow: 0 0 0 3px rgba(237, 95, 69, 0.25) !important;
+  }
+
+  /* Variant 1: Primary Accent Gradient (AI-UI / Copy Markdown Style) */
+  .variant-primary {
+    background: linear-gradient(180deg, #f06a52 0%, #ed5f45 100%);
+    color: #ffffff;
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(237, 95, 69, 0.25);
+  }
+
+  .variant-primary:hover {
+    background: linear-gradient(180deg, #f2755f 0%, #ee634a 100%);
+    box-shadow: 0 4px 14px rgba(237, 95, 69, 0.35), 0 2px 4px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .variant-primary:active {
+    transform: scale(0.98);
+  }
+
+  /* Variant 2: Secondary Neutral Gradient */
+  .variant-secondary {
+    background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+    color: #222222;
+    border: 1px solid #e1e7ea;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .variant-secondary:hover {
+    background: #f5f6f8;
+    color: #111111;
+    border-color: #d1d9dd;
+    transform: translateY(-1px);
+  }
+
+  .variant-secondary:active {
+    transform: scale(0.98);
+  }
+
+  /* Variant 3: "See Work" Webflow Pill with Shimmer Sheen */
+  .variant-see-work {
+    background-color: rgba(237, 95, 69, 0.06);
+    color: #ed5f45;
+    border: 1px solid rgba(237, 95, 69, 0.18);
+    border-radius: 999px !important;
+    overflow: hidden;
+  }
+
+  .variant-see-work::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+  }
+
+  .variant-see-work:hover {
+    background-color: #ed5f45;
+    color: #ffffff;
+    border-color: #ed5f45;
+    box-shadow: 0 4px 14px rgba(237, 95, 69, 0.35);
+  }
+
+  .variant-see-work:hover::after {
+    animation: shine-slide 1.8s ease-in-out infinite;
+  }
+
+  .variant-see-work:hover .base-btn-arrow {
+    transform: translateX(3px);
+  }
+
+  @keyframes shine-slide {
+    0% { transform: translateX(0) skewX(-20deg); }
+    100% { transform: translateX(250%) skewX(-20deg); }
+  }
+
+  /* Variant 4: Icon Square (from copy-markdown) */
+  .variant-icon-square {
+    border-radius: 14px;
+    border: 1px solid #e1e7ea;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    color: #555555;
+  }
+
+  .variant-icon-square:hover {
+    color: #111111;
+    border-color: #c4cbd1;
+    background: #f8f9fa;
+  }
+
+  .variant-icon-square:active {
+    transform: scale(0.96);
+  }
+
+  /* Variant 5: Outline */
+  .variant-outline {
+    background: transparent;
+    border: 1px solid #e1e7ea;
+    color: #333333;
+  }
+
+  .variant-outline:hover {
+    background: #f7f8f9;
+    border-color: #cbd3d7;
+    color: #111111;
+  }
+
+  /* Variant 6: Ghost / Tertiary */
+  .variant-ghost {
+    background: transparent;
+    color: #666666;
+  }
+
+  .variant-ghost:hover {
+    background: #f0f1f3;
+    color: #111111;
+  }
+
+  /* Variant 7: Dark */
+  .variant-dark {
+    background: #151515;
+    color: #ffffff;
+    border: 1px solid #282828;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .variant-dark:hover {
+    background: #242424;
+    transform: translateY(-1px);
+  }
+
+  /* Variant 8: Link */
+  .variant-link {
+    background: transparent;
+    color: #ed5f45;
+    padding: 0 2px;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .variant-link:hover {
+    text-decoration: underline;
+  }
+
+  .base-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .base-btn-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .base-btn-spinner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>

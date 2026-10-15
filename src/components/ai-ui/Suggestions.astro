@@ -7,15 +7,17 @@ interface SuggestionItem {
 interface Props {
   suggestions: SuggestionItem[];
   class?: string;
+  [key: string]: any;
 }
 
 const {
   suggestions = [],
   class: className = '',
+  ...rest
 } = Astro.props;
 ---
 
-<div class={`ai-suggestions-grid ${className}`} data-suggestions>
+<div class={`ai-suggestions-grid ${className}`} data-suggestions {...rest}>
   {suggestions.map((item) => (
     <button type="button" class="ai-suggestion-card" data-suggestion-label={item.label}>
       <span class="ai-suggestion-label">{item.label}</span>
@@ -78,11 +80,31 @@ const {
       container.querySelectorAll<HTMLButtonElement>('[data-suggestion-label]').forEach((btn) => {
         btn.addEventListener('click', () => {
           const label = btn.getAttribute('data-suggestion-label') || '';
-          const promptInput = document.querySelector<HTMLTextAreaElement>('.ai-prompt-textarea');
+          const desc = btn.querySelector('.ai-suggestion-desc')?.textContent || '';
+
+          const event = new CustomEvent('ai:suggestion', {
+            bubbles: true,
+            composed: true,
+            detail: { label, description: desc }
+          });
+          btn.dispatchEvent(event);
+
+          container.dispatchEvent(new CustomEvent('ai:suggestion-select', {
+            bubbles: true,
+            composed: true,
+            detail: { label, description: desc }
+          }));
+
+          const promptInput = document.querySelector<HTMLTextAreaElement | HTMLInputElement>(
+            '.ai-prompt-textarea, [data-textarea], textarea, input[type="text"]'
+          );
           if (promptInput) {
             promptInput.value = label;
             promptInput.focus();
+            promptInput.dispatchEvent(new Event('input', { bubbles: true }));
+            promptInput.dispatchEvent(new Event('change', { bubbles: true }));
           }
+
           if (typeof (window as any).aiToast === 'function') {
             (window as any).aiToast({
               title: 'Suggestion loaded',

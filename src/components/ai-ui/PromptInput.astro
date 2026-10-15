@@ -29,12 +29,13 @@ const {
   selectedModel = 'claude-3-5-sonnet',
   class: className = '',
   id = 'ai-prompt-input',
+  ...rest
 } = Astro.props;
 
 const selectedModelId = selectedModel === 'Claude 3.5 Sonnet' ? 'claude-3-5-sonnet' : selectedModel;
 ---
 
-<div class={`ai-prompt-input-container ${className}`} data-prompt-input id={id}>
+<div class={`ai-prompt-input-container ${className}`} data-prompt-input id={id} {...rest}>
   <div class="ai-prompt-input-surface">
     <textarea
       class="ai-prompt-textarea"
@@ -341,10 +342,28 @@ const selectedModelId = selectedModel === 'Claude 3.5 Sonnet' ? 'claude-3-5-sonn
       submitBtn?.addEventListener('click', handleSubmit);
 
       function handleSubmit() {
-        const val = textarea?.value.trim();
-        if (!val) return;
+        const val = textarea ? textarea.value.trim() : '';
+        const detail = {
+          value: val,
+          query: val,
+          text: val,
+          isEmpty: !val
+        };
 
-        if (typeof (window as any).aiToast === 'function') {
+        const submitEvt = new CustomEvent('ai:submit', {
+          bubbles: true,
+          composed: true,
+          detail: detail
+        });
+        container.dispatchEvent(submitEvt);
+
+        container.dispatchEvent(new CustomEvent('submit', {
+          bubbles: true,
+          composed: true,
+          detail: detail
+        }));
+
+        if (typeof (window as any).aiToast === 'function' && val) {
           (window as any).aiToast({
             title: 'Diagnostic initiated',
             description: `Analyzing: ${val.substring(0, 48)}${val.length > 48 ? '...' : ''}`,
@@ -352,7 +371,7 @@ const selectedModelId = selectedModel === 'Claude 3.5 Sonnet' ? 'claude-3-5-sonn
           });
         }
 
-        if (textarea) {
+        if (textarea && val) {
           textarea.value = '';
           adjustHeight();
         }

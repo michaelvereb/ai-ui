@@ -1,0 +1,232 @@
+---
+interface TabItem {
+  id: string;
+  label: string;
+  icon?: string;
+  color?: string; // Optional custom active accent color (e.g. #ED5F45, #A145ED, #4583ED)
+}
+
+interface Props {
+  tabs?: TabItem[];
+  defaultActive?: string;
+  id?: string;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  tabs = [
+    { id: 'content', label: 'Content', color: '#ED5F45' },
+    { id: 'design', label: 'Design', color: '#A145ED' },
+    { id: 'links', label: 'Links', color: '#4583ED' },
+  ],
+  defaultActive = tabs[0]?.id || 'content',
+  id = `tab-selector-${Math.random().toString(36).substring(2, 7)}`,
+  size = 'md',
+  class: className = '',
+} = Astro.props;
+
+const defaultIndex = Math.max(0, tabs.findIndex(t => t.id === defaultActive));
+---
+
+<div
+  class:list={['base-tab-selector-wrap', `size-${size}`, className]}
+  id={id}
+  data-active-index={defaultIndex}
+  data-active-id={defaultActive}
+  style={`--tab-count: ${tabs.length};`}
+>
+  <div class="mode-bar">
+    <div
+      class="mode-tab-indicator"
+      style={`width: calc((100% - 4px) / ${tabs.length}); transform: translateX(${defaultIndex * 100}%);`}
+    />
+    {tabs.map((tab, idx) => (
+      <button
+        type="button"
+        class:list={['mode-tab', { active: idx === defaultIndex }]}
+        data-index={idx}
+        data-tab-id={tab.id}
+        data-tab-color={tab.color || '#222222'}
+        style={idx === defaultIndex && tab.color ? `color: ${tab.color};` : undefined}
+      >
+        {tab.icon && (
+          <span class="mode-tab-icon" set:html={tab.icon} />
+        )}
+        <span class="mode-tab-label">{tab.label}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .base-tab-selector-wrap {
+    display: inline-block;
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+  }
+
+  .mode-bar {
+    align-items: center;
+    align-self: stretch;
+    background-color: #fafafa;
+    border-radius: 16px;
+    outline: 0.75px solid #e1e7ea;
+    border: none;
+    padding: 2px;
+    display: flex;
+    min-width: 0px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* Sizes */
+  .size-sm .mode-bar {
+    height: 32px;
+    border-radius: 12px;
+  }
+  .size-sm .mode-tab-indicator {
+    border-radius: 10px;
+  }
+  .size-sm .mode-tab {
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .size-md .mode-bar {
+    height: 38px;
+    border-radius: 16px;
+  }
+  .size-md .mode-tab-indicator {
+    border-radius: 14px;
+  }
+  .size-md .mode-tab {
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .size-lg .mode-bar {
+    height: 46px;
+    border-radius: 18px;
+  }
+  .size-lg .mode-tab-indicator {
+    border-radius: 16px;
+  }
+  .size-lg .mode-tab {
+    height: 42px;
+    font-size: 16px;
+  }
+
+  /* Sliding Indicator Pill */
+  .mode-tab-indicator {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    background-color: #ffffff;
+    border: 0.5px solid #f6f8f9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Mode Tab Buttons */
+  .mode-tab {
+    position: relative;
+    z-index: 2;
+    align-items: center;
+    border-radius: 14px;
+    display: flex;
+    flex: 1;
+    gap: 6px;
+    justify-content: center;
+    min-width: 0px;
+    padding-inline: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #999999;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 110%;
+    transition: color 0.18s ease;
+  }
+
+  .mode-tab:hover {
+    color: #444444;
+  }
+
+  .mode-tab.active {
+    font-weight: 550;
+  }
+
+  .mode-tab-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mode-tab-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+
+<script>
+  function initTabSelectors() {
+    document.querySelectorAll('.base-tab-selector-wrap').forEach((wrap) => {
+      if ((wrap as any).__tabSelectorInitialized) return;
+      (wrap as any).__tabSelectorInitialized = true;
+
+      const indicator = wrap.querySelector('.mode-tab-indicator') as HTMLElement;
+      const tabs = wrap.querySelectorAll('.mode-tab') as NodeListOf<HTMLButtonElement>;
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const index = parseInt(tab.dataset.index || '0', 10);
+          const tabId = tab.dataset.tabId || '';
+          const tabColor = tab.dataset.tabColor || '#222222';
+
+          wrap.setAttribute('data-active-index', String(index));
+          wrap.setAttribute('data-active-id', tabId);
+
+          if (indicator) {
+            indicator.style.transform = `translateX(${index * 100}%)`;
+          }
+
+          tabs.forEach((t) => {
+            t.classList.remove('active');
+            t.style.color = '';
+          });
+
+          tab.classList.add('active');
+          if (tabColor) {
+            tab.style.color = tabColor;
+          }
+
+          wrap.dispatchEvent(new CustomEvent('tab-change', {
+            detail: { index, id: tabId, color: tabColor },
+            bubbles: true,
+            composed: true,
+          }));
+
+          wrap.dispatchEvent(new CustomEvent('ai:tab-change', {
+            detail: { index, id: tabId, color: tabColor },
+            bubbles: true,
+            composed: true,
+          }));
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initTabSelectors);
+  initTabSelectors();
+</script>

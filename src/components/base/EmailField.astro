@@ -1,0 +1,349 @@
+---
+interface Props {
+  placeholder?: string;
+  label?: string;
+  buttonText?: string;
+  shape?: 'pill' | 'rounded';
+  size?: 'sm' | 'md' | 'lg';
+  id?: string;
+  name?: string;
+  helperText?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  placeholder = 'your@email.com',
+  label,
+  buttonText = 'Subscribe',
+  shape = 'rounded',
+  size = 'md',
+  id = `email-field-${Math.random().toString(36).substring(2, 7)}`,
+  name = 'email',
+  helperText,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const inputId = `${id}-input`;
+---
+
+<div class:list={['base-email-wrap', `shape-${shape}`, `size-${size}`, className]}>
+  <form class="base-email-form" id={id} novalidate {...rest}>
+
+    {label && (
+      <label for={inputId} class="base-email-label">{label}</label>
+    )}
+
+    <div class="base-email-field-row">
+      <div class="base-email-input-wrap">
+        <!-- Email icon prefix -->
+        <div class="base-email-prefix-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="3"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+        </div>
+
+        <input
+          type="email"
+          id={inputId}
+          name={name}
+          required
+          placeholder={placeholder}
+          class="base-email-input"
+          autocomplete="email"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- Circular submit button -->
+      <button type="submit" class="base-email-submit-circle" aria-label={buttonText} title={buttonText}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="M13 6l6 6-6 6"></path>
+        </svg>
+      </button>
+    </div>
+
+    {helperText && (
+      <p class="base-email-helper">{helperText}</p>
+    )}
+
+    <!-- Inline validation message -->
+    <p class="base-email-error" role="alert" aria-live="polite"></p>
+
+    <!-- Success state overlay -->
+    <div class="base-email-success" role="status" aria-live="polite">
+      <div class="base-success-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+      </div>
+      <span>You're on the list.</span>
+    </div>
+
+  </form>
+</div>
+
+<style>
+  .base-email-wrap {
+    width: 100%;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    box-sizing: border-box;
+  }
+
+  .base-email-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Label */
+  .base-email-label {
+    font-size: 13px;
+    font-weight: 550;
+    color: #444;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+
+  /* Row: input + circular button */
+  .base-email-field-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Input wrapper */
+  .base-email-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    background: #ffffff;
+    border: 1px solid #e1e7ea;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .shape-pill .base-email-input-wrap {
+    border-radius: 999px;
+    padding: 0 16px 0 14px;
+  }
+
+  .shape-rounded .base-email-input-wrap {
+    border-radius: 14px;
+    padding: 0 14px 0 12px;
+  }
+
+  .base-email-input-wrap:focus-within {
+    border-color: #ed5f45;
+    box-shadow: 0 0 0 3px rgba(237, 95, 69, 0.1);
+  }
+
+  /* Sizes */
+  .size-sm .base-email-input-wrap { height: 40px; }
+  .size-md .base-email-input-wrap { height: 48px; }
+  .size-lg .base-email-input-wrap { height: 56px; }
+
+  /* Prefix icon */
+  .base-email-prefix-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #b0b8be;
+    flex-shrink: 0;
+    margin-right: 10px;
+    pointer-events: none;
+    transition: color 0.15s ease;
+  }
+
+  .base-email-input-wrap:focus-within .base-email-prefix-icon {
+    color: #888;
+  }
+
+  /* Input */
+  .base-email-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a1a;
+    letter-spacing: -0.01em;
+    width: 100%;
+  }
+
+  .size-sm .base-email-input { font-size: 14px; }
+  .size-md .base-email-input { font-size: 15px; }
+  .size-lg .base-email-input { font-size: 16px; }
+
+  .base-email-input::placeholder {
+    color: #c4cbd1;
+  }
+
+  /* ─── CIRCULAR SUBMIT BUTTON ─── */
+  .base-email-submit-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f06a52 0%, #ed5f45 100%);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 8px rgba(237, 95, 69, 0.3), 0 1px 2px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Sizes for circle button */
+  .size-sm .base-email-submit-circle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .size-md .base-email-submit-circle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .size-lg .base-email-submit-circle {
+    width: 56px;
+    height: 56px;
+  }
+
+  .base-email-submit-circle:hover {
+    background: linear-gradient(145deg, #f2755f 0%, #ee6349 100%);
+    box-shadow: 0 4px 16px rgba(237, 95, 69, 0.45), 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px) scale(1.04);
+  }
+
+  .base-email-submit-circle:active {
+    transform: scale(0.96);
+    box-shadow: 0 1px 4px rgba(237, 95, 69, 0.3);
+  }
+
+  .base-email-submit-circle svg {
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .base-email-submit-circle:hover svg {
+    transform: translateX(2px);
+  }
+
+  /* Helper text */
+  .base-email-helper {
+    margin: 0;
+    font-size: 12px;
+    color: #9aa3aa;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    padding-left: 2px;
+  }
+
+  /* Error message */
+  .base-email-error {
+    display: none;
+    font-size: 12px;
+    color: #d44;
+    margin: 0;
+    padding-left: 2px;
+  }
+
+  .base-email-form.has-error .base-email-error {
+    display: block;
+  }
+
+  .base-email-form.has-error .base-email-input-wrap {
+    border-color: #d44;
+    box-shadow: 0 0 0 3px rgba(221, 68, 68, 0.1);
+  }
+
+  /* Success State */
+  .base-email-success {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(14, 102, 85, 0.06);
+    border: 1px solid rgba(14, 102, 85, 0.18);
+    color: #0e6655;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    border-radius: 12px;
+  }
+
+  .base-email-form.submitted .base-email-field-row,
+  .base-email-form.submitted .base-email-helper {
+    display: none;
+  }
+
+  .base-email-form.submitted .base-email-success {
+    display: flex;
+  }
+
+  .base-success-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(14, 102, 85, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.base-email-form').forEach((form) => {
+    if ((form as any).__emailFormInit) return;
+    (form as any).__emailFormInit = true;
+
+    const input = form.querySelector('.base-email-input') as HTMLInputElement;
+    const errorEl = form.querySelector('.base-email-error') as HTMLElement;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.classList.remove('has-error');
+
+      const val = input?.value?.trim() || '';
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+
+      if (!emailOk) {
+        form.classList.add('has-error');
+        if (errorEl) errorEl.textContent = 'Please enter a valid email address.';
+        input?.focus();
+        return;
+      }
+
+      form.classList.add('submitted');
+
+      form.dispatchEvent(new CustomEvent('ai:email-submit', {
+        bubbles: true,
+        composed: true,
+        detail: { email: val }
+      }));
+
+      form.dispatchEvent(new CustomEvent('email-submit', {
+        bubbles: true,
+        composed: true,
+        detail: { email: val }
+      }));
+    });
+
+    input?.addEventListener('input', () => {
+      form.classList.remove('has-error');
+      if (errorEl) errorEl.textContent = '';
+    });
+  });
+</script>

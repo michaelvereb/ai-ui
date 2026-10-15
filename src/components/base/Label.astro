@@ -1,0 +1,183 @@
+---
+interface Props {
+  type?: 'neutral' | 'success' | 'warning' | 'error' | 'primary';
+  style?: 'filled' | 'outlined';
+  size?: 'sm' | 'md' | 'lg';
+  dot?: boolean;
+  icon?: string;
+  iconPosition?: 'left' | 'right' | 'only';
+  class?: string;
+}
+
+const {
+  type = 'neutral',
+  style = 'filled',
+  size = 'md',
+  dot = false,
+  icon,
+  iconPosition = 'left',
+  class: className = '',
+} = Astro.props;
+
+const isIconOnly = iconPosition === 'only';
+---
+
+<span
+  class:list={[
+    'base-label',
+    `type-${type}`,
+    `style-${style}`,
+    `size-${size}`,
+    { 'is-icon-only': isIconOnly },
+    className,
+  ]}
+>
+  {dot && <span class="base-label-dot" aria-hidden="true" />}
+
+  {icon && (iconPosition === 'left' || isIconOnly) && (
+    <span class="base-label-icon" aria-hidden="true" set:html={icon} />
+  )}
+
+  {!isIconOnly && (
+    <span class="base-label-text">
+      <slot />
+    </span>
+  )}
+
+  {icon && iconPosition === 'right' && (
+    <span class="base-label-icon" aria-hidden="true" set:html={icon} />
+  )}
+</span>
+
+<style>
+  .base-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1;
+    box-sizing: border-box;
+    white-space: nowrap;
+    user-select: none;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  /* Sizes & Border Radii (Figma: rounded-[6px] / rounded-[8px]) */
+  .size-sm {
+    height: 22px;
+    padding: 0 6px;
+    font-size: 11px;
+    letter-spacing: 0.01em;
+    border-radius: 6px;
+  }
+
+  .size-md {
+    height: 26px;
+    padding: 0 8px;
+    font-size: 12.5px;
+    letter-spacing: -0.005em;
+    border-radius: 7px;
+  }
+
+  .size-lg {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    border-radius: 8px;
+  }
+
+  .is-icon-only.size-sm { width: 22px; padding: 0; }
+  .is-icon-only.size-md { width: 26px; padding: 0; }
+  .is-icon-only.size-lg { width: 30px; padding: 0; }
+
+  /* ─── Type 1: Neutral ─── */
+  .type-neutral.style-filled {
+    background: #f1f4f3;
+    color: #4b5855;
+    border: 1px solid #e1e6e5;
+  }
+  .type-neutral.style-outlined {
+    background: #ffffff;
+    color: #4b5855;
+    border: 1px solid #c7d1cf;
+  }
+  .type-neutral .base-label-dot { background: #71807d; }
+
+  /* ─── Type 2: Success ─── */
+  .type-success.style-filled {
+    background: #eafaf1;
+    color: #14723e;
+    border: 1px solid rgba(20, 114, 62, 0.18);
+  }
+  .type-success.style-outlined {
+    background: #ffffff;
+    color: #14723e;
+    border: 1px solid #14723e;
+  }
+  .type-success .base-label-dot { background: #14723e; }
+
+  /* ─── Type 3: Warning ─── */
+  .type-warning.style-filled {
+    background: #fef8eb;
+    color: #9a6509;
+    border: 1px solid rgba(154, 101, 9, 0.2);
+  }
+  .type-warning.style-outlined {
+    background: #ffffff;
+    color: #9a6509;
+    border: 1px solid #d49524;
+  }
+  .type-warning .base-label-dot { background: #d49524; }
+
+  /* ─── Type 4: Error ─── */
+  .type-error.style-filled {
+    background: #fdf2f2;
+    color: #c02929;
+    border: 1px solid rgba(192, 41, 41, 0.2);
+  }
+  .type-error.style-outlined {
+    background: #ffffff;
+    color: #c02929;
+    border: 1px solid #c02929;
+  }
+  .type-error .base-label-dot { background: #c02929; }
+
+  /* ─── Type 5: Primary (AI-UI Coral) ─── */
+  .type-primary.style-filled {
+    background: rgba(237, 95, 69, 0.08);
+    color: #ed5f45;
+    border: 1px solid rgba(237, 95, 69, 0.2);
+  }
+  .type-primary.style-outlined {
+    background: #ffffff;
+    color: #ed5f45;
+    border: 1px solid #ed5f45;
+  }
+  .type-primary .base-label-dot { background: #ed5f45; }
+
+  /* Dot */
+  .base-label-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .base-label-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .base-label-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .size-sm .base-label-icon svg { width: 12px; height: 12px; }
+  .size-lg .base-label-icon svg { width: 16px; height: 16px; }
+</style>

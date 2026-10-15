@@ -1,0 +1,166 @@
+---
+interface Props {
+  href: string;
+  variant?: 'nav' | 'editorial' | 'tool' | 'inline';
+  target?: string;
+  iconSrc?: string;
+  badge?: string;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'editorial',
+  target,
+  iconSrc,
+  badge,
+  class: className = '',
+} = Astro.props;
+
+const isExternal = target === '_blank' || href.startsWith('http');
+---
+
+<a
+  href={href}
+  target={target || (isExternal ? '_blank' : undefined)}
+  rel={isExternal ? 'noopener noreferrer' : undefined}
+  class:list={[
+    'base-link-item',
+    `variant-${variant}`,
+    className,
+  ]}
+>
+  {iconSrc && (
+    <img src={iconSrc} alt="" class="base-link-icon" width="16" height="16" loading="lazy" />
+  )}
+  <span class="base-link-text">
+    <slot />
+  </span>
+  {badge && (
+    <span class="base-link-badge">{badge}</span>
+  )}
+  {variant === 'editorial' && (
+    <svg class="base-link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14"></path>
+      <path d="M12 5l7 7-7 7"></path>
+    </svg>
+  )}
+  {variant === 'tool' && (
+    <svg class="base-link-external-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17L17 7"></path>
+      <path d="M7 7h10v10"></path>
+    </svg>
+  )}
+</a>
+
+<style>
+  .base-link-item {
+    font-family: Geist, -apple-system, BlinkMacSystemFont, sans-serif;
+    text-decoration: none;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Variant 1: Editorial CTA link (Michael's "Let's connect" style) */
+  .variant-editorial {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #ed5f45;
+    position: relative;
+    padding-bottom: 2px;
+  }
+
+  .variant-editorial::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background-color: #ed5f45;
+    transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .variant-editorial:hover::after {
+    width: 100%;
+  }
+
+  .variant-editorial:hover .base-link-arrow {
+    transform: translateX(4px);
+  }
+
+  .base-link-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  /* Variant 2: Nav Link */
+  .variant-nav {
+    font-size: 15px;
+    font-weight: 450;
+    color: #666;
+    padding: 6px 12px;
+    border-radius: 8px;
+  }
+
+  .variant-nav:hover {
+    color: #111;
+    background-color: #f5f5f5;
+  }
+
+  /* Variant 3: Tool / Resource link (Michael's footer tool links) */
+  .variant-tool {
+    font-size: 14px;
+    font-weight: 450;
+    color: #444;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+  }
+
+  .variant-tool:hover {
+    color: #111;
+    background-color: #fafafa;
+    border-color: #e6e6e6;
+  }
+
+  .variant-tool:hover .base-link-external-icon {
+    transform: translate(1px, -1px);
+    color: #ed5f45;
+  }
+
+  .base-link-external-icon {
+    color: #aaa;
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+
+  /* Variant 4: Inline text link */
+  .variant-inline {
+    font-size: inherit;
+    color: #ed5f45;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(237, 95, 69, 0.3);
+  }
+
+  .variant-inline:hover {
+    text-decoration-color: #ed5f45;
+  }
+
+  .base-link-icon {
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  .base-link-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background-color: #f5f5f5;
+    color: #888;
+  }
+</style>
