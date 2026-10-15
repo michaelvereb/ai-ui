@@ -21,6 +21,14 @@ interface IdleThinkingProps {
 
 export type Props = StreamingThinkingProps | IdleThinkingProps;
 
+const defaultPhases: string[] = [
+  'Analyzing target domain...',
+  'Evaluating 30-point agent specification...',
+  'Probing robots.txt crawler access...',
+  'Validating RFC 8259 structured JSON-LD...',
+  'Synthesizing diagnostic report...'
+];
+
 const {
   phases = defaultPhases,
   isStreaming = true,

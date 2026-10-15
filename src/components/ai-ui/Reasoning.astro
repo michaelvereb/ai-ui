@@ -24,6 +24,12 @@ interface StaticReasoningProps extends BaseReasoningProps {
 
 export type Props = CollapsibleReasoningProps | StaticReasoningProps;
 
+const defaultSteps: ReasoningStep[] = [
+  { text: 'Analyzing user request and context', detail: 'Parsing intent and entity boundaries' },
+  { text: 'Evaluating technical architecture', detail: 'Validating against 30-point benchmark' },
+  { text: 'Generating optimized solution', detail: 'Synthesizing output' }
+];
+
 const {
   steps = defaultSteps,
   title = 'Reasoning',
